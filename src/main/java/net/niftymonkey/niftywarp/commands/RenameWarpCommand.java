@@ -2,7 +2,6 @@ package net.niftymonkey.niftywarp.commands;
 
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
-import net.niftymonkey.niftywarp.Warp;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,10 +10,10 @@ import org.bukkit.entity.Player;
 
 /**
  * User: Mark Lozano
- * Date: 6/13/11
- * Time: 2:34 AM
+ * Date: 6/14/11
+ * Time: 9:32 PM
  */
-public class WarpCommand implements CommandExecutor
+public class RenameWarpCommand implements CommandExecutor
 {
     /**
      * The plugin
@@ -22,11 +21,11 @@ public class WarpCommand implements CommandExecutor
     private final NiftyWarp plugin;
 
     /**
-     * Creates a new warp command instance
+     * Creates a new rename warp command instance
      *
      * @param plugin The base plugin
      */
-    public WarpCommand(NiftyWarp plugin)
+    public RenameWarpCommand(NiftyWarp plugin)
     {
         this.plugin = plugin;
     }
@@ -45,35 +44,34 @@ public class WarpCommand implements CommandExecutor
         boolean retVal = false;
 
         // check for the correct command name
-        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_WARP))
+        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_RENAME))
         {
-            // make sure we have one argument, which is the name of the warp
-            if (args.length == 1)
+            // make sure we have two arguments (name and new name)
+            if (args.length == 2)
             {
                 // Cast to the player object
                 Player player = (Player) sender;
 
                 // get the first argument which is the warp name
                 String warpName = args[0];
-                // find that in the warp map
-                Warp warp = plugin.getWarpManager().getWarp(warpName, player);
+                // get the second argument which is the new warp name
+                String newWarpName = args[1];
 
                 // get the addon message prefix
                 String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
-                if (warp != null)
+                // rename this warp from the warp map
+                boolean renamed = plugin.getWarpManager().renameWarp(warpName, newWarpName, player);
+                if (renamed)
                 {
-                    // send the player there
-                    player.teleport(warp.getLocation());
-
-                    // let them know it worked
+                    // let them know that we successfully renamed the warp
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
-                                       warp.getType().getTypeColor() + warpName);
+                                       ChatColor.GREEN + AppStrings.WARP_RENAMED_PREFIX +
+                                       ChatColor.WHITE + warpName + " --> " + newWarpName);
                 }
                 else
                 {
-                    // let them know we couldn't find a warp with that name
+                    // let them know that we couldn't find that warp
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
                                        ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
                                        ChatColor.WHITE + warpName);
@@ -86,4 +84,3 @@ public class WarpCommand implements CommandExecutor
         return retVal;
     }
 }
-

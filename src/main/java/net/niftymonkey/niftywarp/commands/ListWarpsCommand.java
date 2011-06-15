@@ -25,7 +25,7 @@ public class ListWarpsCommand implements CommandExecutor
     private final NiftyWarp plugin;
 
     /**
-     * Creates a new warp command instance
+     * Creates a new list warps command instance
      *
      * @param plugin The base plugin
      */
@@ -48,7 +48,7 @@ public class ListWarpsCommand implements CommandExecutor
         boolean retVal = false;
 
         // check for the correct command name
-        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_LIST_WARPS))
+        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_LIST))
         {
             // make sure we have one argument, which is the name of the warp
             if (args.length == 0)
@@ -74,8 +74,13 @@ public class ListWarpsCommand implements CommandExecutor
                         Warp warp = warpsList.get(i);
                         // get the name
                         String warpName = warp.getName();
+
+                        // if this is owned by someone else, we need to use the id instead so that it can be looked up correctly on use
+                        if(!warp.getOwner().equalsIgnoreCase(player.getDisplayName()))
+                            warpName = warp.getId();
+
                         // append it to the string
-                        availableWarpStr += warpName;
+                        availableWarpStr += warp.getType().getTypeColor() + warpName;
                         // increment counter
                         i++;
 

@@ -4,15 +4,52 @@ version: 0.1
 description: >
              A Nifty Warp plugin that allows private, public listed, and public unlisted warps
 commands:
-   warp:
-      description: Warps you to a named warp location
-      usage: |
-           /<command> <name>
-   addwarp:
+   nwadd:
+      aliases: [nwa]
       description: Sets a named warp to your current location
       usage: |
-           /<command> <name>
-   listwarps:
+           /<command> <warpname> [private|listed|unlisted]
+           Type defaults to private.
+   nwadmin:
+      aliases: [nw+]
+      description: Admin command that enables or disables a player's ability to use warp
+      usage: |
+           /<command> enable|disable <player>
+   nwdelete:
+      aliases: [nwd]
+      description: Removes a named warp
+      usage: |
+           /<command> [<owner>.]<warpname>
+           Example Usages:
+           /<command> hilltop
+           /<command> niftymonkey.hilltop
+           The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner
+   nwlist:
+      aliases: [nwl]
       description: Lists all of the warps available to you
       usage: |
-           /<command>
+           /<command> [private|listed|unlisted]
+           If no type is provided, will show all warps you own, plus any public-listed warps.
+   nwrename:
+      aliases: [nwr]
+      description: Renames a named warp
+      usage: |
+           /<command> [<owner>.]<warpname>
+           Example Usages:
+           /<command> hilltop
+           /<command> niftymonkey.hilltop
+           The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner
+   nwset:
+      aliases: [nws]
+      description: Sets the type of an existing named warp
+      usage: |
+           /<command> [<owner>.]<warpname> private|listed|unlisted
+   nwwarp:
+      aliases: [nw, nww]
+      description: Warps you to a named warp location
+      usage: |
+           /<command> [<owner>.]<warpname>
+           Example Usages:
+           /<command> hilltop
+           /<command> niftymonkey.hilltop
+           The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner

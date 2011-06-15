@@ -1,11 +1,15 @@
 package net.niftymonkey.niftywarp;
 
-import java.util.logging.Logger;
-
 import net.niftymonkey.niftywarp.commands.AddWarpCommand;
+import net.niftymonkey.niftywarp.commands.AdminCommand;
+import net.niftymonkey.niftywarp.commands.DeleteWarpCommand;
 import net.niftymonkey.niftywarp.commands.ListWarpsCommand;
+import net.niftymonkey.niftywarp.commands.RenameWarpCommand;
+import net.niftymonkey.niftywarp.commands.SetWarpTypeCommand;
 import net.niftymonkey.niftywarp.commands.WarpCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Logger;
 
 /**
  * Main plugin class
@@ -22,13 +26,17 @@ public class NiftyWarp extends JavaPlugin
 
     public void onEnable()
     {
-        // register commands
-        getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));
-        getCommand(AppStrings.COMMAND_ADD_WARP).setExecutor(new AddWarpCommand(this));
-        getCommand(AppStrings.COMMAND_LIST_WARPS).setExecutor(new ListWarpsCommand(this));
-
         // create the warp manager
         warpManager = new WarpManager();
+
+        // register commands
+        getCommand(AppStrings.COMMAND_ADD).setExecutor(new AddWarpCommand(this));
+        getCommand(AppStrings.COMMAND_ADMIN).setExecutor(new AdminCommand(this));
+        getCommand(AppStrings.COMMAND_LIST).setExecutor(new ListWarpsCommand(this));
+        getCommand(AppStrings.COMMAND_DELETE).setExecutor(new DeleteWarpCommand(this));
+        getCommand(AppStrings.COMMAND_RENAME).setExecutor(new RenameWarpCommand(this));
+        getCommand(AppStrings.COMMAND_SET).setExecutor(new SetWarpTypeCommand(this));
+        getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));
 
         log.info(AppStrings.getEnabledMessage(this));
     }

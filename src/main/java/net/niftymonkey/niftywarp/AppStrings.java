@@ -13,24 +13,36 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class AppStrings
 {
     // commands
-    public static final String COMMAND_WARP = "warp";
-    public static final String COMMAND_ADD_WARP = "addwarp";
-    public static final String COMMAND_LIST_WARPS = "listwarps";
+    public static final String COMMAND_ADD      = "nwadd";
+    public static final String COMMAND_ADMIN    = "nwadmin";
+    public static final String COMMAND_LIST     = "nwlist";
+    public static final String COMMAND_DELETE   = "nwdelete";
+    public static final String COMMAND_RENAME   = "nwrename";
+    public static final String COMMAND_SET      = "nwset";
+    public static final String COMMAND_WARP     = "nwwarp";
 
     // message strings (public)
-    public static final String WARPED_TO_PREFIX = "Warped to:  ";
-    public static final String WARP_NOT_FOUND_PREFIX = "Warped to:  ";
-    public static final String WARP_ADDED_PREFIX = "Added warp named: ";
-    public static final String AVAILABLE_WARPS_PREFIX = "Available warps: ";
-    public static final String NO_AVAILABLE_WARPS = "No warps found.";
+    public static final String WARPED_TO_PREFIX         = "Warped to:  ";
+    public static final String WARP_NOT_FOUND_PREFIX    = "No warp found for name:  ";
+    public static final String WARP_ADDED_PREFIX        = "Added warp: ";
+    public static final String WARP_REMOVED_PREFIX      = "Removed warp: ";
+    public static final String WARP_RENAMED_PREFIX      = "Renamed warp: ";
+    public static final String WARP_SET_PREFIX          = "Type set for warp: ";
+    public static final String AVAILABLE_WARPS_PREFIX   = "Available warps: ";
+    public static final String NO_AVAILABLE_WARPS       = "No warps found.";
 
     // message strings (private)
-    private static final String ADDON_MSG_PREFIX = "[NiftyWarp] - ";
-    private static final String ENABLED_MSG_SUFFIX = " has been enabled";
+    private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";
+    private static final String ENABLED_MSG_SUFFIX  = " has been enabled";
     private static final String DISABLED_MSG_SUFFIX = " has been disabled";
 
     // properties
-    private static final String PROPERTY_USE_ADDON_MSG_PREFIX = "useAddonMessagePrefix";
+    private static final String PROPERTY_MSG_SHOWPREFIX = "messages.showprefix";
+
+    // constants
+    public static final String WARP_TYPE_PRIVATE = "private";
+    public static final String WARP_TYPE_LISTED = "listed";
+    public static final String WARP_TYPE_UNLISTED = "unlisted";
 
     /**
      * Gets the message that will be displayed in the server console when the addon is enabled
@@ -82,7 +94,7 @@ public class AppStrings
         String retVal = ADDON_MSG_PREFIX;
 
         // try to get the value out of the config.  Default to true
-        boolean useAddonMessagePrefix = plugin.getConfiguration().getBoolean(PROPERTY_USE_ADDON_MSG_PREFIX, true);
+        boolean useAddonMessagePrefix = plugin.getConfiguration().getBoolean(PROPERTY_MSG_SHOWPREFIX, true);
 
         // blank out the message prefix the config was set to false
         if(!useAddonMessagePrefix)

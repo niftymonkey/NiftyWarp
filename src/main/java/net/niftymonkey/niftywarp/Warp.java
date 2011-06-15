@@ -1,11 +1,11 @@
 package net.niftymonkey.niftywarp;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 /**
  * Warp object
@@ -25,7 +25,37 @@ public class Warp implements Serializable, Comparable<Warp>
         PUBLIC_LISTED,
 
         // Only the owner of this warp will see it in their list, however others can still use this warp
-        PUBLIC_UNLISTED,
+        PUBLIC_UNLISTED;
+
+        public static Type getTypeForString(String typeStr)
+        {
+            // default to private
+            Type retVal = PRIVATE;
+
+            if(typeStr.equals(AppStrings.WARP_TYPE_LISTED))
+                retVal = PUBLIC_LISTED;
+            if(typeStr.equals(AppStrings.WARP_TYPE_UNLISTED))
+                retVal = PUBLIC_UNLISTED;
+
+            return retVal;
+        }
+
+        /**
+         * Gets the ChatColor for the type of Warp this is
+         *
+         * @return the relevant ChatColor
+         */
+        public ChatColor getTypeColor()
+        {
+            ChatColor retVal = ChatColor.WHITE;
+
+            if(this.equals(PRIVATE))
+                retVal = ChatColor.DARK_GRAY;
+            if(this.equals(PUBLIC_UNLISTED))
+                retVal = ChatColor.DARK_PURPLE;
+
+            return retVal;
+        }
     }
 
     // warp creation parameters
@@ -45,7 +75,7 @@ public class Warp implements Serializable, Comparable<Warp>
 
     public static String buildId(String owner, String warpName)
     {
-        return owner + ":" + warpName;
+        return owner + "." + warpName;
     }
 
     ///////////////////////
@@ -165,6 +195,6 @@ public class Warp implements Serializable, Comparable<Warp>
 
     public int compareTo(Warp o)
     {
-        return getName().compareTo(o.getName());
+        return getId().compareTo(o.getId());
     }
 }

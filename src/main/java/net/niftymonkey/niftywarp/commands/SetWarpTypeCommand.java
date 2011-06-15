@@ -11,10 +11,10 @@ import org.bukkit.entity.Player;
 
 /**
  * User: Mark Lozano
- * Date: 6/13/11
- * Time: 2:34 AM
+ * Date: 6/14/11
+ * Time: 9:33 PM
  */
-public class WarpCommand implements CommandExecutor
+public class SetWarpTypeCommand implements CommandExecutor
 {
     /**
      * The plugin
@@ -22,11 +22,11 @@ public class WarpCommand implements CommandExecutor
     private final NiftyWarp plugin;
 
     /**
-     * Creates a new warp command instance
+     * Creates a new set warp type command instance
      *
      * @param plugin The base plugin
      */
-    public WarpCommand(NiftyWarp plugin)
+    public SetWarpTypeCommand(NiftyWarp plugin)
     {
         this.plugin = plugin;
     }
@@ -45,35 +45,35 @@ public class WarpCommand implements CommandExecutor
         boolean retVal = false;
 
         // check for the correct command name
-        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_WARP))
+        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_SET))
         {
-            // make sure we have one argument, which is the name of the warp
-            if (args.length == 1)
+            // make sure we have two arguments (warp name and new type)
+            if (args.length == 2)
             {
                 // Cast to the player object
                 Player player = (Player) sender;
 
                 // get the first argument which is the warp name
                 String warpName = args[0];
-                // find that in the warp map
-                Warp warp = plugin.getWarpManager().getWarp(warpName, player);
+                // get the second argument which is the warp type
+                String warpTypeStr = args[1];
+                Warp.Type type = Warp.Type.getTypeForString(warpTypeStr);
 
                 // get the addon message prefix
                 String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
-                if (warp != null)
+                // rename this warp from the warp map
+                boolean renamed = plugin.getWarpManager().setWarpType(warpName, type, player);
+                if (renamed)
                 {
-                    // send the player there
-                    player.teleport(warp.getLocation());
-
-                    // let them know it worked
+                    // let them know that we successfully renamed the warp
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
-                                       warp.getType().getTypeColor() + warpName);
+                                       ChatColor.GREEN + AppStrings.WARP_SET_PREFIX +
+                                       ChatColor.WHITE + warpName + type.getTypeColor() + " [" + warpTypeStr + "]");
                 }
                 else
                 {
-                    // let them know we couldn't find a warp with that name
+                    // let them know that we couldn't find that warp
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
                                        ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
                                        ChatColor.WHITE + warpName);
@@ -86,4 +86,3 @@ public class WarpCommand implements CommandExecutor
         return retVal;
     }
 }
-

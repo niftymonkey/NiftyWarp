@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <groupId>net.niftymonkey.niftywarp</groupId>
     <artifactId>niftywarp</artifactId>
     <version>0.1</version>
@@ -19,32 +19,6 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>dev-copy</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>${project.artifactId}</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>C:\Users\Mark\AppData\Roaming\.minecraft\server\plugins</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -56,12 +30,80 @@
             <scope>compile</scope>
         </dependency>
         <!--<dependency>-->
-        <!--<groupId>com.nijikokun.bukkit</groupId>-->
-        <!--<artifactId>Permissions</artifactId>-->
-        <!--<version>2.7.0</version>-->
-        <!--<type>jar</type>-->
-        <!--<scope>provided</scope>-->
+            <!--<groupId>com.nijikokun.bukkit</groupId>-->
+            <!--<artifactId>Permissions</artifactId>-->
+            <!--<version>2.7.0</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope>provided</scope>-->
         <!--</dependency>-->
     </dependencies>
+    <profiles>
+        <!--
+        Dev profile - For doing any "developer environment only" build/deploy logic
+        -->
+        <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <!--
+                    Properties plugin for loading development environment properties
+                    -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>1.0-alpha-2</version>
+                        <executions>
+                            <!--
+                            When initializing this build, load the properties from the user home directory
+                            -->
+                            <execution>
+                                <id>load-properties</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <files>
+                                        <file>${user.home}/dev/properties/niftywarp-${project.version}.properties</file>
+                                    </files>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Dependency plugin for unpacking various artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <!--
+                            Execution used to drop the plugin jar into the server plugin dir
+                            -->
+                            <execution>
+                                <id>dev-install-jar</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${minecraft.server.dir}/plugins</outputDirectory>
+                                    <overWriteReleases>true</overWriteReleases>
+                                    <overWriteSnapshots>true</overWriteSnapshots>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -17,7 +17,7 @@ commands:
            /<command> enable|disable <player>
    nwdelete:
       aliases: [nwd]
-      description: Removes a named warp
+      description: Deletes a named warp
       usage: |
            /<command> [<owner>.]<warpname>
            Example Usages:
@@ -34,10 +34,10 @@ commands:
       aliases: [nwr]
       description: Renames a named warp
       usage: |
-           /<command> [<owner>.]<warpname>
+           /<command> [<owner>.]<warpname> [<owner>.]<newwarpname>
            Example Usages:
-           /<command> hilltop
-           /<command> niftymonkey.hilltop
+           /<command> hilltop mountaintop
+           /<command> niftymonkey.hilltop niftymonkey.mountaintop
            The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner
    nwset:
       aliases: [nws]

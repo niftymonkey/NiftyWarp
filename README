@@ -1,0 +1,25 @@
+Nifty Warp is a server-side plugin (built on bukkit) that allows for private, listed, unlisted warps.
+
+
+WARP TYPES:
+---------------------------------
+"private"
+- This is the default type of a warp if no type parameter is used when adding a warp.  When listing warps, private warps will only show up the their owner's lists.  When warping, only the owner will be able to warp to that named warp.
+
+"unlisted"
+- When listing warps, unlisted warps will only show up the their owner's lists.  However, when using warps, anyone can use the warp by typing the fully qualified name of the warp.  This type is useful if you want create useful warps to places that you can let your friends know about, but you don't want to clutter up everyone's list.
+
+"listed"
+- This type of warp is able to be seen and used by anyone.  
+
+
+WARPING:
+---------------------------------
+All warps have an owner.  When listing warps, any available warps that you don't own will be shown as the fully qualfied name of the warp, which is <owner>.<warpname> ... whereas, warps you own will be listed as <warpname>.  For instance, if I'm logged into my niftymonkey account, and I make a listed warp called "foo", that's exactly how it'll show up in my list.  However, in other people's lists, it'll show up as "niftymonkey.foo"
+
+If I want to use that warp, I can type "/nwwarp foo"  OR  I can type "/nwwarp niftymonkey.foo" ... either one will work.  However, anyone else that wants to use that warp will have to use the fully qualified version "/nwwarp niftymonkey.foo"
+
+
+CONFIGURATION:
+---------------------------------
+<TBD>

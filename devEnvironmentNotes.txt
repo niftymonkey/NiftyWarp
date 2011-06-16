@@ -1,0 +1,61 @@
+
+DEVELOPMENT ENVIRONMENT NOTES:
+---------------------------------
+
+Here is a high-level rundown of how to setup your environment for NiftyWarp development.  
+This is written based on the tools I have chosen for developing, and use of any other 
+tools is up to you.  If I have time later I may write a more "step-by-step" failproof
+version of this document.  For now, here's the basic rundown from memory.
+
+
+SOFTWARE LIST
+
+* IntelliJ IDEA 10.5 Community Edition
+  - http://www.jetbrains.com/idea/
+
+* Maven 2.2.1
+  - http://maven.apache.org/download.html
+  - http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+
+* Craftbukkit Server 0.0.1
+  - http://wiki.bukkit.org/Setting_up_a_server
+
+* Bukkit API
+  - http://bukkit.org
+
+* Git/Github
+  - http://github.com
+
+
+
+BASIC DEV ENVIRONMENT SETUP STEPS:
+
+* Install IntellJ if you haven't already done so
+
+* Install Maven
+
+* Install Craftbukkit Server
+  - I also ran it to make sure it worked before I start messing around with it with this plugin
+  Note:  I had to run it twice before it worked for me.  Seemed like it generated everything it needed
+         in the directory the first time, and the second time it just started up the server
+
+* Download the Bukkit API, and install it
+  - Since we're using Maven, and I can't find a repository for tbe bukkit dependency,
+    just download it and go to the folder you downloaded the bukkit api into, and 
+    type the following:
+  
+    mvn install:install-file -DgroupId=org.bukkit -DartifactId=bukkit -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar -Dfile=bukkit-0.0.1-SNAPSHOT.jar
+
+* Install Git and pull the latest from the repository
+
+* Open IntelliJ and "Open Project..." and select the pom.xml from the top level project directory
+
+* [Optional] Create a properties file to support the dev profile used to deploy the jar for testing on your server.
+  - Create a niftywarp-1.0-beta.properties file in your <user.home>/dev/properties folder and place the following property in it
+  
+    minecraft.server.dir=<path to your craftbukkit server directory>
+
+  - The "1.0-beta" part of the property file name needs to match the version of the project in the pom.xml
+  - If you do this step, you'll need to select the "dev.install.jar" profile
+
+* Run a maven clean/install and you should have the jar in your <minecraft.server.dir>/plugins directory

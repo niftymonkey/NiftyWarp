@@ -80,24 +80,33 @@ public class WarpManager
      * Gets a named warp object from the list
      *
      * @param warpName the name of the warp to get
-     * @param owner the owner who is requesting to warp to this warp
+     * @param requestingPlayer the player who is requesting this warp
      *
      * @return a warp object
      */
-    public Warp getWarp(String warpName, Player owner)
+    public Warp getWarp(String warpName, Player requestingPlayer)
     {
         Warp retVal = null;
 
-        if(warpName != null && owner != null)
+        if(warpName != null && requestingPlayer != null)
         {
             String warpId;
             // if the warp name contains a dot, then this is an id, so we can use it as-is
             if(warpName.contains("."))
+            {
                 warpId = warpName;
-            else // if it doesn't have a dot, the user didn't specify owner, so default to self and build the id
-                warpId = Warp.buildId(owner.getDisplayName(), warpName);
+            }
+            else // if it doesn't have a dot, the user didn't specify an owner, so default to self and build the id
+                warpId = Warp.buildId(requestingPlayer.getDisplayName(), warpName);
 
             retVal = warpMap.get(warpId);
+
+            // we need to null this back out if this player doesn't have access to this warp
+            if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
+               retVal.getType() == Warp.Type.PRIVATE)
+            {
+                retVal = null;
+            }
         }
 
         return retVal;
@@ -138,18 +147,26 @@ public class WarpManager
             warpMap.put(warp.getId(), warp);
     }
 
-    public boolean deleteWarp(String warpName, Player owner)
+    /**
+     * Deletes a warp from the list
+     *
+     * @param warpName the name of the warp
+     * @param requestingPlayer the player requesting this action
+     *
+     * @return true if deleted, false if not
+     */
+    public boolean deleteWarp(String warpName, Player requestingPlayer)
     {
         boolean retVal = false;
 
-        if(warpName != null && owner != null)
+        if(warpName != null && requestingPlayer != null)
         {
             String warpId;
             // if the warp name contains a dot, then this is an id, so we can use it as-is
             if(warpName.contains("."))
                 warpId = warpName;
-            else // if it doesn't have a dot, the user didn't specify owner, so default to self and build the id
-                warpId = Warp.buildId(owner.getDisplayName(), warpName);
+            else // if it doesn't have a dot, the user didn't specify warp owner, so default to self and build the id
+                warpId = Warp.buildId(requestingPlayer.getDisplayName(), warpName);
 
             if(warpMap.containsKey(warpId))
             {
@@ -161,11 +178,20 @@ public class WarpManager
         return retVal;
     }
 
-    public boolean renameWarp(String warpName, String newWarpName, Player owner)
+    /**
+     * Renames a warp in the system.  Currently this is done with an add and a remove.
+     *
+     * @param warpName the name of the warp to rename
+     * @param newWarpName the new name of the warp
+     * @param requestingPlayer the player requesting this action
+     *
+     * @return true if renamed, false if not
+     */
+    public boolean renameWarp(String warpName, String newWarpName, Player requestingPlayer)
     {
         boolean retVal = false;
 
-        if(warpName != null && newWarpName != null && owner != null)
+        if(warpName != null && newWarpName != null && requestingPlayer != null)
         {
             String warpId;
             boolean renamingNonOwned = false;
@@ -175,8 +201,8 @@ public class WarpManager
                 warpId = warpName;
                 renamingNonOwned = true;
             }
-            else // if it doesn't have a dot, the user didn't specify owner, so default to self and build the id
-                warpId = Warp.buildId(owner.getDisplayName(), warpName);
+            else // if it doesn't have a dot, the user didn't specify warp owner, so default to self and build the id
+                warpId = Warp.buildId(requestingPlayer.getDisplayName(), warpName);
 
             // let's see if that warp exists
             if(warpMap.containsKey(warpId))
@@ -204,13 +230,24 @@ public class WarpManager
         return retVal;
     }
 
-    public boolean setWarpType(String warpName, Warp.Type type, Player owner)
+    /**
+     * Sets the warp type of an existing named warp
+     *
+     * @param warpName the name of the warp we're going to modify
+     * @param type the type to set that warp to
+     * @param requestingPlayer the player requesting this action
+     *
+     * @return true if type was set, false if not
+     */
+    public boolean setWarpType(String warpName, Warp.Type type, Player requestingPlayer)
     {
         boolean retVal = false;
 
-        if(warpName != null && type != null && owner != null)
+        // make sure we have valid params
+        if(warpName != null && type != null && requestingPlayer != null)
         {
-            Warp warp = getWarp(warpName, owner);
+            // get our warp
+            Warp warp = getWarp(warpName, requestingPlayer);
 
             if (warp != null)
             {

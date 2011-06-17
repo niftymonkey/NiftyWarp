@@ -8,6 +8,7 @@
     <artifactId>niftywarp</artifactId>
     <version>1.0-beta</version>
     <packaging>jar</packaging>
+    
     <build>
         <plugins>
             <plugin>
@@ -21,13 +22,12 @@
             </plugin>
         </plugins>
     </build>
+    
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>compile</scope>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>com.nijikokun.bukkit</groupId>-->
@@ -105,5 +105,20 @@
             </build>
         </profile>
     </profiles>
+
+    <scm>
+        <connection>scm:git:git://github.com/niftymonkey/NiftyWarp.git</connection>
+        <url>https://github.com/niftymonkey/NiftyWarp</url>
+        <developerConnection>scm:git:git@github.com:niftymonkey/NiftyWarp.git</developerConnection>
+    </scm>
+
+    <!-- Dropping in repository info, even though they don't seem to resolve currently -->
+    <repositories>
+        <!-- Repository for Bukkit -->
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/artifactory/repo</url>
+        </repository>
+    </repositories>
 
 </project>

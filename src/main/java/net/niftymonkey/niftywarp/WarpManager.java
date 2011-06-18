@@ -102,11 +102,14 @@ public class WarpManager
 
             retVal = warpMap.get(warpId);
 
-            // we need to null this back out if this player doesn't have access to this warp
-            if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
-               retVal.getType() == Warp.Type.PRIVATE)
+            if (retVal != null)
             {
-                retVal = null;
+                // we need to null this back out if this player doesn't have access to this warp
+                if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
+                   retVal.getType() == Warp.Type.PRIVATE)
+                {
+                    retVal = null;
+                }
             }
         }
 

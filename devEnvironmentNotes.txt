@@ -19,9 +19,11 @@ SOFTWARE LIST
 
 * Craftbukkit Server 0.0.1
   - http://wiki.bukkit.org/Setting_up_a_server
+  - Apparently, there's an "installer" link at the bottom, though I didn't try that
 
 * Bukkit API
-  - http://bukkit.org
+  - http://ci.bukkit.org/job/dev-Bukkit/ (the jar under the "Last Successful Artifacts")
+  - Alternatively, you can figure out a valid maven repository (if you find one, let me know :-) I'll update the pom)
 
 * Git/Github
   - http://github.com

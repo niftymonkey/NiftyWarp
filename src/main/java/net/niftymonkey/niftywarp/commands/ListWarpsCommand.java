@@ -60,7 +60,8 @@ public class ListWarpsCommand implements CommandExecutor
                 String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
                 // get the list of warps
-                List<Warp> warpsList = plugin.getWarpManager().getWarpsForUser(player.getDisplayName());
+                // TODO: implement getting warps for a different user (using the first param of the getWarpsForUser() method)
+                List<Warp> warpsList = plugin.getWarpManager().getWarpsForUser(player.getDisplayName(), player);
                 Collections.sort(warpsList);
 
                 if (warpsList.size() > 0)

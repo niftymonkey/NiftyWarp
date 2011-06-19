@@ -58,7 +58,7 @@ public class Warp implements Serializable, Comparable<Warp>
 
     public static String buildFullyQualifiedName(String owner, String warpName)
     {
-        return owner + "." + warpName;
+        return owner + AppStrings.FQL_DELIMITER + warpName;
     }
 
     ///////////////////////

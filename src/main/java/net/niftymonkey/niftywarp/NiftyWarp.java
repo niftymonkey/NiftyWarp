@@ -68,7 +68,7 @@ public class NiftyWarp extends JavaPlugin
         }
         catch (PersistenceException ex)
         {
-            System.out.println("Installing database for " + getDescription().getName() + " due to first time usage");
+            System.out.println(AppStrings.DB_INSTALL_PREFIX + getDescription().getName());
             installDDL();
         }
     }

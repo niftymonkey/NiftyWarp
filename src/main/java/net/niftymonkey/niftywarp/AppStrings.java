@@ -30,6 +30,7 @@ public class AppStrings
     public static final String WARP_SET_PREFIX          = "Type set for warp: ";
     public static final String AVAILABLE_WARPS_PREFIX   = "Available warps: ";
     public static final String NO_AVAILABLE_WARPS       = "No warps found.";
+    public static final String DB_INSTALL_PREFIX        = "Installing database due to first time usage for:  ";
 
     // message strings (private)
     private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";
@@ -40,10 +41,10 @@ public class AppStrings
     private static final String PROPERTY_MSG_SHOWPREFIX = "messages.showprefix";
 
     // constants
-    public static final String WARP_TYPE_PRIVATE = "private";
-    public static final String WARP_TYPE_LISTED = "listed";
+    public static final String WARP_TYPE_PRIVATE  = "private";
+    public static final String WARP_TYPE_LISTED   = "listed";
     public static final String WARP_TYPE_UNLISTED = "unlisted";
-
+    public static final String FQL_DELIMITER      = ".";
     /**
      * Gets the message that will be displayed in the server console when the addon is enabled
      *

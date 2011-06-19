@@ -51,31 +51,35 @@ public class DeleteWarpCommand implements CommandExecutor
             {
                 // Cast to the player object
                 Player player = (Player) sender;
-
-                // get the first argument which is the warp name
-                String warpName = args[0];
-
-                // get the addon message prefix
-                String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
-
-                // remove this warp from the warp map
-                boolean removed = plugin.getWarpManager().deleteWarp(warpName, player);
-                if (removed)
+                // Check permission
+                if(this.plugin.hasPermission(player, AppStrings.COMMAND_DELETE_PERMISSION, AppStrings.COMMAND_DELETE))
                 {
-                    // let them know that we successfully removed the warp
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARP_REMOVED_PREFIX +
-                                       ChatColor.WHITE + warpName);
-                }
-                else
-                {
-                    // let them know that we couldn't find that warp
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                       ChatColor.WHITE + warpName);
-                }
 
-                retVal = true;
+                    // get the first argument which is the warp name
+                    String warpName = args[0];
+
+                    // get the addon message prefix
+                    String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
+
+                    // remove this warp from the warp map
+                    boolean removed = plugin.getWarpManager().deleteWarp(warpName, player);
+                    if (removed)
+                    {
+                        // let them know that we successfully removed the warp
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.GREEN + AppStrings.WARP_REMOVED_PREFIX +
+                                           ChatColor.WHITE + warpName);
+                    }
+                    else
+                    {
+                        // let them know that we couldn't find that warp
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
+                                           ChatColor.WHITE + warpName);
+                    }
+
+                    retVal = true;
+                }
             }
         }
 

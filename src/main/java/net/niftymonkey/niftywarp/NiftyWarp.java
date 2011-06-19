@@ -1,5 +1,7 @@
 package net.niftymonkey.niftywarp;
 
+import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
 import net.niftymonkey.niftywarp.commands.AddWarpCommand;
 import net.niftymonkey.niftywarp.commands.AdminCommand;
 import net.niftymonkey.niftywarp.commands.DeleteWarpCommand;
@@ -7,8 +9,13 @@ import net.niftymonkey.niftywarp.commands.ListWarpsCommand;
 import net.niftymonkey.niftywarp.commands.RenameWarpCommand;
 import net.niftymonkey.niftywarp.commands.SetWarpTypeCommand;
 import net.niftymonkey.niftywarp.commands.WarpCommand;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.text.MessageFormat;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -21,6 +28,8 @@ import java.util.logging.Logger;
 public class NiftyWarp extends JavaPlugin
 {
     private static Logger log = Logger.getLogger("Minecraft");
+
+    public PermissionHandler permissionHandler;
 
     private WarpManager warpManager;
 
@@ -38,6 +47,9 @@ public class NiftyWarp extends JavaPlugin
         getCommand(AppStrings.COMMAND_SET).setExecutor(new SetWarpTypeCommand(this));
         getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));
 
+        // setup permissions
+        this.setupPermissions();
+
         log.info(AppStrings.getEnabledMessage(this));
     }
 
@@ -50,4 +62,71 @@ public class NiftyWarp extends JavaPlugin
     {
         return warpManager;
     }
+
+    public PermissionHandler getPermissionHandler()
+    {
+        return this.permissionHandler;
+    }
+
+    /**
+     * Courtesy of the example:
+     * https://github.com/TheYeti/Permissions/wiki/API-Reference
+     */
+    private void setupPermissions()
+    {
+      Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
+
+      if (this.permissionHandler == null) {
+          if (permissionsPlugin != null) {
+              this.permissionHandler = ((Permissions) permissionsPlugin).getHandler();
+          } else {
+              log.info("Permission system not detected, defaulting to OP");
+          }
+      }
+    }
+
+    /**
+     * Delegates to the permissions plugin
+     * @param inPlayer The Player
+     * @param inKey The string that represents the permission key, for example "net.niftymonkey.niftywarp.addwarp"
+     * @return
+     */
+    public boolean hasPermission(Player inPlayer, String inKey, String inCommandString)
+    {
+        boolean result = false;
+        String worldName = null;
+        String playerName = null;
+
+        if(inPlayer != null && inKey != null)
+        {
+            worldName = inPlayer.getWorld().getName();
+            playerName = inPlayer.getName();
+
+            if (this.permissionHandler.has(worldName, playerName, inKey))
+            {
+                result = true;
+            }
+            if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): Checking permission for " +
+                    "player = '"  + playerName + "', \nkey = '" + inKey +
+                    ", \ncommand = '" + inCommandString +
+                    "', \nresult = " + result);
+        }
+        else
+        {
+            if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): Player or key was NULL");
+        }
+        //--Notify player if permission was denied--
+        if(!result)
+        {
+            String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
+            //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
+            inPlayer.sendMessage(ChatColor.RED + usrMsg);
+            usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
+            //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
+            inPlayer.sendMessage(ChatColor.RED + usrMsg);
+            inPlayer.sendMessage(ChatColor.RED + inKey);
+        }
+        return result;
+    }
+
 }

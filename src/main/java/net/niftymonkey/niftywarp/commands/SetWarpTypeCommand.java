@@ -52,34 +52,37 @@ public class SetWarpTypeCommand implements CommandExecutor
             {
                 // Cast to the player object
                 Player player = (Player) sender;
-
-                // get the first argument which is the warp name
-                String warpName = args[0];
-                // get the second argument which is the warp type
-                String warpTypeStr = args[1];
-                Warp.Type type = Warp.Type.getTypeForString(warpTypeStr);
-
-                // get the addon message prefix
-                String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
-
-                // rename this warp from the warp map
-                boolean renamed = plugin.getWarpManager().setWarpType(warpName, type, player);
-                if (renamed)
+                // Check permission
+                if(this.plugin.hasPermission(player, AppStrings.COMMAND_SET_PERMISSION, AppStrings.COMMAND_SET))
                 {
-                    // let them know that we successfully renamed the warp
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARP_SET_PREFIX +
-                                       ChatColor.WHITE + warpName + type.getTypeColor() + " [" + warpTypeStr + "]");
-                }
-                else
-                {
-                    // let them know that we couldn't find that warp
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                       ChatColor.WHITE + warpName);
-                }
+                    // get the first argument which is the warp name
+                    String warpName = args[0];
+                    // get the second argument which is the warp type
+                    String warpTypeStr = args[1];
+                    Warp.Type type = Warp.Type.getTypeForString(warpTypeStr);
 
-                retVal = true;
+                    // get the addon message prefix
+                    String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
+
+                    // rename this warp from the warp map
+                    boolean renamed = plugin.getWarpManager().setWarpType(warpName, type, player);
+                    if (renamed)
+                    {
+                        // let them know that we successfully renamed the warp
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.GREEN + AppStrings.WARP_SET_PREFIX +
+                                           ChatColor.WHITE + warpName + type.getTypeColor() + " [" + warpTypeStr + "]");
+                    }
+                    else
+                    {
+                        // let them know that we couldn't find that warp
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
+                                           ChatColor.WHITE + warpName);
+                    }
+
+                    retVal = true;
+                }
             }
         }
 

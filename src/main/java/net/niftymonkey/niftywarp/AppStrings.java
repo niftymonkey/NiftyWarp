@@ -22,14 +22,16 @@ public class AppStrings
     public static final String COMMAND_WARP     = "nwwarp";
 
     // message strings (public)
-    public static final String WARPED_TO_PREFIX         = "Warped to:  ";
-    public static final String WARP_NOT_FOUND_PREFIX    = "No warp found for name:  ";
-    public static final String WARP_ADDED_PREFIX        = "Added warp: ";
-    public static final String WARP_REMOVED_PREFIX      = "Removed warp: ";
-    public static final String WARP_RENAMED_PREFIX      = "Renamed warp: ";
-    public static final String WARP_SET_PREFIX          = "Type set for warp: ";
-    public static final String AVAILABLE_WARPS_PREFIX   = "Available warps: ";
-    public static final String NO_AVAILABLE_WARPS       = "No warps found.";
+    public static final String WARPED_TO_PREFIX             = "Warped to:  ";
+    public static final String WARP_NOT_FOUND_PREFIX        = "No warp found for name:  ";
+    public static final String WARP_ADDED_PREFIX            = "Added warp: ";
+    public static final String WARP_REMOVED_PREFIX          = "Removed warp: ";
+    public static final String WARP_RENAMED_PREFIX          = "Renamed warp: ";
+    public static final String WARP_SET_PREFIX              = "Type set for warp: ";
+    public static final String AVAILABLE_WARPS_PREFIX       = "Available warps: ";
+    public static final String NO_AVAILABLE_WARPS           = "No warps found.";
+    public static final String INSUFFICIENT_PRIVELEGES_1    = "Sorry, you don't have permission to use '{0}'.";
+    public static final String INSUFFICIENT_PRIVELEGES_2    = "Please ask your server administrator about permission:";
 
     // message strings (private)
     private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";
@@ -43,6 +45,15 @@ public class AppStrings
     public static final String WARP_TYPE_PRIVATE = "private";
     public static final String WARP_TYPE_LISTED = "listed";
     public static final String WARP_TYPE_UNLISTED = "unlisted";
+
+    // command permissions Keys
+    public static final String COMMAND_ADD_PERMISSION      = "net.niftymonkey.niftywarp.nwadd";
+    public static final String COMMAND_ADMIN_PERMISSION    = "net.niftymonkey.niftywarp.nwadmin";
+    public static final String COMMAND_LIST_PERMISSION     = "net.niftymonkey.niftywarp.nwlist";
+    public static final String COMMAND_DELETE_PERMISSION   = "net.niftymonkey.niftywarp.nwdelete";
+    public static final String COMMAND_RENAME_PERMISSION   = "net.niftymonkey.niftywarp.nwrename";
+    public static final String COMMAND_SET_PERMISSION      = "net.niftymonkey.niftywarp.nwset";
+    public static final String COMMAND_WARP_PERMISSION     = "net.niftymonkey.niftywarp.nwwarp";
 
     /**
      * Gets the message that will be displayed in the server console when the addon is enabled

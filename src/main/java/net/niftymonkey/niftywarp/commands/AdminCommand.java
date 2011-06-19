@@ -5,6 +5,7 @@ import net.niftymonkey.niftywarp.NiftyWarp;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * User: Mark Lozano
@@ -44,8 +45,13 @@ public class AdminCommand implements CommandExecutor
         // check for the correct command name
         if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_ADMIN))
         {
-            // TODO: Implement me!
-            retVal = true;
+            // Cast to the player object
+            Player player = (Player) sender;
+            if(this.plugin.hasPermission(player, AppStrings.COMMAND_ADMIN_PERMISSION, AppStrings.COMMAND_ADMIN))
+            {
+                // TODO: Implement me!
+                retVal = true;
+            }
         }
 
         return retVal;

@@ -74,11 +74,12 @@ public class WarpManager
             // if the warp name contains a dot, then this is the fully qualified name, so we can use it as-is
             if(warpName.contains("."))
             {
+                retVal = database.find(Warp.class).where().ieq("fullyQualifiedName", warpName).findUnique();
                 // we need to null this back out if this player doesn't have access to this warp
-                if(retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
-                   retVal.getWarpType() != WarpType.PRIVATE)
+                if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
+                   retVal.getWarpType() == WarpType.PRIVATE)
                 {
-                    retVal = database.find(Warp.class).where().ieq("fullyQualifiedName", warpName).findUnique();
+                    retVal = null;
                 }
             }
             else // if it doesn't have a dot, the user didn't specify an owner, so default to self and build the fully qualified name

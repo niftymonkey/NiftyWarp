@@ -48,10 +48,11 @@ public class WarpManager
      * Gets the list of warps for the user
      *
      * @param playerName the name of the player whose warps should be listed
+     * @param requestingPlayer the name of the player requesting this list
      *
      * @return a list of warps that the player in the playerName parameter can use
      */
-    public List<Warp> getWarpsForUser(String playerName)
+    public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer)
     {
         List<Warp> retVal = new ArrayList<Warp>();
 
@@ -101,11 +102,14 @@ public class WarpManager
 
             retVal = warpMap.get(warpId);
 
-            // we need to null this back out if this player doesn't have access to this warp
-            if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
-               retVal.getType() == Warp.Type.PRIVATE)
+            if (retVal != null)
             {
-                retVal = null;
+                // we need to null this back out if this player doesn't have access to this warp
+                if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
+                   retVal.getType() == Warp.Type.PRIVATE)
+                {
+                    retVal = null;
+                }
             }
         }
 

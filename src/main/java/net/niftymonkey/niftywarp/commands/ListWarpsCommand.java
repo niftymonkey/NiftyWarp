@@ -73,15 +73,18 @@ public class ListWarpsCommand implements CommandExecutor
                     {
                         // get the warp
                         Warp warp = warpsList.get(i);
-                        // get the name
-                        String warpName = warp.getName();
 
-                        // if this is owned by someone else, we need to use the id instead so that it can be looked up correctly on use
+                        String warpName;
+                        // if this is owned by someone else, we need to show the fully qualified name instead so that it can be
+                        // looked up correctly on use
                         if(!warp.getOwner().equalsIgnoreCase(player.getDisplayName()))
-                            warpName = warp.getId();
+                            warpName = warp.getFullyQualifiedName();
+                        else
+                            warpName = warp.getName();
+
 
                         // append it to the string
-                        availableWarpStr += warp.getType().getTypeColor() + warpName;
+                        availableWarpStr += warp.getWarpType().getTypeColor() + warpName;
                         // increment counter
                         i++;
 

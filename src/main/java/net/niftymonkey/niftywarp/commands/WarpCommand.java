@@ -69,7 +69,7 @@ public class WarpCommand implements CommandExecutor
                     // let them know it worked
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
                                        ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
-                                       warp.getType().getTypeColor() + warpName);
+                                       warp.getWarpType().getTypeColor() + warpName);
                 }
                 else
                 {

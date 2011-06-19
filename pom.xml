@@ -29,6 +29,13 @@
             <artifactId>bukkit</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.avaje</groupId>
+            <artifactId>ebean</artifactId>
+            <version>2.7.3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>com.nijikokun.bukkit</groupId>-->
             <!--<artifactId>Permissions</artifactId>-->
@@ -112,7 +119,7 @@
         <developerConnection>scm:git:git@github.com:niftymonkey/NiftyWarp.git</developerConnection>
     </scm>
 
-    <!-- Dropping in repository info, even though they don't seem to resolve currently -->
+    <!-- Dropping in repository info, even though they don't seem to resolve for me -->
     <repositories>
         <!-- Repository for Bukkit -->
         <repository>

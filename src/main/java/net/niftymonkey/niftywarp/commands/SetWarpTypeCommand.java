@@ -2,7 +2,7 @@ package net.niftymonkey.niftywarp.commands;
 
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
-import net.niftymonkey.niftywarp.Warp;
+import net.niftymonkey.niftywarp.WarpType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -57,19 +57,19 @@ public class SetWarpTypeCommand implements CommandExecutor
                 String warpName = args[0];
                 // get the second argument which is the warp type
                 String warpTypeStr = args[1];
-                Warp.Type type = Warp.Type.getTypeForString(warpTypeStr);
+                WarpType warpType = WarpType.getTypeForString(warpTypeStr);
 
                 // get the addon message prefix
                 String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
                 // rename this warp from the warp map
-                boolean renamed = plugin.getWarpManager().setWarpType(warpName, type, player);
+                boolean renamed = plugin.getWarpManager().setWarpType(warpName, warpType, player);
                 if (renamed)
                 {
                     // let them know that we successfully renamed the warp
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
                                        ChatColor.GREEN + AppStrings.WARP_SET_PREFIX +
-                                       ChatColor.WHITE + warpName + type.getTypeColor() + " [" + warpTypeStr + "]");
+                                       ChatColor.WHITE + warpName + warpType.getTypeColor() + " [" + warpTypeStr + "]");
                 }
                 else
                 {

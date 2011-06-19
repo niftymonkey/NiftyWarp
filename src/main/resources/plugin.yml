@@ -1,6 +1,7 @@
 name: NiftyWarp
 main: net.niftymonkey.niftywarp.NiftyWarp
 version: 0.1
+database: true
 description: >
              A Nifty Warp plugin that allows private, public listed, and public unlisted warps
 commands:

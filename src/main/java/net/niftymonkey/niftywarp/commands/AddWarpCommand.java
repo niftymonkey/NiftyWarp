@@ -3,6 +3,7 @@ package net.niftymonkey.niftywarp.commands;
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
 import net.niftymonkey.niftywarp.Warp;
+import net.niftymonkey.niftywarp.WarpType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -58,8 +59,8 @@ public class AddWarpCommand implements CommandExecutor
                 // add this warp to the warp map
                 // TODO: handle warp type argument
                 Warp warp = plugin.getWarpManager().addWarp(warpName,
-                                                            player.getDisplayName(),
-                                                            Warp.Type.PUBLIC_LISTED,
+                                                            player,
+                                                            WarpType.PUBLIC_LISTED,
                                                             player.getLocation());
 
                 // get the addon message prefix
@@ -68,7 +69,7 @@ public class AddWarpCommand implements CommandExecutor
                 // let them know that we successfully created the warp
                 player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
                                    ChatColor.GREEN + AppStrings.WARP_ADDED_PREFIX +
-                                   warp.getType().getTypeColor() + warpName);
+                                   warp.getWarpType().getTypeColor() + warpName);
 
                 retVal = true;
             }

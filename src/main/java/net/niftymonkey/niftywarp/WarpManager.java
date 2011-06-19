@@ -1,13 +1,11 @@
 package net.niftymonkey.niftywarp;
 
+import com.avaje.ebean.EbeanServer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Class used to handle the loading, saving, and retrieval of warps
@@ -18,30 +16,12 @@ import java.util.Set;
  */
 public class WarpManager
 {
-    // warp id to warp object map
-    // using a map instead of a list for named lookup efficiency
-    private Map<String, Warp> warpMap;
+    // the database to use for warp persistence
+    private EbeanServer database;
 
-    public WarpManager()
+    public WarpManager(EbeanServer database)
     {
-        reloadWarps();
-    }
-
-    /**
-     * Loads the warp map from serialization (file, database, etc.)
-     */
-    public void reloadWarps()
-    {
-        warpMap = new HashMap<String, Warp>();
-        // TODO:  Implement THIS!
-    }
-
-    /**
-     * Serializes the warp map (to file, database, etc.)
-     */
-    public void serializeWarps()
-    {
-        // TODO:  Implement THIS!
+        this.database = database;
     }
 
     /**
@@ -55,13 +35,12 @@ public class WarpManager
     public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer)
     {
         List<Warp> retVal = new ArrayList<Warp>();
+        List<Warp> warpsFromDB = database.find(Warp.class).findList();
 
-        Set<String> warpIds = warpMap.keySet();
-        for (String warpId : warpIds)
+        for (Warp warp : warpsFromDB)
         {
-            Warp warp = warpMap.get(warpId);
             // if this is a public listed warp, it goes in everyone's list
-            if(warp.getType() == Warp.Type.PUBLIC_LISTED)
+            if(warp.getWarpType() == WarpType.PUBLIC_LISTED)
             {
                 retVal.add(warp);
             }
@@ -78,7 +57,7 @@ public class WarpManager
     }
 
     /**
-     * Gets a named warp object from the list
+     * Gets a named warp object from persistence
      *
      * @param warpName the name of the warp to get
      * @param requestingPlayer the player who is requesting this warp
@@ -91,25 +70,21 @@ public class WarpManager
 
         if(warpName != null && requestingPlayer != null)
         {
-            String warpId;
-            // if the warp name contains a dot, then this is an id, so we can use it as-is
+            String fullyQualifiedName;
+            // if the warp name contains a dot, then this is the fully qualified name, so we can use it as-is
             if(warpName.contains("."))
             {
-                warpId = warpName;
-            }
-            else // if it doesn't have a dot, the user didn't specify an owner, so default to self and build the id
-                warpId = Warp.buildId(requestingPlayer.getDisplayName(), warpName);
-
-            retVal = warpMap.get(warpId);
-
-            if (retVal != null)
-            {
                 // we need to null this back out if this player doesn't have access to this warp
-                if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
-                   retVal.getType() == Warp.Type.PRIVATE)
+                if(retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
+                   retVal.getWarpType() != WarpType.PRIVATE)
                 {
-                    retVal = null;
+                    retVal = database.find(Warp.class).where().ieq("fullyQualifiedName", warpName).findUnique();
                 }
+            }
+            else // if it doesn't have a dot, the user didn't specify an owner, so default to self and build the fully qualified name
+            {
+                fullyQualifiedName = Warp.buildFullyQualifiedName(requestingPlayer.getDisplayName(), warpName);
+                retVal = database.find(Warp.class).where().ieq("fullyQualifiedName", fullyQualifiedName).findUnique();
             }
         }
 
@@ -119,36 +94,29 @@ public class WarpManager
     /**
      * Adds a warp to the list using the supplied parameters
      *
+     *
      * @param warpName the name of the warp
      * @param owner the player creating this warp
-     * @param type the type of warp this is
+     * @param warpType the warpType for this warp
      * @param location the {@link org.bukkit.Location} object that represents this warp
      *
      * @return the Warp that was created
      */
-    public Warp addWarp(String warpName, String owner, Warp.Type type, Location location)
+    public Warp addWarp(String warpName, Player owner, WarpType warpType, Location location)
     {
-        Warp retVal = new Warp();
+        Warp retVal = getWarp(warpName, owner);
+
+        if (retVal == null)
+            retVal = new Warp();
+
         retVal.setName(warpName);
-        retVal.setOwner(owner);
-        retVal.setType(type);
+        retVal.setOwner(owner.getDisplayName());
+        retVal.setWarpType(warpType);
         retVal.setLocation(location);
 
-        // add it to our list
-        addWarp(retVal);
+        database.save(retVal);
 
         return retVal;
-    }
-
-    /**
-     * Overloaded method for use in adding warps that already have been created by some other means
-     *
-     * @param warp the warp object
-     */
-    private void addWarp(Warp warp)
-    {
-        if (warp != null)
-            warpMap.put(warp.getId(), warp);
     }
 
     /**
@@ -165,16 +133,12 @@ public class WarpManager
 
         if(warpName != null && requestingPlayer != null)
         {
-            String warpId;
-            // if the warp name contains a dot, then this is an id, so we can use it as-is
-            if(warpName.contains("."))
-                warpId = warpName;
-            else // if it doesn't have a dot, the user didn't specify warp owner, so default to self and build the id
-                warpId = Warp.buildId(requestingPlayer.getDisplayName(), warpName);
+            Warp warp = getWarp(warpName, requestingPlayer);
 
-            if(warpMap.containsKey(warpId))
+            if(warp != null)
             {
-                warpMap.remove(warpId);
+                database.delete(warp);
+
                 retVal = true;
             }
         }
@@ -183,7 +147,7 @@ public class WarpManager
     }
 
     /**
-     * Renames a warp in the system.  Currently this is done with an add and a remove.
+     * Renames a warp in the system.
      *
      * @param warpName the name of the warp to rename
      * @param newWarpName the new name of the warp
@@ -197,38 +161,20 @@ public class WarpManager
 
         if(warpName != null && newWarpName != null && requestingPlayer != null)
         {
-            String warpId;
-            boolean renamingNonOwned = false;
-            // if the warp name contains a dot, then this is an id, so we can use it as-is
-            if(warpName.contains("."))
-            {
-                warpId = warpName;
-                renamingNonOwned = true;
-            }
-            else // if it doesn't have a dot, the user didn't specify warp owner, so default to self and build the id
-                warpId = Warp.buildId(requestingPlayer.getDisplayName(), warpName);
+            // since it exists, let's get it out so we can modify it
+            Warp warp = getWarp(warpName, requestingPlayer);
 
-            // let's see if that warp exists
-            if(warpMap.containsKey(warpId))
-            {
-                // since it exists, let's get it out so we can modify it
-                Warp warp = warpMap.get(warpId);
+            // if we're changing one we don't own, we only need to change the name to the part after the dot
+            if(!warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
+                newWarpName = newWarpName.substring(newWarpName.indexOf(".")+1);
 
-                // if we're changing one we don't own, we only need to change the name to the part after the dot
-                if(renamingNonOwned)
-                    newWarpName = newWarpName.substring(newWarpName.indexOf(".")+1);
+            // change the name
+            warp.setName(newWarpName);
 
-                // change the name
-                warp.setName(newWarpName);
+            // update the database
+            database.update(warp);
 
-                // add it to the map
-                addWarp(warp);
-
-                // remove the old entry
-                warpMap.remove(warpId);
-
-                retVal = true;
-            }
+            retVal = true;
         }
 
         return retVal;
@@ -243,7 +189,7 @@ public class WarpManager
      *
      * @return true if type was set, false if not
      */
-    public boolean setWarpType(String warpName, Warp.Type type, Player requestingPlayer)
+    public boolean setWarpType(String warpName, WarpType type, Player requestingPlayer)
     {
         boolean retVal = false;
 
@@ -255,8 +201,10 @@ public class WarpManager
 
             if (warp != null)
             {
-                // change the type
-                warp.setType(type);
+                // change the warpType
+                warp.setWarpType(type);
+                // update the database
+                database.update(warp);
 
                 retVal = true;
             }

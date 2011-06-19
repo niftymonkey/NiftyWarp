@@ -10,7 +10,7 @@ WARP TYPES:
 - When listing warps, unlisted warps will only show up the their owner's lists.  However, when using warps, anyone can use the warp by typing the fully qualified name of the warp.  This type is useful if you want create useful warps to places that you can let your friends know about, but you don't want to clutter up everyone's list.
 
 "listed"
-- This type of warp is able to be seen and used by anyone.  
+- This type of warp is able to be seen and used by anyone.
 
 
 WARPING:

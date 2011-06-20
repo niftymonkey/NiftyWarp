@@ -1,11 +1,12 @@
 name: NiftyWarp
 main: net.niftymonkey.niftywarp.NiftyWarp
-version: 0.1
+version: 1.0-beta
+database: true
 description: >
              A Nifty Warp plugin that allows private, public listed, and public unlisted warps
 commands:
    nwadd:
-      aliases: [nwa]
+      aliases: [nwa, addwarp, createwarp, setwarp]
       description: Sets a named warp to your current location
       usage: |
            /<command> <warpname> [private|listed|unlisted]
@@ -16,7 +17,7 @@ commands:
       usage: |
            /<command> enable|disable <player>
    nwdelete:
-      aliases: [nwd]
+      aliases: [nwd, deletewarp, removewarp]
       description: Deletes a named warp
       usage: |
            /<command> [<owner>.]<warpname>
@@ -25,13 +26,13 @@ commands:
            /<command> niftymonkey.hilltop
            The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner
    nwlist:
-      aliases: [nwl]
+      aliases: [nwl, listwarps]
       description: Lists all of the warps available to you
       usage: |
            /<command> [private|listed|unlisted]
            If no type is provided, will show all warps you own, plus any public-listed warps.
    nwrename:
-      aliases: [nwr]
+      aliases: [nwr, renamewarp]
       description: Renames a named warp
       usage: |
            /<command> [<owner>.]<warpname> [<owner>.]<newwarpname>
@@ -40,12 +41,12 @@ commands:
            /<command> niftymonkey.hilltop niftymonkey.mountaintop
            The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner
    nwset:
-      aliases: [nws]
+      aliases: [nws, setwarp, setwarptype]
       description: Sets the type of an existing named warp
       usage: |
            /<command> [<owner>.]<warpname> private|listed|unlisted
    nwwarp:
-      aliases: [nw, nww]
+      aliases: [nw, nww, warp]
       description: Warps you to a named warp location
       usage: |
            /<command> [<owner>.]<warpname>

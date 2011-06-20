@@ -3,6 +3,7 @@ package net.niftymonkey.niftywarp.commands;
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
 import net.niftymonkey.niftywarp.Warp;
+import net.niftymonkey.niftywarp.WarpType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -56,22 +57,22 @@ public class AddWarpCommand implements CommandExecutor
                 if(this.plugin.hasPermission(player, AppStrings.COMMAND_ADD_PERMISSION, AppStrings.COMMAND_ADD))
                 {
 
-                    // get the first argument which is the warp name
-                    String warpName = args[0];
-                    // add this warp to the warp map
-                    // TODO: handle warp type argument
-                    Warp warp = plugin.getWarpManager().addWarp(warpName,
-                                                                player.getDisplayName(),
-                                                                Warp.Type.PUBLIC_LISTED,
-                                                                player.getLocation());
+                // get the first argument which is the warp name
+                String warpName = args[0];
+                // add this warp to the warp map
+                // TODO: handle warp type argument
+                Warp warp = plugin.getWarpManager().addWarp(warpName,
+                                                            player,
+                                                            WarpType.PUBLIC_LISTED,
+                                                            player.getLocation());
 
-                    // get the addon message prefix
-                    String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
+                // get the addon message prefix
+                String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
-                    // let them know that we successfully created the warp
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARP_ADDED_PREFIX +
-                                       warp.getType().getTypeColor() + warpName);
+                // let them know that we successfully created the warp
+                player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                   ChatColor.GREEN + AppStrings.WARP_ADDED_PREFIX +
+                                   warp.getWarpType().getTypeColor() + warpName);
 
                     retVal = true;
                 }

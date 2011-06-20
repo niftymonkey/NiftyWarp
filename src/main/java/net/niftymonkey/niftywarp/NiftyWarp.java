@@ -16,6 +16,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -35,8 +38,11 @@ public class NiftyWarp extends JavaPlugin
 
     public void onEnable()
     {
+        // setup the persistence database
+        setupDatabase();
+
         // create the warp manager
-        warpManager = new WarpManager();
+        warpManager = new WarpManager(getDatabase());
 
         // register commands
         getCommand(AppStrings.COMMAND_ADD).setExecutor(new AddWarpCommand(this));
@@ -130,3 +136,32 @@ public class NiftyWarp extends JavaPlugin
     }
 
 }
+
+    /**
+     * Sets up the database
+     */
+    private void setupDatabase()
+    {
+        try
+        {
+            getDatabase().find(Warp.class).findRowCount();
+        }
+        catch (PersistenceException ex)
+        {
+            System.out.println(AppStrings.DB_INSTALL_PREFIX + getDescription().getName());
+            installDDL();
+        }
+    }
+
+    @Override
+    /**
+     * Gets the database classes
+     */
+    public List<Class<?>> getDatabaseClasses()
+    {
+        List<Class<?>> list = new ArrayList<Class<?>>();
+        list.add(Warp.class);
+        return list;
+    }
+}
+

@@ -34,6 +34,12 @@
             <artifactId>Permissions</artifactId>
             <version>3.1.3</version>
         </dependency>
+            <groupId>org.avaje</groupId>
+            <artifactId>ebean</artifactId>
+            <version>2.7.3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <profiles>
         <!--
@@ -117,11 +123,6 @@
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/artifactory/repo</url>
         </repository>
-        <repository>
-            <id>webbukkit-repo</id>
-            <url>http://webbukkit.org/jenkins/builds/permissions/2011-06-06_21-18-58/</url>
-        </repository>
-
     </repositories>
 
 </project>

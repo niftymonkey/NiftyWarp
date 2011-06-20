@@ -1,11 +1,19 @@
 package net.niftymonkey.niftywarp;
 
+import com.avaje.ebean.validation.Length;
+import com.avaje.ebean.validation.NotEmpty;
+import com.avaje.ebean.validation.NotNull;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Warp object
@@ -14,57 +22,29 @@ import java.io.Serializable;
  * Date: 6/14/11
  * Time: 12:30 AM
  */
+@Entity()
+@Table(name="nw_warp")
 public class Warp implements Serializable, Comparable<Warp>
 {
-    public enum Type
-    {
-        // only the owner of this warp can see it in their list, and only the owner can use this warp
-        PRIVATE,
-
-        // Anyone can see this warp in their list
-        PUBLIC_LISTED,
-
-        // Only the owner of this warp will see it in their list, however others can still use this warp
-        PUBLIC_UNLISTED;
-
-        public static Type getTypeForString(String typeStr)
-        {
-            // default to private
-            Type retVal = PRIVATE;
-
-            if(typeStr.equals(AppStrings.WARP_TYPE_LISTED))
-                retVal = PUBLIC_LISTED;
-            if(typeStr.equals(AppStrings.WARP_TYPE_UNLISTED))
-                retVal = PUBLIC_UNLISTED;
-
-            return retVal;
-        }
-
-        /**
-         * Gets the ChatColor for the type of Warp this is
-         *
-         * @return the relevant ChatColor
-         */
-        public ChatColor getTypeColor()
-        {
-            ChatColor retVal = ChatColor.WHITE;
-
-            if(this.equals(PRIVATE))
-                retVal = ChatColor.DARK_GRAY;
-            if(this.equals(PUBLIC_UNLISTED))
-                retVal = ChatColor.DARK_PURPLE;
-
-            return retVal;
-        }
-    }
+    @Id
+    private int id;
+    @NotNull
+    private String   fullyQualifiedName;
 
     // warp creation parameters
+
+    @Length(max=30)
+    @NotEmpty
     private String   name;
+    @NotNull
     private String   owner;
-    private Warp.Type type;
+    @NotNull
+    @Enumerated(STRING)
+    private WarpType warpType;
 
     // LOCATION ATTRIBUTES - in here separately for serialization purposes
 
+    @NotEmpty
     private String worldName;
     private double x;
     private double y;
@@ -72,19 +52,37 @@ public class Warp implements Serializable, Comparable<Warp>
     private float  pitch;
     private float  yaw;
 
+    ///////////////////////
+    // Helper Methods
+    ///////////////////////
 
-    public static String buildId(String owner, String warpName)
+    public static String buildFullyQualifiedName(String owner, String warpName)
     {
-        return owner + "." + warpName;
+        return owner + AppStrings.FQL_DELIMITER + warpName;
     }
 
     ///////////////////////
     // Getters and Setters
     ///////////////////////
 
-    public String getId()
+    public int getId()
     {
-        return buildId(getOwner(), getName());
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public String getFullyQualifiedName()
+    {
+        return fullyQualifiedName;
+    }
+
+    public void setFullyQualifiedName(String fullyQualifiedName)
+    {
+        this.fullyQualifiedName = fullyQualifiedName;
     }
 
     public String getName()
@@ -95,6 +93,7 @@ public class Warp implements Serializable, Comparable<Warp>
     public void setName(String name)
     {
         this.name = name;
+        setFullyQualifiedName(buildFullyQualifiedName(getOwner(), getName()));
     }
 
     public String getOwner()
@@ -105,16 +104,17 @@ public class Warp implements Serializable, Comparable<Warp>
     public void setOwner(String owner)
     {
         this.owner = owner;
+        setFullyQualifiedName(buildFullyQualifiedName(getOwner(), getName()));
     }
 
-    public Warp.Type getType()
+    public WarpType getWarpType()
     {
-        return type;
+        return warpType;
     }
 
-    public void setType(Warp.Type type)
+    public void setWarpType(WarpType warpType)
     {
-        this.type = type;
+        this.warpType = warpType;
     }
 
     public void setLocation(Location location)
@@ -195,6 +195,6 @@ public class Warp implements Serializable, Comparable<Warp>
 
     public int compareTo(Warp o)
     {
-        return getId().compareTo(o.getId());
+        return getFullyQualifiedName().compareTo(o.getFullyQualifiedName());
     }
 }

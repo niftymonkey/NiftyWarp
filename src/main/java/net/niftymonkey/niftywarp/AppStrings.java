@@ -50,13 +50,13 @@ public class AppStrings
 	public static final String FQL_DELIMITER      = ".";
 
     // command permissions Keys
-    public static final String COMMAND_ADD_PERMISSION      = "net.niftymonkey.niftywarp.nwadd";
-    public static final String COMMAND_ADMIN_PERMISSION    = "net.niftymonkey.niftywarp.nwadmin";
-    public static final String COMMAND_LIST_PERMISSION     = "net.niftymonkey.niftywarp.nwlist";
-    public static final String COMMAND_DELETE_PERMISSION   = "net.niftymonkey.niftywarp.nwdelete";
-    public static final String COMMAND_RENAME_PERMISSION   = "net.niftymonkey.niftywarp.nwrename";
-    public static final String COMMAND_SET_PERMISSION      = "net.niftymonkey.niftywarp.nwset";
-    public static final String COMMAND_WARP_PERMISSION     = "net.niftymonkey.niftywarp.nwwarp";
+    public static final String COMMAND_ADD_PERMISSION      = "niftywarp.use.add";
+    public static final String COMMAND_ADMIN_PERMISSION    = "niftywarp.admin.toggleuse";
+    public static final String COMMAND_LIST_PERMISSION     = "niftywarp.use.list";
+    public static final String COMMAND_DELETE_PERMISSION   = "niftywarp.use.delete";
+    public static final String COMMAND_RENAME_PERMISSION   = "niftywarp.use.rename";
+    public static final String COMMAND_SET_PERMISSION      = "niftywarp.use.set";
+    public static final String COMMAND_WARP_PERMISSION     = "niftywarp.use.warp";
 
 
     /**

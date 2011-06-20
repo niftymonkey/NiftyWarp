@@ -14,11 +14,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.text.MessageFormat;
-import java.util.logging.Level;
 import javax.persistence.PersistenceException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -94,8 +94,10 @@ public class NiftyWarp extends JavaPlugin
     /**
      * Delegates to the permissions plugin
      * @param inPlayer The Player
-     * @param inKey The string that represents the permission key, for example "net.niftymonkey.niftywarp.addwarp"
-     * @return
+     * @param inKey The string that represents the permission key, for example "niftywarp.add"
+     * @param inCommandString the command string that the user typed, for example "nwadd"
+     *
+     * @return true if the user has permission, false if not
      */
     public boolean hasPermission(Player inPlayer, String inKey, String inCommandString)
     {
@@ -112,25 +114,26 @@ public class NiftyWarp extends JavaPlugin
             {
                 result = true;
             }
-            if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): Checking permission for " +
+            if(log.isLoggable(Level.INFO)) log.info("hasPermission(): Checking permission for " +
                     "player = '"  + playerName + "', \nkey = '" + inKey +
-                    ", \ncommand = '" + inCommandString +
+                    "', \ncommand = '" + inCommandString +
                     "', \nresult = " + result);
+
+            //--Notify player if permission was denied--
+            if(!result)
+            {
+                String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
+                //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
+                inPlayer.sendMessage(ChatColor.RED + usrMsg);
+                usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
+                //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
+                inPlayer.sendMessage(ChatColor.RED + usrMsg);
+                inPlayer.sendMessage(ChatColor.RED + inKey);
+            }
         }
         else
         {
             if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): Player or key was NULL");
-        }
-        //--Notify player if permission was denied--
-        if(!result)
-        {
-            String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
-            //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
-            inPlayer.sendMessage(ChatColor.RED + usrMsg);
-            usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
-            //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
-            inPlayer.sendMessage(ChatColor.RED + usrMsg);
-            inPlayer.sendMessage(ChatColor.RED + inKey);
         }
         return result;
     }

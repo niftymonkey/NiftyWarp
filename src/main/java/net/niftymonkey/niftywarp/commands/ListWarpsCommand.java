@@ -55,10 +55,10 @@ public class ListWarpsCommand implements CommandExecutor
             {
                 // Cast to the player object
                 Player player = (Player) sender;
+
                 // Check permission
                 if(this.plugin.hasPermission(player, AppStrings.COMMAND_LIST_PERMISSION, AppStrings.COMMAND_LIST))
                 {
-
                     // get the addon message prefix
                     String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
@@ -69,9 +69,6 @@ public class ListWarpsCommand implements CommandExecutor
 
                     if (warpsList.size() > 0)
                     {
-
-                        if (warpsList.size() > 0)
-                        {
                         String availableWarpStr = "";
 
                         int i = 0;
@@ -110,8 +107,7 @@ public class ListWarpsCommand implements CommandExecutor
                                            ChatColor.WHITE + AppStrings.NO_AVAILABLE_WARPS);
                     }
 
-                        retVal = true;
-                    }
+                    retVal = true;
                 }
             }
         }

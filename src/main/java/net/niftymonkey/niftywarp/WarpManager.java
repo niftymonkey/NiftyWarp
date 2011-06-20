@@ -1,6 +1,6 @@
 package net.niftymonkey.niftywarp;
 
-import com.avaje.ebean.EbeanServer;
+import net.niftymonkey.niftywarp.exceptions.InternalPermissionsException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -16,12 +16,14 @@ import java.util.List;
  */
 public class WarpManager
 {
-    // the database to use for warp persistence
-    private EbeanServer database;
+    /**
+     * The plugin
+     */
+    private final NiftyWarp plugin;
 
-    public WarpManager(EbeanServer database)
+    public WarpManager(NiftyWarp niftyWarp)
     {
-        this.database = database;
+        this.plugin = niftyWarp;
     }
 
     /**
@@ -35,7 +37,7 @@ public class WarpManager
     public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer)
     {
         List<Warp> retVal = new ArrayList<Warp>();
-        List<Warp> warpsFromDB = database.find(Warp.class).findList();
+        List<Warp> warpsFromDB = plugin.getDatabase().find(Warp.class).findList();
 
         for (Warp warp : warpsFromDB)
         {
@@ -74,7 +76,7 @@ public class WarpManager
             // if the warp name contains a dot, then this is the fully qualified name, so we can use it as-is
             if(warpName.contains("."))
             {
-                retVal = database.find(Warp.class).where().ieq("fullyQualifiedName", warpName).findUnique();
+                retVal = plugin.getDatabase().find(Warp.class).where().ieq("fullyQualifiedName", warpName).findUnique();
                 // we need to null this back out if this player doesn't have access to this warp
                 if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
                    retVal.getWarpType() == WarpType.PRIVATE)
@@ -85,7 +87,7 @@ public class WarpManager
             else // if it doesn't have a dot, the user didn't specify an owner, so default to self and build the fully qualified name
             {
                 fullyQualifiedName = Warp.buildFullyQualifiedName(requestingPlayer.getDisplayName(), warpName);
-                retVal = database.find(Warp.class).where().ieq("fullyQualifiedName", fullyQualifiedName).findUnique();
+                retVal = plugin.getDatabase().find(Warp.class).where().ieq("fullyQualifiedName", fullyQualifiedName).findUnique();
             }
         }
 
@@ -115,7 +117,7 @@ public class WarpManager
         retVal.setWarpType(warpType);
         retVal.setLocation(location);
 
-        database.save(retVal);
+        plugin.getDatabase().save(retVal);
 
         return retVal;
     }
@@ -127,20 +129,32 @@ public class WarpManager
      * @param requestingPlayer the player requesting this action
      *
      * @return true if deleted, false if not
+     *
+     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
      */
     public boolean deleteWarp(String warpName, Player requestingPlayer)
+        throws InternalPermissionsException
     {
         boolean retVal = false;
 
         if(warpName != null && requestingPlayer != null)
         {
             Warp warp = getWarp(warpName, requestingPlayer);
-
             if(warp != null)
             {
-                database.delete(warp);
+                boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
+                boolean hasAdminDelete = plugin.hasPermission(requestingPlayer,
+                                                              AppStrings.COMMAND_ADMIN_DELETE_PERMISSION,
+                                                              AppStrings.COMMAND_DELETE);
 
-                retVal = true;
+                // either they're deleting their own, or they aren't but they have the admin delete priv
+                if( isOwner || hasAdminDelete && !isOwner )
+                {
+                    plugin.getDatabase().delete(warp);
+                    retVal = true;
+                }
+                else
+                    throw new InternalPermissionsException(AppStrings.WARP_CANNOT_REMOVE_OTHERS);
             }
         }
 
@@ -155,8 +169,11 @@ public class WarpManager
      * @param requestingPlayer the player requesting this action
      *
      * @return true if renamed, false if not
+     *
+     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
      */
     public boolean renameWarp(String warpName, String newWarpName, Player requestingPlayer)
+        throws InternalPermissionsException
     {
         boolean retVal = false;
 
@@ -169,13 +186,24 @@ public class WarpManager
             if(!warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
                 newWarpName = newWarpName.substring(newWarpName.indexOf(".")+1);
 
-            // change the name
-            warp.setName(newWarpName);
+            boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
+            boolean hasAdminRename = plugin.hasPermission(requestingPlayer,
+                                                          AppStrings.COMMAND_ADMIN_RENAME_PERMISSION,
+                                                          AppStrings.COMMAND_RENAME);
 
-            // update the database
-            database.update(warp);
+            // either they're renaming their own, or they aren't but they have the admin rename priv
+            if( isOwner || hasAdminRename && !isOwner )
+            {
+                // change the name
+                warp.setName(newWarpName);
 
-            retVal = true;
+                // update the database
+                plugin.getDatabase().update(warp);
+
+                retVal = true;
+            }
+            else
+                throw new InternalPermissionsException(AppStrings.WARP_CANNOT_RENAME_OTHERS);
         }
 
         return retVal;
@@ -189,8 +217,11 @@ public class WarpManager
      * @param requestingPlayer the player requesting this action
      *
      * @return true if type was set, false if not
+     *
+     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
      */
     public boolean setWarpType(String warpName, WarpType type, Player requestingPlayer)
+        throws InternalPermissionsException
     {
         boolean retVal = false;
 
@@ -202,12 +233,22 @@ public class WarpManager
 
             if (warp != null)
             {
-                // change the warpType
-                warp.setWarpType(type);
-                // update the database
-                database.update(warp);
+                boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
+                boolean hasAdminSetType = plugin.hasPermission(requestingPlayer,
+                                                               AppStrings.COMMAND_ADMIN_SET_PERMISSION,
+                                                               AppStrings.COMMAND_SET);
 
-                retVal = true;
+                // either they're setting type on their own, or they aren't but they have the admin set type priv
+                if( isOwner || hasAdminSetType && !isOwner )
+                {
+                    // change the warpType
+                    warp.setWarpType(type);
+                    // update the database
+                    plugin.getDatabase().update(warp);
+                    retVal = true;
+                }
+                else
+                    throw new InternalPermissionsException(AppStrings.WARP_CANNOT_SET_OTHERS);
             }
         }
 

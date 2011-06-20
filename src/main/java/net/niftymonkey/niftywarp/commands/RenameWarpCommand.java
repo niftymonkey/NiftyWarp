@@ -2,6 +2,7 @@ package net.niftymonkey.niftywarp.commands;
 
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
+import net.niftymonkey.niftywarp.exceptions.InternalPermissionsException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,7 +48,7 @@ public class RenameWarpCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_RENAME_PERMISSION, label))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_RENAME_PERMISSION, AppStrings.COMMAND_RENAME))
         {
             // make sure we have two arguments (name and new name)
             if (args.length == 2)
@@ -60,21 +61,30 @@ public class RenameWarpCommand implements CommandExecutor
                 // get the addon message prefix
                 String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
-                // rename this warp from the warp map
-                boolean renamed = plugin.getWarpManager().renameWarp(warpName, newWarpName, player);
-                if (renamed)
+                try
                 {
-                    // let them know that we successfully renamed the warp
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARP_RENAMED_PREFIX +
-                                       ChatColor.WHITE + warpName + " --> " + newWarpName);
+                    // rename this warp from the warp map
+                    boolean renamed = plugin.getWarpManager().renameWarp(warpName, newWarpName, player);
+                    if (renamed)
+                    {
+                        // let them know that we successfully renamed the warp
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.GREEN + AppStrings.WARP_RENAMED_PREFIX +
+                                           ChatColor.WHITE + warpName + " --> " + newWarpName);
+                    }
+                    else
+                    {
+                        // let them know that we couldn't find that warp
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
+                                           ChatColor.WHITE + warpName);
+                    }
                 }
-                else
+                catch (InternalPermissionsException e)
                 {
-                    // let them know that we couldn't find that warp
+                    // let them know they don't have permission to do that
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                       ChatColor.WHITE + warpName);
+                                       ChatColor.RED + e.getMessage());
                 }
 
                 retVal = true;

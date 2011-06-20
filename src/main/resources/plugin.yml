@@ -11,11 +11,6 @@ commands:
       usage: |
            /<command> <warpname> [private|listed|unlisted]
            Type defaults to private.
-   nwadmin:
-      aliases: [nw+]
-      description: Admin command that enables or disables a player's ability to use warp
-      usage: |
-           /<command> enable|disable <player>
    nwdelete:
       aliases: [nwd, deletewarp, removewarp]
       description: Deletes a named warp

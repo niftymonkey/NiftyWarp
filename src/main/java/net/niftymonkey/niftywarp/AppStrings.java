@@ -13,27 +13,30 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class AppStrings
 {
     // commands
-    public static final String COMMAND_ADD      = "nwadd";
-    public static final String COMMAND_ADMIN    = "nwadmin";
-    public static final String COMMAND_LIST     = "nwlist";
-    public static final String COMMAND_DELETE   = "nwdelete";
-    public static final String COMMAND_RENAME   = "nwrename";
-    public static final String COMMAND_SET      = "nwset";
-    public static final String COMMAND_WARP     = "nwwarp";
+    public static final String COMMAND_ADD       = "nwadd";
+    public static final String COMMAND_LIST      = "nwlist";
+    public static final String COMMAND_DELETE    = "nwdelete";
+    public static final String COMMAND_RENAME    = "nwrename";
+    public static final String COMMAND_SET       = "nwset";
+    public static final String COMMAND_WARP      = "nwwarp";
 
     // message strings (public)
-    public static final String WARPED_TO_PREFIX             = "Warped to:  ";
-    public static final String WARP_NOT_FOUND_PREFIX        = "No warp found for name:  ";
-    public static final String WARP_ADDED_PREFIX            = "Added warp: ";
-    public static final String WARP_REMOVED_PREFIX          = "Removed warp: ";
-    public static final String WARP_RENAMED_PREFIX          = "Renamed warp: ";
-    public static final String WARP_SET_PREFIX              = "Type set for warp: ";
-    public static final String AVAILABLE_WARPS_PREFIX       = "Available warps: ";
-    public static final String NO_AVAILABLE_WARPS           = "No warps found.";
-    public static final String DB_INSTALL_PREFIX            = "Installing database due to first time usage for:  ";
-    public static final String INSUFFICIENT_PRIVELEGES_1    = "Sorry, you don't have permission to use '{0}'.";
-    public static final String INSUFFICIENT_PRIVELEGES_2    = "Please ask your server administrator about permission:";
-    public static final String WARP_TYPE_NOT_FOUND_SUFFIX   = " is not a valid warp type.";
+    public static final String WARPED_TO_PREFIX           = "Warped to:  ";
+    public static final String WARP_NOT_FOUND_PREFIX      = "No warp found for name:  ";
+    public static final String WARP_ADDED_PREFIX          = "Added warp: ";
+    public static final String WARP_REMOVED_PREFIX        = "Removed warp: ";
+    public static final String WARP_RENAMED_PREFIX        = "Renamed warp: ";
+    public static final String WARP_SET_PREFIX            = "Type set for warp: ";
+    public static final String AVAILABLE_WARPS_PREFIX     = "Available warps: ";
+    public static final String NO_AVAILABLE_WARPS         = "No warps found.";
+    public static final String DB_INSTALL_PREFIX          = "Installing database due to first time usage for:  ";
+    public static final String INSUFFICIENT_PRIVELEGES_1  = "Sorry, you don't have permission to use '{0}'.";
+    public static final String INSUFFICIENT_PRIVELEGES_2  = "Please ask your server administrator about permission:";
+    public static final String WARP_TYPE_NOT_FOUND_SUFFIX = " is not a valid warp type.";
+    public static final String WARP_CANNOT_REMOVE_OTHERS  = "You do not have permission to delete someone else's warp.";
+    public static final String WARP_CANNOT_RENAME_OTHERS  = "You do not have permission to rename someone else's warp.";
+    public static final String WARP_CANNOT_SET_OTHERS     = "You do not have permission to set someone else's warp type.";
+
 
     // message strings (private)
     private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";
@@ -51,12 +54,15 @@ public class AppStrings
 
     // command permissions Keys
     public static final String COMMAND_ADD_PERMISSION      = "niftywarp.use.add";
-    public static final String COMMAND_ADMIN_PERMISSION    = "niftywarp.admin.toggleuse";
     public static final String COMMAND_LIST_PERMISSION     = "niftywarp.use.list";
     public static final String COMMAND_DELETE_PERMISSION   = "niftywarp.use.delete";
     public static final String COMMAND_RENAME_PERMISSION   = "niftywarp.use.rename";
     public static final String COMMAND_SET_PERMISSION      = "niftywarp.use.set";
     public static final String COMMAND_WARP_PERMISSION     = "niftywarp.use.warp";
+
+    public static final String COMMAND_ADMIN_DELETE_PERMISSION = "niftywarp.admin.delete";
+    public static final String COMMAND_ADMIN_RENAME_PERMISSION = "niftywarp.admin.rename";
+    public static final String COMMAND_ADMIN_SET_PERMISSION    = "niftywarp.admin.set";
 
 
     /**

@@ -51,7 +51,7 @@ public class ListWarpsCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_LIST_PERMISSION, label))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_LIST_PERMISSION, AppStrings.COMMAND_LIST))
         {
             if (args.length == 0)
             {

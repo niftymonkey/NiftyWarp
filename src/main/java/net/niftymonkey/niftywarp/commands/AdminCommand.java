@@ -47,6 +47,7 @@ public class AdminCommand implements CommandExecutor
         {
             // Cast to the player object
             Player player = (Player) sender;
+
             if(this.plugin.hasPermission(player, AppStrings.COMMAND_ADMIN_PERMISSION, AppStrings.COMMAND_ADMIN))
             {
                 // TODO: Implement me!

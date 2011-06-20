@@ -51,10 +51,10 @@ public class DeleteWarpCommand implements CommandExecutor
             {
                 // Cast to the player object
                 Player player = (Player) sender;
+
                 // Check permission
                 if(this.plugin.hasPermission(player, AppStrings.COMMAND_DELETE_PERMISSION, AppStrings.COMMAND_DELETE))
                 {
-
                     // get the first argument which is the warp name
                     String warpName = args[0];
 

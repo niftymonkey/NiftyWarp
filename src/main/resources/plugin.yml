@@ -41,7 +41,7 @@ commands:
            /<command> niftymonkey.hilltop niftymonkey.mountaintop
            The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner
    nwset:
-      aliases: [nws, setwarp, setwarptype]
+      aliases: [nws, settype, setwarptype]
       description: Sets the type of an existing named warp
       usage: |
            /<command> [<owner>.]<warpname> private|listed|unlisted

@@ -30,9 +30,10 @@ public class AppStrings
     public static final String WARP_SET_PREFIX              = "Type set for warp: ";
     public static final String AVAILABLE_WARPS_PREFIX       = "Available warps: ";
     public static final String NO_AVAILABLE_WARPS           = "No warps found.";
-    public static final String DB_INSTALL_PREFIX        = "Installing database due to first time usage for:  ";
+    public static final String DB_INSTALL_PREFIX            = "Installing database due to first time usage for:  ";
     public static final String INSUFFICIENT_PRIVELEGES_1    = "Sorry, you don't have permission to use '{0}'.";
     public static final String INSUFFICIENT_PRIVELEGES_2    = "Please ask your server administrator about permission:";
+    public static final String WARP_TYPE_NOT_FOUND_SUFFIX   = " is not a valid warp type.";
 
     // message strings (private)
     private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";

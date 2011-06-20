@@ -18,11 +18,31 @@ public enum WarpType
     // Only the owner of this warp will see it in their list, however others can still use this warp
     PUBLIC_UNLISTED;
 
+    /**
+     * Returns the default warp type to use (when a warp type is not specified or when unable to resolve warp type)
+     *
+     * @return the default warp type
+     */
+    public static WarpType getDefaultWarpType()
+    {
+        // TODO:  this is where we should probably have a config item
+        return PUBLIC_UNLISTED;
+    }
+
+    /**
+     * Gets the warp type for a given string
+     *
+     * @param typeStr the string representation of the warp type
+     *
+     * @return the warp type that matches the string, or null if none found
+     * @see #getDefaultWarpType()
+     */
     public static WarpType getTypeForString(String typeStr)
     {
-        // default to private
-        WarpType retVal = PRIVATE;
+        WarpType retVal = null;
 
+        if(typeStr.equals(AppStrings.WARP_TYPE_PRIVATE))
+            retVal = PRIVATE;
         if(typeStr.equals(AppStrings.WARP_TYPE_LISTED))
             retVal = PUBLIC_LISTED;
         if(typeStr.equals(AppStrings.WARP_TYPE_UNLISTED))

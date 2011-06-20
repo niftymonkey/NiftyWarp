@@ -57,6 +57,9 @@ public class WarpCommand implements CommandExecutor
                 {
                 	// get the first argument which is the warp name
                 	String warpName = args[0];
+                    // find that in the warp map
+                    Warp warp = plugin.getWarpManager().getWarp(warpName, player);
+
                 	// get the addon message prefix
                 	String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 

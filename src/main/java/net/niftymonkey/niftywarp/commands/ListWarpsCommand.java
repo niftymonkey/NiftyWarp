@@ -59,64 +59,62 @@ public class ListWarpsCommand implements CommandExecutor
                 if(this.plugin.hasPermission(player, AppStrings.COMMAND_LIST_PERMISSION, AppStrings.COMMAND_LIST))
                 {
 
-                // get the addon message prefix
-                String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
+                    // get the addon message prefix
+                    String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
-                // get the list of warps
-                // TODO: implement getting warps for a different user (using the first param of the getWarpsForUser() method)
-                List<Warp> warpsList = plugin.getWarpManager().getWarpsForUser(player.getDisplayName(), player);
-                Collections.sort(warpsList);
-
-                if (warpsList.size() > 0)
-                {
+                    // get the list of warps
+                    // TODO: implement getting warps for a different user (using the first param of the getWarpsForUser() method)
+                    List<Warp> warpsList = plugin.getWarpManager().getWarpsForUser(player.getDisplayName(), player);
+                    Collections.sort(warpsList);
 
                     if (warpsList.size() > 0)
                     {
-                    String availableWarpStr = "";
 
-                    int i = 0;
-                    while (i < warpsList.size())
-                    {
-                        // get the warp
-                        Warp warp = warpsList.get(i);
+                        if (warpsList.size() > 0)
+                        {
+                        String availableWarpStr = "";
+
+                        int i = 0;
+                        while (i < warpsList.size())
+                        {
+                            // get the warp
+                            Warp warp = warpsList.get(i);
                             // get the name
-                            String warpName = warp.getName();
-
-                        String warpName;
-                        // if this is owned by someone else, we need to show the fully qualified name instead so that it can be
-                        // looked up correctly on use
-                        if(!warp.getOwner().equalsIgnoreCase(player.getDisplayName()))
-                            warpName = warp.getFullyQualifiedName();
-                        else
-                            warpName = warp.getName();
+                            String warpName;
+                            // if this is owned by someone else, we need to show the fully qualified name instead so that it can be
+                            // looked up correctly on use
+                            if(!warp.getOwner().equalsIgnoreCase(player.getDisplayName()))
+                                warpName = warp.getFullyQualifiedName();
+                            else
+                                warpName = warp.getName();
 
 
-                        // append it to the string
-                        availableWarpStr += warp.getWarpType().getTypeColor() + warpName;
-                        // increment counter
-                        i++;
+                            // append it to the string
+                            availableWarpStr += warp.getWarpType().getTypeColor() + warpName;
+                            // increment counter
+                            i++;
 
-                        // if this was not the last one, append a comma and space
-                        if(i != warpsList.size())
-                            availableWarpStr += ", ";
+                            // if this was not the last one, append a comma and space
+                            if(i != warpsList.size())
+                                availableWarpStr += ", ";
+                        }
+
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.GREEN + AppStrings.AVAILABLE_WARPS_PREFIX +
+                                           ChatColor.WHITE + availableWarpStr);
+                    }
+                    else
+                    {
+                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                           ChatColor.GREEN + AppStrings.AVAILABLE_WARPS_PREFIX +
+                                           ChatColor.WHITE + AppStrings.NO_AVAILABLE_WARPS);
                     }
 
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.AVAILABLE_WARPS_PREFIX +
-                                       ChatColor.WHITE + availableWarpStr);
-                }
-                else
-                {
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.AVAILABLE_WARPS_PREFIX +
-                                       ChatColor.WHITE + AppStrings.NO_AVAILABLE_WARPS);
-                }
-
-                    retVal = true;
+                        retVal = true;
+                    }
                 }
             }
         }
-
         return retVal;
     }
 }

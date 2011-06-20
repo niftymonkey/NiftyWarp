@@ -135,7 +135,7 @@ public class NiftyWarp extends JavaPlugin
         return result;
     }
 
-}
+
 
     /**
      * Sets up the database

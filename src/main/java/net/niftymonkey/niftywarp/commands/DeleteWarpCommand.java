@@ -43,45 +43,43 @@ public class DeleteWarpCommand implements CommandExecutor
     {
         boolean retVal = false;
 
-        // check for the correct command name
-        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_DELETE))
+        // Cast to the player object
+        Player player = (Player) sender;
+
+        // Check permission
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_DELETE_PERMISSION, label))
         {
             // make sure we have one argument, which is the name for the warp we're about to add
             if (args.length == 1)
             {
-                // Cast to the player object
-                Player player = (Player) sender;
+                // get the first argument which is the warp name
+                String warpName = args[0];
 
-                // Check permission
-                if(this.plugin.hasPermission(player, AppStrings.COMMAND_DELETE_PERMISSION, AppStrings.COMMAND_DELETE))
+                // get the addon message prefix
+                String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
+
+                // remove this warp from the warp map
+                boolean removed = plugin.getWarpManager().deleteWarp(warpName, player);
+                if (removed)
                 {
-                    // get the first argument which is the warp name
-                    String warpName = args[0];
-
-                    // get the addon message prefix
-                    String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
-
-                    // remove this warp from the warp map
-                    boolean removed = plugin.getWarpManager().deleteWarp(warpName, player);
-                    if (removed)
-                    {
-                        // let them know that we successfully removed the warp
-                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                           ChatColor.GREEN + AppStrings.WARP_REMOVED_PREFIX +
-                                           ChatColor.WHITE + warpName);
-                    }
-                    else
-                    {
-                        // let them know that we couldn't find that warp
-                        player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                           ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                           ChatColor.WHITE + warpName);
-                    }
-
-                    retVal = true;
+                    // let them know that we successfully removed the warp
+                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                       ChatColor.GREEN + AppStrings.WARP_REMOVED_PREFIX +
+                                       ChatColor.WHITE + warpName);
                 }
+                else
+                {
+                    // let them know that we couldn't find that warp
+                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                       ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
+                                       ChatColor.WHITE + warpName);
+                }
+
+                retVal = true;
             }
         }
+        else
+            retVal = true; // in the case of permissions failure, we still need to return true so that no usage is printed
 
         return retVal;
     }

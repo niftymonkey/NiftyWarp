@@ -42,18 +42,16 @@ public class AdminCommand implements CommandExecutor
     {
         boolean retVal = false;
 
-        // check for the correct command name
-        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_ADMIN))
-        {
-            // Cast to the player object
-            Player player = (Player) sender;
+        // Cast to the player object
+        Player player = (Player) sender;
 
-            if(this.plugin.hasPermission(player, AppStrings.COMMAND_ADMIN_PERMISSION, AppStrings.COMMAND_ADMIN))
-            {
-                // TODO: Implement me!
-                retVal = true;
-            }
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_ADMIN_PERMISSION, label))
+        {
+            // TODO: Implement me!
+            retVal = true;
         }
+        else
+            retVal = true; // in the case of permissions failure, we still need to return true so that no usage is printed
 
         return retVal;
     }

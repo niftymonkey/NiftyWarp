@@ -44,48 +44,46 @@ public class WarpCommand implements CommandExecutor
     {
         boolean retVal = false;
 
-        // check for the correct command name
-        if (command.getName().equalsIgnoreCase(AppStrings.COMMAND_WARP))
+        // Cast to the player object
+        Player player = (Player) sender;
+
+        // Check permission
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_WARP_PERMISSION, label))
         {
             // make sure we have one argument, which is the name of the warp
             if (args.length == 1)
             {
-                // Cast to the player object
-                Player player = (Player) sender;
+                // get the first argument which is the warp name
+                String warpName = args[0];
+                // find that in the warp map
+                Warp warp = plugin.getWarpManager().getWarp(warpName, player);
 
-                // Check permission
-                if(this.plugin.hasPermission(player, AppStrings.COMMAND_WARP_PERMISSION, AppStrings.COMMAND_WARP))
+                // get the addon message prefix
+                String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
+
+                if (warp != null)
                 {
-                	// get the first argument which is the warp name
-                	String warpName = args[0];
-                    // find that in the warp map
-                    Warp warp = plugin.getWarpManager().getWarp(warpName, player);
+                    // send the player there
+                    player.teleport(warp.getLocation());
 
-                	// get the addon message prefix
-                	String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
-
-                	if (warp != null)
-                	{
-                   	 	// send the player there
-                    	player.teleport(warp.getLocation());
-
-                    	// let them know it worked
-                    	player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
-                                       warp.getWarpType().getTypeColor() + warpName);
-               	 	}
-                	else
-                	{
-                    	// let them know we couldn't find a warp with that name
-                    	player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                       ChatColor.WHITE + warpName);
-                	}
-
-               	 	retVal = true;
+                    // let them know it worked
+                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                   ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
+                                   warp.getWarpType().getTypeColor() + warpName);
                 }
+                else
+                {
+                    // let them know we couldn't find a warp with that name
+                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                   ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
+                                   ChatColor.WHITE + warpName);
+                }
+
+                retVal = true;
             }
         }
+        else
+            retVal = true; // in the case of permissions failure, we still need to return true so that no usage is printed
 
         return retVal;
     }

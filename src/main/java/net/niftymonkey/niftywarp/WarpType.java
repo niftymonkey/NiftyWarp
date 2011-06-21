@@ -1,6 +1,7 @@
 package net.niftymonkey.niftywarp;
 
 import org.bukkit.ChatColor;
+import org.bukkit.util.config.Configuration;
 
 /**
  * User: Mark Lozano
@@ -22,11 +23,22 @@ public enum WarpType
      * Returns the default warp type to use (when a warp type is not specified or when unable to resolve warp type)
      *
      * @return the default warp type
+     * @param configuration the configuration object to use to get the default type
      */
-    public static WarpType getDefaultWarpType()
+    public static WarpType getDefaultWarpType(Configuration configuration)
     {
-        // TODO:  this is where we should probably have a config item
-        return PUBLIC_UNLISTED;
+        WarpType retVal;
+
+        // grab the default type from the config, defaulting to unlisted
+        String type = configuration.getString(AppStrings.PROPERTY_WARP_DEFAULT_WARPTYPE, AppStrings.WARP_TYPE_UNLISTED);
+        // get the type for the string specified
+        retVal = getTypeForString(type);
+
+        // handle the case where they put in an invalid value
+        if(retVal == null)
+            retVal = PUBLIC_UNLISTED;
+
+        return retVal;
     }
 
     /**
@@ -35,7 +47,7 @@ public enum WarpType
      * @param typeStr the string representation of the warp type
      *
      * @return the warp type that matches the string, or null if none found
-     * @see #getDefaultWarpType()
+     * @see #getDefaultWarpType(org.bukkit.util.config.Configuration)
      */
     public static WarpType getTypeForString(String typeStr)
     {

@@ -44,7 +44,9 @@ public class AppStrings
     private static final String DISABLED_MSG_SUFFIX = " has been disabled";
 
     // properties
-    private static final String PROPERTY_MSG_SHOWPREFIX = "messages.showprefix";
+    public static final String PROPERTY_MSG_SHOWPREFIX        = "messages.show-prefix";
+    public static final String PROPERTY_MSG_SHOWPERM_FAILURE  = "messages.permissions.show-fail-message";
+    public static final String PROPERTY_WARP_DEFAULT_WARPTYPE = "warps.default-type";
 
     // constants
     public static final String WARP_TYPE_PRIVATE  = "private";

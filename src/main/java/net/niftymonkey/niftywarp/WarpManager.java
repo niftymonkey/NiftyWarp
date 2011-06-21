@@ -149,7 +149,7 @@ public class WarpManager
                                                               false);
 
                 // either they're deleting their own, or they aren't but they have the admin delete priv
-                if( isOwner || hasAdminDelete && !isOwner )
+                if( isOwner || hasAdminDelete )
                 {
                     plugin.getDatabase().delete(warp);
                     retVal = true;
@@ -194,7 +194,7 @@ public class WarpManager
                                                           false);
 
             // either they're renaming their own, or they aren't but they have the admin rename priv
-            if( isOwner || hasAdminRename && !isOwner )
+            if( isOwner || hasAdminRename )
             {
                 // change the name
                 warp.setName(newWarpName);

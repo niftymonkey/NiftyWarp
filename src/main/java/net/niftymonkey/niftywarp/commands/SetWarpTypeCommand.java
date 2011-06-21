@@ -83,7 +83,6 @@ public class SetWarpTypeCommand implements CommandExecutor
                                                ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
                                                ChatColor.WHITE + warpName);
                         }
-                        retVal = true;
                     }
                     catch (InternalPermissionsException e)
                     {
@@ -91,6 +90,7 @@ public class SetWarpTypeCommand implements CommandExecutor
                         player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
                                            ChatColor.RED + e.getMessage());
                     }
+                    retVal = true;
                 }
                 else
                 {

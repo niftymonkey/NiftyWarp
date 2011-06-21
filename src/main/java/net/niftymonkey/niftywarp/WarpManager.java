@@ -236,10 +236,11 @@ public class WarpManager
                 boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
                 boolean hasAdminSetType = plugin.hasPermission(requestingPlayer,
                                                                AppStrings.COMMAND_ADMIN_SET_PERMISSION,
-                                                               AppStrings.COMMAND_SET);
+                                                               AppStrings.COMMAND_SET,
+                                                               false);
 
                 // either they're setting type on their own, or they aren't but they have the admin set type priv
-                if( isOwner || hasAdminSetType && !isOwner )
+                if( isOwner || hasAdminSetType )
                 {
                     // change the warpType
                     warp.setWarpType(type);

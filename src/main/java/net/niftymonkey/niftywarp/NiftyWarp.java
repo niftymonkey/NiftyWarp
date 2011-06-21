@@ -99,6 +99,21 @@ public class NiftyWarp extends JavaPlugin
      */
     public boolean hasPermission(Player inPlayer, String inKey, String inCommandString)
     {
+        return hasPermission(inPlayer, inKey, inCommandString, true);
+    }
+
+    /**
+     * Delegates to the permissions plugin
+     *
+     * @param inPlayer The Player
+     * @param inKey The string that represents the permission key, for example "niftywarp.add"
+     * @param inCommandString the command string that the user typed, for example "nwadd"
+     * @param displayDenialMessage specifies whether or not to display a message when permission is denied
+     *
+     * @return true if the user has permission, false if not
+     */
+    public boolean hasPermission(Player inPlayer, String inKey, String inCommandString, boolean displayDenialMessage)
+    {
         boolean result = false;
         String worldName = null;
         String playerName = null;
@@ -118,7 +133,7 @@ public class NiftyWarp extends JavaPlugin
                     "', \nresult = " + result);
 
             //--Notify player if permission was denied--
-            if(!result)
+            if(!result && displayDenialMessage)
             {
                 String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
                 //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);

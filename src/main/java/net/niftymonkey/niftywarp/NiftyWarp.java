@@ -12,8 +12,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
 import javax.persistence.PersistenceException;
+import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +38,18 @@ public class NiftyWarp extends JavaPlugin
 
     private WarpManager warpManager;
 
+    private Configuration configuration;
+
     public void onEnable()
     {
         // setup the persistence database
         setupDatabase();
+
+        // setup permissions
+        this.setupPermissions();
+
+        // setup config
+        this.setupConfiguration();
 
         // create the warp manager
         warpManager = new WarpManager(this);
@@ -50,9 +61,6 @@ public class NiftyWarp extends JavaPlugin
         getCommand(AppStrings.COMMAND_RENAME).setExecutor(new RenameWarpCommand(this));
         getCommand(AppStrings.COMMAND_SET).setExecutor(new SetWarpTypeCommand(this));
         getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));
-
-        // setup permissions
-        this.setupPermissions();
 
         log.info(AppStrings.getEnabledMessage(this));
     }
@@ -132,16 +140,22 @@ public class NiftyWarp extends JavaPlugin
                     "', \ncommand = '" + inCommandString +
                     "', \nresult = " + result);
 
-            //--Notify player if permission was denied--
-            if(!result && displayDenialMessage)
+            // only bother doing this if they passed in true to this method
+            if(displayDenialMessage)
             {
-                String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
-                //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
-                inPlayer.sendMessage(ChatColor.RED + usrMsg);
-                usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
-                //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
-                inPlayer.sendMessage(ChatColor.RED + usrMsg);
-                inPlayer.sendMessage(ChatColor.RED + inKey);
+                boolean showFailureMessage = getConfiguration().getBoolean(AppStrings.PROPERTY_MSG_SHOWPERM_FAILURE, true);
+                //--Notify player if permission was denied if they failed and the config says the user of this addon
+                // wants these messages displayed --
+                if(!result && showFailureMessage)
+                {
+                    String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
+                    //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
+                    inPlayer.sendMessage(ChatColor.RED + usrMsg);
+                    usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
+                    //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
+                    inPlayer.sendMessage(ChatColor.RED + usrMsg);
+                    inPlayer.sendMessage(ChatColor.RED + inKey);
+                }
             }
         }
         else
@@ -179,5 +193,33 @@ public class NiftyWarp extends JavaPlugin
         list.add(Warp.class);
         return list;
     }
-}
 
+    private void setupConfiguration()
+    {
+        try
+        {
+            File configFile = new File("./plugins/NiftyWarp/NiftyWarp.yml");
+            boolean fileExists = configFile.exists();
+            if(!fileExists)
+            {
+                fileExists = configFile.createNewFile();
+            }
+
+            if(fileExists)
+            {
+                configuration = new Configuration(configFile);
+                configuration.load();
+            }
+        }
+        catch (IOException e)
+        {
+            log.warning(e.getMessage());
+        }
+    }
+
+    @Override
+    public Configuration getConfiguration()
+    {
+        return configuration;
+    }
+}

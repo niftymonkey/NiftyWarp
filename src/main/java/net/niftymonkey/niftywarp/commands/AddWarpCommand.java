@@ -57,7 +57,7 @@ public class AddWarpCommand implements CommandExecutor
                 // get the first argument which is the warp name
                 String warpName = args[0];
                 // get a default warp type
-                WarpType warpType = WarpType.getDefaultWarpType();
+                WarpType warpType = WarpType.getDefaultWarpType(plugin.getConfiguration());
 
                 // if we have two arguments, they're passing in warp type
                 if(args.length == 2)
@@ -71,7 +71,6 @@ public class AddWarpCommand implements CommandExecutor
                 }
 
                 // add this warp to the warp map
-                // TODO: handle warp type argument
                 Warp warp = plugin.getWarpManager().addWarp(warpName,
                                                             player,
                                                             warpType,

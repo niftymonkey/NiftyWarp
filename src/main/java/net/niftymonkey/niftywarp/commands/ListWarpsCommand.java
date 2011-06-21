@@ -3,6 +3,7 @@ package net.niftymonkey.niftywarp.commands;
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
 import net.niftymonkey.niftywarp.Warp;
+import net.niftymonkey.niftywarp.WarpType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -92,8 +93,14 @@ public class ListWarpsCommand implements CommandExecutor
                             availableWarpStr += ", ";
                     }
 
-                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.AVAILABLE_WARPS_PREFIX +
+                    String warpTypesInfo = ChatColor.WHITE + "(" +
+                                           WarpType.PUBLIC_LISTED.getTypeColor() + AppStrings.WARP_TYPE_LISTED + ", " +
+                                           WarpType.PUBLIC_UNLISTED.getTypeColor() + AppStrings.WARP_TYPE_UNLISTED + ", " +
+                                           WarpType.PRIVATE.getTypeColor() + AppStrings.WARP_TYPE_PRIVATE +
+                                           ChatColor.WHITE + ")";
+
+                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix + warpTypesInfo);
+                    player.sendMessage(ChatColor.GREEN + AppStrings.AVAILABLE_WARPS_PREFIX +
                                        ChatColor.WHITE + availableWarpStr);
                 }
                 else

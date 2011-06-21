@@ -145,7 +145,8 @@ public class WarpManager
                 boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
                 boolean hasAdminDelete = plugin.hasPermission(requestingPlayer,
                                                               AppStrings.COMMAND_ADMIN_DELETE_PERMISSION,
-                                                              AppStrings.COMMAND_DELETE);
+                                                              AppStrings.COMMAND_DELETE,
+                                                              false);
 
                 // either they're deleting their own, or they aren't but they have the admin delete priv
                 if( isOwner || hasAdminDelete && !isOwner )
@@ -189,7 +190,8 @@ public class WarpManager
             boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
             boolean hasAdminRename = plugin.hasPermission(requestingPlayer,
                                                           AppStrings.COMMAND_ADMIN_RENAME_PERMISSION,
-                                                          AppStrings.COMMAND_RENAME);
+                                                          AppStrings.COMMAND_RENAME,
+                                                          false);
 
             // either they're renaming their own, or they aren't but they have the admin rename priv
             if( isOwner || hasAdminRename && !isOwner )

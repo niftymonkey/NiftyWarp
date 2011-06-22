@@ -72,7 +72,6 @@ public class WarpManager
 
         if(warpName != null && requestingPlayer != null)
         {
-            String fullyQualifiedName;
             // if the warp name contains a dot, then this is the fully qualified name, so we can use it as-is
             if(warpName.contains("."))
             {
@@ -100,6 +99,13 @@ public class WarpManager
                         }
                     }
                 }
+                else if(warpList.size() == 1)
+                {
+                    Warp warp = warpList.get(0);
+                    // since we're looking up by name only (not fully qualified), let's make sure we don't return a private one
+                    if(warp.getWarpType() != WarpType.PRIVATE)
+                        retVal = warp;
+                }
             }
         }
 
@@ -119,11 +125,13 @@ public class WarpManager
      */
     public Warp addWarp(String warpName, Player owner, WarpType warpType, Location location)
     {
+        // if one exists, delete it
+        // NOTE: doing this for now because save() doesn't seem to be updating existing warps
         Warp retVal = getWarp(warpName, owner);
+        plugin.getDatabase().delete(retVal);
 
-        if (retVal == null)
-            retVal = new Warp();
-
+        // now let's make a new one
+        retVal = new Warp();
         retVal.setName(warpName);
         retVal.setOwner(owner.getDisplayName());
         retVal.setWarpType(warpType);

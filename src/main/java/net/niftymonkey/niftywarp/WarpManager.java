@@ -86,8 +86,20 @@ public class WarpManager
             }
             else // if it doesn't have a dot, the user didn't specify an owner, so default to self and build the fully qualified name
             {
-                fullyQualifiedName = Warp.buildFullyQualifiedName(requestingPlayer.getDisplayName(), warpName);
-                retVal = plugin.getDatabase().find(Warp.class).where().ieq("fullyQualifiedName", fullyQualifiedName).findUnique();
+                // get the list of warps from the db that have the name requested
+                List<Warp> warpList = plugin.getDatabase().find(Warp.class).where().ieq("name", warpName).findList();
+                // if there's more than one, iterate through until we find the one owned by the player
+                if(warpList.size() > 1)
+                {
+                    for (Warp warp : warpList)
+                    {
+                        if(warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
+                        {
+                            retVal = warp;
+                            break;
+                        }
+                    }
+                }
             }
         }
 

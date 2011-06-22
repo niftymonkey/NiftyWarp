@@ -36,7 +36,8 @@ public class AppStrings
     public static final String WARP_CANNOT_REMOVE_OTHERS  = "You do not have permission to delete someone else's warp.";
     public static final String WARP_CANNOT_RENAME_OTHERS  = "You do not have permission to rename someone else's warp.";
     public static final String WARP_CANNOT_SET_OTHERS     = "You do not have permission to set someone else's warp type.";
-
+    public static final String WARPS_YOURS                = "Your Warps: ";
+    public static final String WARPS_OTHERS               = "Other's Warps: ";
 
     // message strings (private)
     private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";

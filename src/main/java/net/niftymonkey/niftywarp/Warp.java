@@ -195,6 +195,12 @@ public class Warp implements Serializable, Comparable<Warp>
 
     public int compareTo(Warp o)
     {
-        return getFullyQualifiedName().compareTo(o.getFullyQualifiedName());
+        return getName().compareTo(o.getName());
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getFullyQualifiedName();
     }
 }

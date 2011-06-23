@@ -16,14 +16,27 @@ import java.util.List;
  */
 public class WarpManager
 {
-    /**
-     * The plugin
-     */
     private final NiftyWarp plugin;
 
+    private IPersistenceProvider warpProvider;
+
+    
     public WarpManager(NiftyWarp niftyWarp)
     {
         this.plugin = niftyWarp;
+
+        // create the warp provider
+        warpProvider = new EbeanServerPersistenceProvider(plugin.getDatabase());
+    }
+
+    /**
+     * Gets the warp provider instance
+     * 
+     * @return the warp provider implementation we're using
+     */
+    public IPersistenceProvider getWarpProvider()
+    {
+        return warpProvider;
     }
 
     /**
@@ -36,8 +49,22 @@ public class WarpManager
      */
     public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer)
     {
+        return getWarpsForUser(playerName, requestingPlayer, getWarpProvider());
+    }
+
+    /**
+     * Gets the list of warps for the user
+     *
+     * @param playerName the name of the player whose warps should be listed
+     * @param requestingPlayer the name of the player requesting this list
+     * @param warpProvider the warp provider class
+     *
+     * @return a list of warps that the player in the playerName parameter can use
+     */
+    public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider warpProvider)
+    {
         List<Warp> retVal = new ArrayList<Warp>();
-        List<Warp> warpsFromDB = plugin.getDatabase().find(Warp.class).findList();
+        List<Warp> warpsFromDB = warpProvider.getAllWarps();
 
         for (Warp warp : warpsFromDB)
         {

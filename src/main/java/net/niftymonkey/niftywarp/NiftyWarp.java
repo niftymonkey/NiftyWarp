@@ -37,9 +37,11 @@ public class NiftyWarp extends JavaPlugin
     public PermissionHandler permissionHandler;
 
     private WarpManager warpManager;
-
     private Configuration configuration;
 
+    /**
+     * Called when the plugin is enabled
+     */
     public void onEnable()
     {
         // setup the persistence database
@@ -62,14 +64,22 @@ public class NiftyWarp extends JavaPlugin
         getCommand(AppStrings.COMMAND_SET).setExecutor(new SetWarpTypeCommand(this));
         getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));
 
+        // log enable success to console
         log.info(AppStrings.getEnabledMessage(this));
     }
 
+    /**
+     * Called when the plugin is disabled
+     */
     public void onDisable()
     {
         log.info(AppStrings.getDisabledMessage(this));
     }
 
+    /**
+     * Gets the WarpManager object to be used for doing any warp-related tasks
+     * @return
+     */
     public WarpManager getWarpManager()
     {
         return warpManager;
@@ -194,6 +204,9 @@ public class NiftyWarp extends JavaPlugin
         return list;
     }
 
+    /**
+     * Sets up the configuration file that will be used for this addon.  If it does not exist, the file will be created. 
+     */
     private void setupConfiguration()
     {
         try
@@ -201,9 +214,7 @@ public class NiftyWarp extends JavaPlugin
             File configFile = new File("./plugins/NiftyWarp/NiftyWarp.yml");
             boolean fileExists = configFile.exists();
             if(!fileExists)
-            {
                 fileExists = configFile.createNewFile();
-            }
 
             if(fileExists)
             {

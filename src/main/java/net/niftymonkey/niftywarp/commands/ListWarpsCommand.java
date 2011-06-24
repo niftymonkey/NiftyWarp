@@ -153,8 +153,8 @@ public class ListWarpsCommand implements CommandExecutor
 
                     // create a line that shows the warp type names in their color for clarity
                     String warpTypesInfo = ChatColor.WHITE + "(" +
-                                           WarpType.PUBLIC_LISTED.getTypeColor() + AppStrings.WARP_TYPE_LISTED + ", " +
-                                           WarpType.PUBLIC_UNLISTED.getTypeColor() + AppStrings.WARP_TYPE_UNLISTED + ", " +
+                                           WarpType.LISTED.getTypeColor() + AppStrings.WARP_TYPE_LISTED + ", " +
+                                           WarpType.UNLISTED.getTypeColor() + AppStrings.WARP_TYPE_UNLISTED + ", " +
                                            WarpType.PRIVATE.getTypeColor() + AppStrings.WARP_TYPE_PRIVATE +
                                            ChatColor.WHITE + ")";
 

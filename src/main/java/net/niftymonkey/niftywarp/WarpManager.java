@@ -18,7 +18,7 @@ public class WarpManager
 {
     private final NiftyWarp plugin;
 
-    private IPersistenceProvider warpProvider;
+    private IPersistenceProvider persistenceProvider;
 
     
     public WarpManager(NiftyWarp niftyWarp)
@@ -26,17 +26,17 @@ public class WarpManager
         this.plugin = niftyWarp;
 
         // create the warp provider
-        warpProvider = new EbeanServerPersistenceProvider(plugin.getDatabase());
+        persistenceProvider = new EbeanServerPersistenceProvider(plugin.getDatabase());
     }
 
     /**
-     * Gets the warp provider instance
+     * Gets the persistence provider instance
      * 
      * @return the warp provider implementation we're using
      */
-    public IPersistenceProvider getWarpProvider()
+    public IPersistenceProvider getPersistenceProvider()
     {
-        return warpProvider;
+        return persistenceProvider;
     }
 
     /**
@@ -49,7 +49,7 @@ public class WarpManager
      */
     public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer)
     {
-        return getWarpsForUser(playerName, requestingPlayer, getWarpProvider());
+        return getWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
     }
 
     /**
@@ -57,19 +57,19 @@ public class WarpManager
      *
      * @param playerName the name of the player whose warps should be listed
      * @param requestingPlayer the name of the player requesting this list
-     * @param warpProvider the warp provider class
+     * @param persistenceProvider the persistence provider implementation
      *
      * @return a list of warps that the player in the playerName parameter can use
      */
-    public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider warpProvider)
+    public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
     {
         List<Warp> retVal = new ArrayList<Warp>();
-        List<Warp> warpsFromDB = warpProvider.getAllWarps();
+        List<Warp> warpsFromDB = persistenceProvider.getAllWarps();
 
         for (Warp warp : warpsFromDB)
         {
             // if this is a public listed warp, it goes in everyone's list
-            if(warp.getWarpType() == WarpType.PUBLIC_LISTED)
+            if(warp.getWarpType() == WarpType.LISTED)
             {
                 retVal.add(warp);
             }

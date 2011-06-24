@@ -52,6 +52,31 @@ public class Warp implements Serializable, Comparable<Warp>
     private float  pitch;
     private float  yaw;
 
+    public Warp()
+    {
+    }
+
+    public Warp(String name, String owner, WarpType warpType, String worldName, double x, double y, double z, float pitch, float yaw)
+    {
+        setName(name);
+        setOwner(owner);
+        setWarpType(warpType);
+        setWorldName(worldName);
+        setX(x);
+        setY(y);
+        setZ(z);
+        setPitch(pitch);
+        setYaw(yaw);
+    }
+
+    public Warp(String name, String owner, WarpType warpType, Location location)
+    {
+        setName(name);
+        setOwner(owner);
+        setWarpType(warpType);
+        setLocation(location);
+    }
+
     ///////////////////////
     // Helper Methods
     ///////////////////////
@@ -201,6 +226,55 @@ public class Warp implements Serializable, Comparable<Warp>
     @Override
     public String toString()
     {
-        return this.getFullyQualifiedName();
+        return this.name + ":" + this.owner + ":" + this.getWarpType();
+    }
+
+    /** 
+     * (non-Javadoc)
+     * @see java.lang.Object#equals(Object) 
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Warp warp = (Warp) o;
+
+        if (Float.compare(warp.pitch, pitch) != 0) return false;
+        if (Double.compare(warp.x, x) != 0) return false;
+        if (Double.compare(warp.y, y) != 0) return false;
+        if (Float.compare(warp.yaw, yaw) != 0) return false;
+        if (Double.compare(warp.z, z) != 0) return false;
+        if (!name.equals(warp.name)) return false;
+        if (!owner.equals(warp.owner)) return false;
+        if (warpType != warp.warpType) return false;
+        if (!worldName.equals(warp.worldName)) return false;
+
+        return true;
+    }
+
+    /** 
+     * (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode()
+    {
+        int result;
+        long temp;
+        result = name.hashCode();
+        result = 31 * result + owner.hashCode();
+        result = 31 * result + warpType.hashCode();
+        result = 31 * result + worldName.hashCode();
+        temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = y != +0.0d ? Double.doubleToLongBits(y) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (pitch != +0.0f ? Float.floatToIntBits(pitch) : 0);
+        result = 31 * result + (yaw != +0.0f ? Float.floatToIntBits(yaw) : 0);
+        return result;
     }
 }

@@ -14,10 +14,10 @@ public enum WarpType
     PRIVATE,
 
     // Anyone can see this warp in their list
-    PUBLIC_LISTED,
+    LISTED,
 
     // Only the owner of this warp will see it in their list, however others can still use this warp
-    PUBLIC_UNLISTED;
+    UNLISTED;
 
     /**
      * Returns the default warp type to use (when a warp type is not specified or when unable to resolve warp type)
@@ -36,7 +36,7 @@ public enum WarpType
 
         // handle the case where they put in an invalid value
         if(retVal == null)
-            retVal = PUBLIC_UNLISTED;
+            retVal = UNLISTED;
 
         return retVal;
     }
@@ -56,9 +56,9 @@ public enum WarpType
         if(typeStr.equals(AppStrings.WARP_TYPE_PRIVATE))
             retVal = PRIVATE;
         if(typeStr.equals(AppStrings.WARP_TYPE_LISTED))
-            retVal = PUBLIC_LISTED;
+            retVal = LISTED;
         if(typeStr.equals(AppStrings.WARP_TYPE_UNLISTED))
-            retVal = PUBLIC_UNLISTED;
+            retVal = UNLISTED;
 
         return retVal;
     }
@@ -74,7 +74,7 @@ public enum WarpType
 
         if(this.equals(PRIVATE))
             retVal = ChatColor.DARK_GRAY;
-        if(this.equals(PUBLIC_UNLISTED))
+        if(this.equals(UNLISTED))
             retVal = ChatColor.DARK_PURPLE;
 
         return retVal;

@@ -38,7 +38,7 @@ public class WarpManagerTest
     }
 
     @Test
-    public void testGetWarpsForUser() throws Exception
+    public void getAvailableWarpsForUser() throws Exception
     {
         ////////////////////////////////////////////////////////
         // Setup test-specific mocks, stubs, and data
@@ -57,11 +57,11 @@ public class WarpManagerTest
         testPersistenceProvider.setWarpList(warpList);
         
         ////////////////////////////////////////////////////////
-        // Run Test
+        // Run Test(s)
         ////////////////////////////////////////////////////////
 
         WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
-        List<Warp> warpsForUser = warpManager.getWarpsForUser(PLAYER_ONE_NAME, mockPlayerOne, testPersistenceProvider);
+        List<Warp> warpsForUser = warpManager.getAvailableWarpsForUser(PLAYER_ONE_NAME, mockPlayerOne, testPersistenceProvider);
 
         ////////////////////////////////////////////////////////
         // Assert/Verify results
@@ -72,7 +72,276 @@ public class WarpManagerTest
         assertEquals(warpList, warpsForUser);
     }
 
-    
+    @Test
+    public void getVisibleWarpsForUser() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> warpList = getDefaultPlayerWarps(PLAYER_ONE_NAME);
+        warpList.addAll(getDefaultPlayerWarps(PLAYER_TWO_NAME));
+        warpList.addAll(getDefaultPlayerWarps(PLAYER_THREE_NAME));
+
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        List<Warp> warpsForUser = warpManager.getVisibleWarpsForUser(PLAYER_ONE_NAME, mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        // hidden and unlisted warps that belong to others should be the only ones not returned
+
+        warpList = filterByType(warpList, WarpType.PRIVATE, PLAYER_ONE_NAME);
+        warpList = filterByType(warpList, WarpType.UNLISTED, PLAYER_ONE_NAME);
+        assertEquals(warpList, warpsForUser);
+    }
+
+    @Test
+    public void getWarp_byName_playerOwned() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> playerOneWarps = getDefaultPlayerWarps(PLAYER_ONE_NAME);
+        List<Warp> warpList = new ArrayList<Warp>();
+        warpList.addAll(playerOneWarps);
+
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        // setup some expected results
+        Warp expectedPrivateWarp = null;
+        Warp expectedUnlistedWarp = null;
+        Warp expectedListedWarp = null;
+
+        for(Warp tmpWarp : warpList)
+        {
+            if(tmpWarp.getWarpType().equals(WarpType.PRIVATE))
+                expectedPrivateWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.UNLISTED))
+                expectedUnlistedWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.LISTED))
+                expectedListedWarp = tmpWarp;
+        }
+
+        assert expectedPrivateWarp != null;
+        assert expectedUnlistedWarp != null;
+        assert expectedListedWarp != null;
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        Warp privateWarp = warpManager.getWarp(expectedPrivateWarp.getName(), mockPlayerOne, testPersistenceProvider);
+        Warp unlistedWarp = warpManager.getWarp(expectedUnlistedWarp.getName(), mockPlayerOne, testPersistenceProvider);
+        Warp listedWarp = warpManager.getWarp(expectedListedWarp.getName(), mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        assertEquals(expectedPrivateWarp, privateWarp);
+        assertEquals(expectedUnlistedWarp, unlistedWarp);
+        assertEquals(expectedListedWarp, listedWarp);
+    }
+
+    @Test
+    public void getWarp_byFQName_playerOwned() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> playerOneWarps = getDefaultPlayerWarps(PLAYER_ONE_NAME);
+        List<Warp> warpList = new ArrayList<Warp>();
+        warpList.addAll(playerOneWarps);
+
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        // setup some expected results
+        Warp expectedPrivateWarp = null;
+        Warp expectedUnlistedWarp = null;
+        Warp expectedListedWarp = null;
+
+        for(Warp tmpWarp : warpList)
+        {
+            if(tmpWarp.getWarpType().equals(WarpType.PRIVATE))
+                expectedPrivateWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.UNLISTED))
+                expectedUnlistedWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.LISTED))
+                expectedListedWarp = tmpWarp;
+        }
+
+        assert expectedPrivateWarp != null;
+        assert expectedUnlistedWarp != null;
+        assert expectedListedWarp != null;
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        Warp privateWarp = warpManager.getWarp(expectedPrivateWarp.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+        Warp unlistedWarp = warpManager.getWarp(expectedUnlistedWarp.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+        Warp listedWarp = warpManager.getWarp(expectedListedWarp.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        assertEquals(expectedPrivateWarp, privateWarp);
+        assertEquals(expectedUnlistedWarp, unlistedWarp);
+        assertEquals(expectedListedWarp, listedWarp);
+    }
+
+    @Test
+    public void getWarp_byName_notPlayerOwned() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> playerOneWarps = getDefaultPlayerWarps(PLAYER_ONE_NAME);
+        List<Warp> playerTwoWarps = getDefaultPlayerWarps(PLAYER_TWO_NAME);
+        List<Warp> warpList = new ArrayList<Warp>();
+        warpList.addAll(playerOneWarps);
+        warpList.addAll(playerTwoWarps);
+
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        // setup some expected results
+        Warp unexpectedPrivateWarp = null;
+        Warp expectedUnlistedWarp = null;
+        Warp expectedListedWarp = null;
+
+        for(Warp tmpWarp : playerTwoWarps)
+        {
+            if(tmpWarp.getWarpType().equals(WarpType.PRIVATE))
+                unexpectedPrivateWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.UNLISTED))
+                expectedUnlistedWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.LISTED))
+                expectedListedWarp = tmpWarp;
+        }
+
+        assert unexpectedPrivateWarp != null;
+        assert expectedUnlistedWarp != null;
+        assert expectedListedWarp != null;
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        Warp privateWarp = warpManager.getWarp(unexpectedPrivateWarp.getName(), mockPlayerOne, testPersistenceProvider);
+        Warp unlistedWarp = warpManager.getWarp(expectedUnlistedWarp.getName(), mockPlayerOne, testPersistenceProvider);
+        Warp listedWarp = warpManager.getWarp(expectedListedWarp.getName(), mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        // should get null for a private warp owned by someone else
+        assertEquals(null, privateWarp);
+        // should get valid warps for unlisted and listed
+        assertEquals(expectedUnlistedWarp, unlistedWarp);
+        assertEquals(expectedListedWarp, listedWarp);
+    }
+
+    @Test
+    public void getWarp_byFQName_notPlayerOwned() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> playerOneWarps = getDefaultPlayerWarps(PLAYER_ONE_NAME);
+        List<Warp> playerTwoWarps = getDefaultPlayerWarps(PLAYER_TWO_NAME);
+        List<Warp> warpList = new ArrayList<Warp>();
+        warpList.addAll(playerOneWarps);
+        warpList.addAll(playerTwoWarps);
+
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        // setup some expected results
+        Warp unexpectedPrivateWarp = null;
+        Warp expectedUnlistedWarp = null;
+        Warp expectedListedWarp = null;
+
+        for(Warp tmpWarp : playerTwoWarps)
+        {
+            if(tmpWarp.getWarpType().equals(WarpType.PRIVATE))
+                unexpectedPrivateWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.UNLISTED))
+                expectedUnlistedWarp = tmpWarp;
+            if(tmpWarp.getWarpType().equals(WarpType.LISTED))
+                expectedListedWarp = tmpWarp;
+        }
+
+        assert unexpectedPrivateWarp != null;
+        assert expectedUnlistedWarp != null;
+        assert expectedListedWarp != null;
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        Warp privateWarp = warpManager.getWarp(unexpectedPrivateWarp.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+        Warp unlistedWarp = warpManager.getWarp(expectedUnlistedWarp.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+        Warp listedWarp = warpManager.getWarp(expectedListedWarp.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        // should get null for a private warp owned by someone else
+        assertEquals(null, privateWarp);
+        // should get valid warps for unlisted and listed
+        assertEquals(expectedUnlistedWarp, unlistedWarp);
+        assertEquals(expectedListedWarp, listedWarp);
+    }
+
+
     ////////////////////////////////////////////////////////
     // Helper Methods
     ////////////////////////////////////////////////////////
@@ -101,24 +370,25 @@ public class WarpManagerTest
      * Creates a list of warps based on the list passed in, that does not not contain warps of the type passed in
      * 
      * @param warpList the list of warps that will be filtered down
-     * @param type the type to filter out
-     * @param ignorePlayer ignores filtering on warps where this player is the owner
-     * 
+     * @param type the warp type to filter out
+     * @param ignorePlayer ignores filtering warps where this player is the owner.  If null, method will all of the type specified,
+     *                     regardless of owner
+     *
      * @return a new list of warps based on the first parameter that has been filtered
      */
     private List<Warp> filterByType(List<Warp> warpList, WarpType type, String ignorePlayer)
     {
         List<Warp> retVal = new ArrayList<Warp>(warpList);
-        
+
         for (Warp warp : warpList)
         {
-            if (!warp.getOwner().equalsIgnoreCase(ignorePlayer))
+            if ((ignorePlayer == null) || !warp.getOwner().equalsIgnoreCase(ignorePlayer))
             {
                 if(warp.getWarpType() == type)
                     retVal.remove(warp);
             }
         }
-        
+
         return retVal;
     }
 }

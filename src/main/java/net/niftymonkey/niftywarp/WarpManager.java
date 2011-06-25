@@ -40,45 +40,90 @@ public class WarpManager
     }
 
     /**
-     * Gets the list of warps for the user
+     * Gets the list of warps that can by used by the player
      *
-     * @param playerName the name of the player whose warps should be listed
+     * @param playerName the name of the player whose warps we're looking up
      * @param requestingPlayer the name of the player requesting this list
      *
      * @return a list of warps that the player in the playerName parameter can use
      */
-    public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer)
+    public List<Warp> getAvailableWarpsForUser(String playerName, Player requestingPlayer)
     {
-        return getWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
+        return getAvailableWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
     }
 
     /**
-     * Gets the list of warps for the user
+     * Gets the list of warps that can by used by the player
      *
-     * @param playerName the name of the player whose warps should be listed
+     * @param playerName the name of the player whose warps we're looking up
      * @param requestingPlayer the name of the player requesting this list
      * @param persistenceProvider the persistence provider implementation
      *
      * @return a list of warps that the player in the playerName parameter can use
      */
-    public List<Warp> getWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
+    public List<Warp> getAvailableWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
     {
-        List<Warp> retVal = new ArrayList<Warp>();
-        List<Warp> warpsFromDB = persistenceProvider.getAllWarps();
+        List<Warp> retVal = persistenceProvider.getAllWarps();
 
-        for (Warp warp : warpsFromDB)
+        // only private warps should be unavailable (unusable) for a player
+        retVal = filterByType(retVal, WarpType.PRIVATE, playerName);
+
+        return retVal;
+    }
+
+    /**
+     * Gets the list of warps that the player should be able to see when listing warps
+     *
+     * @param playerName the name of the player whose warps we're looking up
+     * @param requestingPlayer the name of the player requesting this list
+     *
+     * @return a list of warps that the player in the playerName parameter can see
+     */
+    public List<Warp> getVisibleWarpsForUser(String playerName, Player requestingPlayer)
+    {
+        return getAvailableWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
+    }
+
+    /**
+     * Gets the list of warps that the player should be able to see when listing warps
+     *
+     * @param playerName the name of the player whose warps we're looking up
+     * @param requestingPlayer the name of the player requesting this list
+     * @param persistenceProvider the persistence provider implementation
+     *
+     * @return a list of warps that the player in the playerName parameter can see
+     */
+    public List<Warp> getVisibleWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
+    {
+        List<Warp> retVal = getAvailableWarpsForUser(playerName, requestingPlayer, persistenceProvider);
+
+        // since the available warps should already have removed private warps that don't belong to this player,
+        // all we have to do is remove unlisted ones
+        retVal = filterByType(retVal, WarpType.UNLISTED, playerName);
+
+        return retVal;
+    }
+
+    /**
+     * Creates a list of warps based on the list passed in, that does not not contain warps of the type passed in
+     *
+     * @param warpList the list of warps that will be filtered down
+     * @param type the warp type to filter out
+     * @param ignorePlayer ignores filtering warps where this player is the owner.  If null, method will all of the type specified,
+     *                     regardless of owner
+     *
+     * @return a new list of warps based on the first parameter that has been filtered
+     */
+    private List<Warp> filterByType(List<Warp> warpList, WarpType type, String ignorePlayer)
+    {
+        List<Warp> retVal = new ArrayList<Warp>(warpList);
+
+        for (Warp warp : warpList)
         {
-            // if this is a public listed warp, it goes in everyone's list
-            if(warp.getWarpType() == WarpType.LISTED)
+            if ((ignorePlayer == null) || !warp.getOwner().equalsIgnoreCase(ignorePlayer))
             {
-                retVal.add(warp);
-            }
-            else // if it's private or unlisted, only the owner should see it
-            {
-                if(warp.getOwner().equals(playerName))
-                {
-                    retVal.add(warp);
-                }
+                if(warp.getWarpType() == type)
+                    retVal.remove(warp);
             }
         }
 
@@ -95,43 +140,64 @@ public class WarpManager
      */
     public Warp getWarp(String warpName, Player requestingPlayer)
     {
+        return getWarp(warpName, requestingPlayer, getPersistenceProvider());
+    }
+
+    /**
+     * Gets a named warp object from persistence
+     *
+     * @param warpName the name of the warp to get
+     * @param requestingPlayer the player who is requesting this warp
+     * @param persistenceProvider the persistence provider implementation
+     *
+     * @return a warp object
+     */
+    public Warp getWarp(String warpName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
+    {
         Warp retVal = null;
 
         if(warpName != null && requestingPlayer != null)
         {
-            // if the warp name contains a dot, then this is the fully qualified name, so we can use it as-is
+            // start with the list of available warps.  This allows the available warps method to weed out anything we shouldn't see
+            List<Warp> availableWarpsForUser = getAvailableWarpsForUser(requestingPlayer.getDisplayName(),
+                                                                        requestingPlayer,
+                                                                        persistenceProvider);
+
+            // if the warpName contains a dot, let's assume they're trying to use a fully qualified name
             if(warpName.contains("."))
             {
-                retVal = plugin.getDatabase().find(Warp.class).where().ieq("fullyQualifiedName", warpName).findUnique();
-                // we need to null this back out if this player doesn't have access to this warp
-                if(!retVal.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()) &&
-                   retVal.getWarpType() == WarpType.PRIVATE)
+                for(Warp warp : availableWarpsForUser)
                 {
-                    retVal = null;
+                    if(warp.getFullyQualifiedName().equalsIgnoreCase(warpName))
+                        retVal = warp;
                 }
             }
-            else // if it doesn't have a dot, the user didn't specify an owner, so default to self and build the fully qualified name
+            else // otherwise, let's get all warps that have that name, then decide which to return
             {
-                // get the list of warps from the db that have the name requested
-                List<Warp> warpList = plugin.getDatabase().find(Warp.class).where().ieq("name", warpName).findList();
-                // if there's more than one, iterate through until we find the one owned by the player
-                if(warpList.size() > 1)
+                // build a list of matching warps
+                List<Warp> matchingWarps = new ArrayList<Warp>();
+                for(Warp warp : availableWarpsForUser)
                 {
-                    for (Warp warp : warpList)
+                    if(warp.getName().equalsIgnoreCase(warpName))
                     {
-                        if(warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
-                        {
-                            retVal = warp;
-                            break;
-                        }
+                        matchingWarps.add(warp);
                     }
                 }
-                else if(warpList.size() == 1)
+
+                // if we have only one match, let's return it
+                if(matchingWarps.size() == 1)
                 {
-                    Warp warp = warpList.get(0);
-                    // since we're looking up by name only (not fully qualified), let's make sure we don't return a private one
-                    if(warp.getWarpType() != WarpType.PRIVATE)
-                        retVal = warp;
+                    retVal = matchingWarps.get(0);
+                }
+                // if we have more than one, we have a naming collision.  In this case it only make sense to return one by just the name
+                // if that warp belongs to the requesting player.  Otherwise they need to request it with the fully qualified name
+                else if(matchingWarps.size() > 1)
+                {
+                    for(Warp warp : matchingWarps)
+                    {
+                        if(warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
+                            retVal = warp;
+                    }
                 }
             }
         }

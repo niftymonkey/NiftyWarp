@@ -81,7 +81,7 @@ public class WarpManager
      */
     public List<Warp> getVisibleWarpsForUser(String playerName, Player requestingPlayer)
     {
-        return getAvailableWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
+        return getVisibleWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
     }
 
     /**
@@ -235,7 +235,12 @@ public class WarpManager
      */
     public Warp addWarp(String warpName, Player owner, WarpType warpType, Location location, IPersistenceProvider persistenceProvider)
     {
-        Warp retVal = new Warp();
+        // deleting then saving for now, since update seems to be failing me on location changes
+        Warp retVal = getWarp(warpName, owner, persistenceProvider);
+        if( (retVal != null) && (retVal.getOwner().equalsIgnoreCase(owner.getDisplayName())) )
+            persistenceProvider.delete(retVal);
+
+        retVal = new Warp();
         retVal.setName(warpName);
         retVal.setOwner(owner.getDisplayName());
         retVal.setWarpType(warpType);

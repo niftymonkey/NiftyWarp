@@ -149,7 +149,8 @@ public class ListWarpsCommand implements CommandExecutor
                     }
 
                     // remove the last comma and whitespace
-                    otherOwnedWarpStr = otherOwnedWarpStr.trim().substring(0, otherOwnedWarpStr.length()-2);
+                    if(otherOwnedWarpStr.endsWith(", "))
+                        otherOwnedWarpStr = otherOwnedWarpStr.trim().substring(0, otherOwnedWarpStr.length()-2);
 
                     // create a line that shows the warp type names in their color for clarity
                     String warpTypesInfo = ChatColor.WHITE + "(" +

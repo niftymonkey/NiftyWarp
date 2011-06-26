@@ -56,7 +56,7 @@ public class WarpManagerTest
         warpList.addAll(getDefaultPlayerWarps(PLAYER_TWO_NAME));
         warpList.addAll(getDefaultPlayerWarps(PLAYER_THREE_NAME));
         
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
         
         ////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ public class WarpManagerTest
         warpList.addAll(getDefaultPlayerWarps(PLAYER_TWO_NAME));
         warpList.addAll(getDefaultPlayerWarps(PLAYER_THREE_NAME));
 
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         ////////////////////////////////////////////////////////
@@ -128,7 +128,7 @@ public class WarpManagerTest
         List<Warp> warpList = new ArrayList<Warp>();
         warpList.addAll(playerOneWarps);
 
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         // setup some expected results
@@ -184,7 +184,7 @@ public class WarpManagerTest
         List<Warp> warpList = new ArrayList<Warp>();
         warpList.addAll(playerOneWarps);
 
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         // setup some expected results
@@ -242,7 +242,7 @@ public class WarpManagerTest
         warpList.addAll(playerOneWarps);
         warpList.addAll(playerTwoWarps);
 
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         // setup some expected results
@@ -302,7 +302,7 @@ public class WarpManagerTest
         warpList.addAll(playerOneWarps);
         warpList.addAll(playerTwoWarps);
 
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         // setup some expected results
@@ -380,7 +380,7 @@ public class WarpManagerTest
         when(mockLocationListed.getPitch()).thenReturn(1.5f);
         when(mockLocationListed.getYaw()).thenReturn(1.75f);
 
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
 
         ////////////////////////////////////////////////////////
         // Run Test(s)
@@ -416,7 +416,7 @@ public class WarpManagerTest
 
         // create and set a list of warps that will be returned from the persistence provider
         List<Warp> warpList = getDefaultPlayerWarps(PLAYER_ONE_NAME);
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         Warp warpToDelete = warpList.get(0);
@@ -447,7 +447,7 @@ public class WarpManagerTest
 
         // create and set a list of warps that will be returned from the persistence provider
         List<Warp> warpList = getDefaultPlayerWarps(PLAYER_ONE_NAME);
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         Warp warpToRename = warpList.get(0);
@@ -484,7 +484,7 @@ public class WarpManagerTest
         // create and warp for the test persistence provider that will me modified
         List<Warp> warpList = new ArrayList<Warp>();
         warpList.add(new Warp("foo", PLAYER_ONE_NAME, WarpType.LISTED, "testWorld", 0, 0, 0, 1f, 2f));
-        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 
         Warp warpToModify = warpList.get(0);
@@ -564,7 +564,7 @@ public class WarpManagerTest
  * Date: 6/22/11
  * Time: 11:12 PM
  */
-class TestPersistenceProvider implements IPersistenceProvider
+class UnitTestPersistenceProvider implements IPersistenceProvider
 {
     private List<Warp> warpList = new ArrayList<Warp>();
 

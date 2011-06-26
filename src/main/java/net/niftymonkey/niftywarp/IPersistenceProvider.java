@@ -20,4 +20,34 @@ public interface IPersistenceProvider
      * @return a list of all the warps we have persisted
      */
     List<Warp> getAllWarps();
+
+    /**
+     * Gets the warps that name specified
+     *
+     * @param name the name of the warp
+     * @return a list of warps that have that name
+     */
+    List<Warp> getWarpsByName(String name);
+
+    /**
+     * Stores a warp into persistence
+     *
+     * @param warp the warp object to persist
+     */
+    void save(Warp warp);
+
+    /**
+     * Updates an existing warp object
+     *
+     * @param warp the warp object to update
+     */
+    void update(Warp warp);
+
+    /**
+     * Deletes a warp from persistence
+     *
+     * @param warp the warp object to remove
+     */
+    void delete(Warp warp);
+
 }

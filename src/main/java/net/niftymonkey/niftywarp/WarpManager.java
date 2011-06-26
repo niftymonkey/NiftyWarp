@@ -218,19 +218,30 @@ public class WarpManager
      */
     public Warp addWarp(String warpName, Player owner, WarpType warpType, Location location)
     {
-        // if one exists, delete it
-        // NOTE: doing this for now because save() doesn't seem to be updating existing warps
-        Warp retVal = getWarp(warpName, owner);
-        plugin.getDatabase().delete(retVal);
+        return addWarp(warpName, owner, warpType, location, getPersistenceProvider());
+    }
 
-        // now let's make a new one
-        retVal = new Warp();
+    /**
+     * Adds a warp to the list using the supplied parameters
+     *
+     *
+     * @param warpName the name of the warp
+     * @param owner the player creating this warp
+     * @param warpType the warpType for this warp
+     * @param location the {@link org.bukkit.Location} object that represents this warp
+     * @param persistenceProvider the persistence provider implementation
+     *
+     * @return the Warp that was created
+     */
+    public Warp addWarp(String warpName, Player owner, WarpType warpType, Location location, IPersistenceProvider persistenceProvider)
+    {
+        Warp retVal = new Warp();
         retVal.setName(warpName);
         retVal.setOwner(owner.getDisplayName());
         retVal.setWarpType(warpType);
         retVal.setLocation(location);
 
-        plugin.getDatabase().save(retVal);
+        persistenceProvider.save(retVal);
 
         return retVal;
     }
@@ -248,11 +259,28 @@ public class WarpManager
     public boolean deleteWarp(String warpName, Player requestingPlayer)
         throws InternalPermissionsException
     {
+        return deleteWarp(warpName, requestingPlayer, getPersistenceProvider());
+    }
+
+    /**
+     * Deletes a warp from the list
+     *
+     * @param warpName the name of the warp
+     * @param requestingPlayer the player requesting this action
+     * @param persistenceProvider the persistence provider implementation
+     *
+     * @return true if deleted, false if not
+     *
+     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
+     */
+    public boolean deleteWarp(String warpName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
+        throws InternalPermissionsException
+    {
         boolean retVal = false;
 
         if(warpName != null && requestingPlayer != null)
         {
-            Warp warp = getWarp(warpName, requestingPlayer);
+            Warp warp = getWarp(warpName, requestingPlayer, persistenceProvider);
             if(warp != null)
             {
                 boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
@@ -264,7 +292,7 @@ public class WarpManager
                 // either they're deleting their own, or they aren't but they have the admin delete priv
                 if( isOwner || hasAdminDelete )
                 {
-                    plugin.getDatabase().delete(warp);
+                    persistenceProvider.delete(warp);
                     retVal = true;
                 }
                 else
@@ -289,12 +317,30 @@ public class WarpManager
     public boolean renameWarp(String warpName, String newWarpName, Player requestingPlayer)
         throws InternalPermissionsException
     {
+        return renameWarp(warpName, newWarpName, requestingPlayer, getPersistenceProvider());
+    }
+
+    /**
+     * Renames a warp in the system.
+     *
+     * @param warpName the name of the warp to rename
+     * @param newWarpName the new name of the warp
+     * @param requestingPlayer the player requesting this action
+     * @param persistenceProvider the persistence provider implementation
+     *
+     * @return true if renamed, false if not
+     *
+     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
+     */
+    public boolean renameWarp(String warpName, String newWarpName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
+        throws InternalPermissionsException
+    {
         boolean retVal = false;
 
         if(warpName != null && newWarpName != null && requestingPlayer != null)
         {
             // since it exists, let's get it out so we can modify it
-            Warp warp = getWarp(warpName, requestingPlayer);
+            Warp warp = getWarp(warpName, requestingPlayer, persistenceProvider);
 
             // if we're changing one we don't own, we only need to change the name to the part after the dot
             if(!warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
@@ -313,7 +359,7 @@ public class WarpManager
                 warp.setName(newWarpName);
 
                 // update the database
-                plugin.getDatabase().update(warp);
+                persistenceProvider.update(warp);
 
                 retVal = true;
             }
@@ -338,13 +384,31 @@ public class WarpManager
     public boolean setWarpType(String warpName, WarpType type, Player requestingPlayer)
         throws InternalPermissionsException
     {
+        return setWarpType(warpName, type, requestingPlayer, getPersistenceProvider());
+    }
+
+    /**
+     * Sets the warp type of an existing named warp
+     *
+     * @param warpName the name of the warp we're going to modify
+     * @param type the type to set that warp to
+     * @param requestingPlayer the player requesting this action
+     * @param persistenceProvider the persistence provider implementation
+     *
+     * @return true if type was set, false if not
+     *
+     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
+     */
+    public boolean setWarpType(String warpName, WarpType type, Player requestingPlayer, IPersistenceProvider persistenceProvider)
+        throws InternalPermissionsException
+    {
         boolean retVal = false;
 
         // make sure we have valid params
         if(warpName != null && type != null && requestingPlayer != null)
         {
             // get our warp
-            Warp warp = getWarp(warpName, requestingPlayer);
+            Warp warp = getWarp(warpName, requestingPlayer, persistenceProvider);
 
             if (warp != null)
             {
@@ -360,7 +424,7 @@ public class WarpManager
                     // change the warpType
                     warp.setWarpType(type);
                     // update the database
-                    plugin.getDatabase().update(warp);
+                    persistenceProvider.update(warp);
                     retVal = true;
                 }
                 else

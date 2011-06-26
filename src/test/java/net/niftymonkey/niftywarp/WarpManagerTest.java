@@ -1,5 +1,7 @@
 package net.niftymonkey.niftywarp;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 
 /**
@@ -341,6 +344,167 @@ public class WarpManagerTest
         assertEquals(expectedListedWarp, listedWarp);
     }
 
+    @Test
+    public void addWarp() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+        // mock world
+        World mockWorld = Mockito.mock(World.class);
+        when(mockWorld.getName()).thenReturn("testWorld");
+        // mock locations
+        Location mockLocationPrivate = Mockito.mock(Location.class);
+        when(mockLocationPrivate.getWorld()).thenReturn(mockWorld);
+        when(mockLocationPrivate.getX()).thenReturn(10.0);
+        when(mockLocationPrivate.getY()).thenReturn(20.0);
+        when(mockLocationPrivate.getZ()).thenReturn(30.0);
+        when(mockLocationPrivate.getPitch()).thenReturn(1.5f);
+        when(mockLocationPrivate.getYaw()).thenReturn(1.75f);
+        Location mockLocationUnlisted = Mockito.mock(Location.class);
+        when(mockLocationUnlisted.getWorld()).thenReturn(mockWorld);
+        when(mockLocationUnlisted.getX()).thenReturn(20.0);
+        when(mockLocationUnlisted.getY()).thenReturn(30.0);
+        when(mockLocationUnlisted.getZ()).thenReturn(40.0);
+        when(mockLocationUnlisted.getPitch()).thenReturn(1.5f);
+        when(mockLocationUnlisted.getYaw()).thenReturn(1.75f);
+        Location mockLocationListed = Mockito.mock(Location.class);
+        when(mockLocationListed.getWorld()).thenReturn(mockWorld);
+        when(mockLocationListed.getX()).thenReturn(30.0);
+        when(mockLocationListed.getY()).thenReturn(40.0);
+        when(mockLocationListed.getZ()).thenReturn(50.0);
+        when(mockLocationListed.getPitch()).thenReturn(1.5f);
+        when(mockLocationListed.getYaw()).thenReturn(1.75f);
+
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        Warp privateWarp = warpManager.addWarp("testWarp_P", mockPlayerOne, WarpType.PRIVATE, mockLocationPrivate, testPersistenceProvider);
+        Warp unlistedWarp = warpManager.addWarp("testWarp_U", mockPlayerOne, WarpType.UNLISTED, mockLocationUnlisted, testPersistenceProvider);
+        Warp listedWarp = warpManager.addWarp("testWarp_L", mockPlayerOne, WarpType.LISTED, mockLocationListed, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        List<Warp> testList1 = testPersistenceProvider.getWarpsByName("testWarp_P");
+        List<Warp> testList2 = testPersistenceProvider.getWarpsByName("testWarp_U");
+        List<Warp> testList3 = testPersistenceProvider.getWarpsByName("testWarp_L");
+        assertEquals(testList1.get(0), privateWarp);
+        assertEquals(testList2.get(0), unlistedWarp);
+        assertEquals(testList3.get(0), listedWarp);
+    }
+
+    @Test
+    public void deleteWarp() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> warpList = getDefaultPlayerWarps(PLAYER_ONE_NAME);
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        Warp warpToDelete = warpList.get(0);
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        warpManager.deleteWarp(warpToDelete.getName(), mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        assertFalse(testPersistenceProvider.getAllWarps().contains(warpToDelete));
+    }
+
+    @Test
+    public void renameWarp() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> warpList = getDefaultPlayerWarps(PLAYER_ONE_NAME);
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        Warp warpToRename = warpList.get(0);
+        String warpToRenameName = warpToRename.getName();
+        String warpNewName = "renamedWarp";
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        warpManager.renameWarp(warpToRenameName, warpNewName, mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        List<Warp> beforeRename = testPersistenceProvider.getWarpsByName(warpToRenameName);
+        List<Warp> afterRename = testPersistenceProvider.getWarpsByName(warpNewName);
+        assertEquals(0, beforeRename.size());
+        assertEquals(1, afterRename.size());
+    }
+
+    @Test
+    public void setWarpType() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and warp for the test persistence provider that will me modified
+        List<Warp> warpList = new ArrayList<Warp>();
+        warpList.add(new Warp("foo", PLAYER_ONE_NAME, WarpType.LISTED, "testWorld", 0, 0, 0, 1f, 2f));
+        TestPersistenceProvider testPersistenceProvider = new TestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        Warp warpToModify = warpList.get(0);
+        String warpToModifyName = warpToModify.getName();
+        WarpType newType = WarpType.PRIVATE;
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        warpManager.setWarpType(warpToModifyName, newType, mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        Warp warpAfterMod = testPersistenceProvider.getAllWarps().get(0);
+        assertEquals(WarpType.PRIVATE, warpAfterMod.getWarpType());
+    }
+
 
     ////////////////////////////////////////////////////////
     // Helper Methods
@@ -424,4 +588,69 @@ class TestPersistenceProvider implements IPersistenceProvider
         return warpList;
     }
 
+    /**
+     * Gets the warps that name specified
+     *
+     * @param name the name of the warp
+     * @return a list of warps that have that name
+     */
+    @Override
+    public List<Warp> getWarpsByName(String name)
+    {
+        List<Warp> retVal = new ArrayList<Warp>();
+
+        List<Warp> allWarps = getAllWarps();
+        for(Warp warp : allWarps)
+        {
+            if(warp.getName().equalsIgnoreCase(name))
+                retVal.add(warp);
+        }
+
+        return retVal;
+    }
+
+    /**
+     * Stores a warp into persistence
+     *
+     * @param warp the warp object to persist
+     */
+    @Override
+    public void save(Warp warp)
+    {
+        // if this one is already in the list, remove it so we can replace it with the new version
+        delete(warp);
+
+        // "store" it
+        warpList.add(warp);
+    }
+
+    /**
+     * Updates an existing warp object
+     *
+     * @param warp the warp object to update
+     */
+    @Override
+    public void update(Warp warp)
+    {
+        save(warp);
+    }
+
+    /**
+     * Deletes a warp from persistence
+     *
+     * @param warp the warp object to remove
+     */
+    @Override
+    public void delete(Warp warp)
+    {
+        Warp warpToDelete = null;
+        for(Warp tmpWarp : warpList)
+        {
+            if(tmpWarp.getFullyQualifiedName().equalsIgnoreCase(warp.getFullyQualifiedName()))
+                warpToDelete = tmpWarp;
+        }
+
+        if(warpToDelete != null)
+            warpList.remove(warpToDelete);
+    }
 }

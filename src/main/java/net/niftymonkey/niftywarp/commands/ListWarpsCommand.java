@@ -65,7 +65,7 @@ public class ListWarpsCommand implements CommandExecutor
 
                 // get the list of warps this user is allowed to see
                 // TODO: perhaps implement getting warps for a different user (using the first param of the getAvailableWarpsForUser() method)?
-                List<Warp> warpsList = plugin.getWarpManager().getAvailableWarpsForUser(player.getDisplayName(), player);
+                List<Warp> warpsList = plugin.getWarpManager().getVisibleWarpsForUser(player.getDisplayName(), player);
 
                 if(warpsList.size() > 0)
                 {

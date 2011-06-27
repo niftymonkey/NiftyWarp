@@ -38,6 +38,7 @@ public class NiftyWarp extends JavaPlugin
 
     private WarpManager warpManager;
     private Configuration configuration;
+    private boolean permissionsPluginEnabled;
 
     /**
      * Called when the plugin is enabled
@@ -101,10 +102,22 @@ public class NiftyWarp extends JavaPlugin
       if (this.permissionHandler == null) {
           if (permissionsPlugin != null) {
               this.permissionHandler = ((Permissions) permissionsPlugin).getHandler();
+              permissionsPluginEnabled = true;
           } else {
               log.info("Permission system not detected, defaulting to OP");
+              permissionsPluginEnabled = false;
           }
       }
+    }
+
+    /**
+     * Indicates whether or not the permission plugin is enabled
+     *
+     * @return true if permissions should be used, false if not
+     */
+    public boolean isPermissionsPluginEnabled()
+    {
+        return permissionsPluginEnabled;
     }
 
     /**
@@ -133,52 +146,68 @@ public class NiftyWarp extends JavaPlugin
     public boolean hasPermission(Player inPlayer, String inKey, String inCommandString, boolean displayDenialMessage)
     {
         boolean result = false;
-        String worldName = null;
-        String playerName = null;
 
-        if(inPlayer != null && inKey != null)
+        if(isPermissionsPluginEnabled())
         {
-            worldName = inPlayer.getWorld().getName();
-            playerName = inPlayer.getName();
+            String worldName = null;
+            String playerName = null;
 
-            if (this.permissionHandler.has(worldName, playerName, inKey))
+            if(inPlayer != null && inKey != null)
             {
-                result = true;
-            }
+                worldName = inPlayer.getWorld().getName();
+                playerName = inPlayer.getName();
 
-            // let's only log permission check on failure to reduce logfile chattiness
-            if(!result)
+                if (this.permissionHandler.has(worldName, playerName, inKey))
+                {
+                    result = true;
+                }
+
+                // let's only log permission check on failure to reduce logfile chattiness
+                if(!result)
+                {
+                    if(log.isLoggable(Level.INFO))
+                    {
+                        log.info(AppStrings.PERM_CHECK_FAIL_LOG_PREFIX +
+                                 "player:"  + playerName + ", " +
+                                 "key:" + inKey + ", " +
+                                 "command:" + inCommandString + " ]");
+                    }
+                }
+
+                // only bother doing this if they passed in true to this method
+                if(displayDenialMessage)
+                {
+                    boolean showFailureMessage = getConfiguration().getBoolean(AppStrings.PROPERTY_MSG_SHOWPERM_FAILURE, true);
+                    //--Notify player if permission was denied if they failed and the config says the user of this addon
+                    // wants these messages displayed --
+                    if(!result && showFailureMessage)
+                    {
+                        String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
+                        //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
+                        inPlayer.sendMessage(ChatColor.RED + usrMsg);
+                        usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
+                        //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
+                        inPlayer.sendMessage(ChatColor.RED + usrMsg);
+                        inPlayer.sendMessage(ChatColor.RED + inKey);
+                    }
+                }
+            }
+            else
+            {
+                if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): Player or key was NULL");
+            }
+        }
+        else // if the permissions plugin isn't enabled, only ops can warp
+        {
+            if(inPlayer.isOp())
+                result = true;
+            else
             {
                 if(log.isLoggable(Level.INFO))
                 {
-                    log.info(AppStrings.PERM_CHECK_FAIL_LOG_PREFIX +
-                             "player:"  + playerName + ", " +
-                             "key:" + inKey + ", " +
-                             "command:" + inCommandString + " ]");
+                    log.info(inPlayer.getDisplayName() + " is not an Op and consequently cannot use the command: " + inCommandString);
                 }
             }
-
-            // only bother doing this if they passed in true to this method
-            if(displayDenialMessage)
-            {
-                boolean showFailureMessage = getConfiguration().getBoolean(AppStrings.PROPERTY_MSG_SHOWPERM_FAILURE, true);
-                //--Notify player if permission was denied if they failed and the config says the user of this addon
-                // wants these messages displayed --
-                if(!result && showFailureMessage)
-                {
-                    String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
-                    //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
-                    inPlayer.sendMessage(ChatColor.RED + usrMsg);
-                    usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
-                    //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
-                    inPlayer.sendMessage(ChatColor.RED + usrMsg);
-                    inPlayer.sendMessage(ChatColor.RED + inKey);
-                }
-            }
-        }
-        else
-        {
-            if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): Player or key was NULL");
         }
         return result;
     }

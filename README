@@ -57,6 +57,7 @@ is owned by niftymonkey, I would type:
     /nwwarp niftymonkey.foo
 
 
+
 CONFIGURATION:
 ---------------------------------
 Currently there are only a few configuration options.  They are stored in the <pluginsDir>/NiftyWarp/NiftyWarp.yml file

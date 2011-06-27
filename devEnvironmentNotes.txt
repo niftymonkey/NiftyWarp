@@ -53,11 +53,11 @@ BASIC DEV ENVIRONMENT SETUP STEPS:
 * Open IntelliJ and "Open Project..." and select the pom.xml from the top level project directory
 
 * [Optional] Create a properties file to support the dev profile used to deploy the jar for testing on your server.
-  - Create a niftywarp-1.0-beta.properties file in your <user.home>/dev/properties folder and place the following property in it
+  - Create a niftywarp-1.0.properties file in your <user.home>/dev/properties folder and place the following property in it
   
     minecraft.server.dir=<path to your craftbukkit server directory>
 
-  - The "1.0-beta" part of the property file name needs to match the version of the project in the pom.xml
+  - The "1.0" part of the property file name needs to match the version of the project in the pom.xml
   - If you do this step, you'll need to select the "dev.install.jar" profile
 
 * Run a maven clean/install and you should have the jar in your <minecraft.server.dir>/plugins directory

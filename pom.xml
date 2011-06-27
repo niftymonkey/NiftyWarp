@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.niftymonkey.niftywarp</groupId>
     <artifactId>niftywarp</artifactId>
-    <version>1.0-beta</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     
     <build>
@@ -129,7 +129,6 @@
         <developerConnection>scm:git:git@github.com:niftymonkey/NiftyWarp.git</developerConnection>
     </scm>
 
-    <!-- Dropping in repository info, even though they don't seem to resolve currently -->
     <repositories>
         <!-- Repository for Bukkit -->
         <repository>

@@ -44,7 +44,11 @@ Use a warp
 
 WARPING:
 ---------------------------------
-All warps have an owner.  When attempting to use a warp that belongs to someone else, you may have to use the fully qualified name which is <owner>.<warpname> ... this situation only occurs when a warp that someone else owns has the same name as one that you own.  For listed warps, this will be obvious due to how it is listed.  However when attempting to use unlisted warps, you may have to take this into account on your own.  For instance, if I want to use an unlisted warp called "foo" that is owned by niftymonkey, I would type:
+All warps have an owner.  When attempting to use a warp that belongs to someone else, you may have to use the fully qualified
+name which is <owner>.<warpname> ... this situation only occurs when a warp that someone else owns has the same name as one that
+you own.  For listed warps, this will be obvious due to how it is listed.  However when attempting to use unlisted warps, you may
+have to take this into account on your own.  For instance, if I want to use an unlisted warp called "foo" that is owned by
+niftymonkey, I would type:
 
     /nwwarp niftymonkey.foo
 

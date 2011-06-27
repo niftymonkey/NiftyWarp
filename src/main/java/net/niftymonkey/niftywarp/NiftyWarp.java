@@ -145,10 +145,18 @@ public class NiftyWarp extends JavaPlugin
             {
                 result = true;
             }
-            if(log.isLoggable(Level.INFO)) log.info("hasPermission(): Checking permission for " +
-                    "player = '"  + playerName + "', \nkey = '" + inKey +
-                    "', \ncommand = '" + inCommandString +
-                    "', \nresult = " + result);
+
+            // let's only log permission check on failure to reduce logfile chattiness
+            if(!result)
+            {
+                if(log.isLoggable(Level.INFO))
+                {
+                    log.info(AppStrings.PERM_CHECK_FAIL_LOG_PREFIX +
+                             "player:"  + playerName + ", " +
+                             "key:" + inKey + ", " +
+                             "command:" + inCommandString + " ]");
+                }
+            }
 
             // only bother doing this if they passed in true to this method
             if(displayDenialMessage)

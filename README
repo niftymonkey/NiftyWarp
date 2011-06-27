@@ -4,10 +4,10 @@ Nifty Warp is a server-side plugin (built on bukkit) that allows for private, li
 WARP TYPES:
 ---------------------------------
 "private"
-- This is the default type of a warp if no type parameter is used when adding a warp.  When listing warps, private warps will only show up the their owner's lists.  When warping, only the owner will be able to warp to that named warp.
+- This is the default type of a warp if no type parameter is used when adding a warp.  When listing warps, private warps will only show up in their owner's lists.  When warping, only the owner will be able to warp to that named warp.
 
 "unlisted"
-- When listing warps, unlisted warps will only show up the their owner's lists.  However, when using warps, anyone can use the warp by typing the fully qualified name of the warp.  This type is useful if you want create useful warps to places that you can let your friends know about, but you don't want to clutter up everyone's list.
+- When listing warps, unlisted warps will only show up the their owner's lists.  However, when using warps, anyone can use the warp.  If the warp has the same name as one the owner has, you can use it by typing the fully qualified name of the warp.  This warp type is useful if you want create useful warps to places that you can let your friends know about, but that aren't important enough to clutter up everyone's list with.
 
 "listed"
 - This type of warp is able to be seen and used by anyone.
@@ -62,14 +62,15 @@ messages:
 
     # this specifies whether or not to show the user a message when they don't have the proper permission set
     # this message also indicates the exact permission that needs to be set in order to use that command
-    # this is intended to be a helper message so that it's easy to determine which permission is needed to use that command
+    # this is intended to be a helper message for determining which permission is needed to use that command
     # values: true | false  (defaults to true)
     permissions:
         show-fail-message: true
 
 # warp-related options
 warps:
-    # this specifies the type to use when you are creating new warps without specifying the type with the type parameter
+
+    # this specifies the type to use when creating new warps without specifying the type
     # value: private | unlisted | listed  (defaults to unlisted)
     default-type: unlisted
 

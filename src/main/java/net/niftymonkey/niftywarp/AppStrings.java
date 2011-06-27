@@ -38,6 +38,7 @@ public class AppStrings
     public static final String WARP_CANNOT_SET_OTHERS     = "You do not have permission to set someone else's warp type.";
     public static final String WARPS_YOURS                = "Your Warps: ";
     public static final String WARPS_OTHERS               = "Other's Warps: ";
+    public static final String PERM_CHECK_FAIL_LOG_PREFIX = "Failed permission check [ ";
 
     // message strings (private)
     private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";

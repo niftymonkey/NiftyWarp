@@ -8,12 +8,14 @@ commands:
    nwadd:
       aliases: [nwa, addwarp, createwarp, setwarp]
       description: Sets a named warp to your current location
+      permission: niftywarp.use.add
       usage: |
            /<command> <warpname> [private|listed|unlisted]
            Type defaults to private.
    nwdelete:
       aliases: [nwd, deletewarp, removewarp]
       description: Deletes a named warp
+      permission: niftywarp.use.delete
       usage: |
            /<command> [<owner>.]<warpname>
            Example Usages:
@@ -23,12 +25,14 @@ commands:
    nwlist:
       aliases: [nwl, listwarps]
       description: Lists all of the warps available to you
+      permission: niftywarp.use.list
       usage: |
            /<command> [private|listed|unlisted]
            If no type is provided, will show all warps you own, plus any public-listed warps.
    nwrename:
       aliases: [nwr, renamewarp]
       description: Renames a named warp
+      permission: niftywarp.use.rename
       usage: |
            /<command> [<owner>.]<warpname> [<owner>.]<newwarpname>
            Example Usages:
@@ -38,11 +42,13 @@ commands:
    nwset:
       aliases: [nws, settype, setwarptype]
       description: Sets the type of an existing named warp
+      permission: niftywarp.use.set
       usage: |
            /<command> [<owner>.]<warpname> private|listed|unlisted
    nwwarp:
       aliases: [nw, nww, warp]
       description: Warps you to a named warp location
+      permission: niftywarp.use.warp
       usage: |
            /<command> [<owner>.]<warpname>
            Example Usages:

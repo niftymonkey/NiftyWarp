@@ -164,7 +164,7 @@ public class WarpManager
                                                                         persistenceProvider);
 
             // if the warpName contains a dot, let's assume they're trying to use a fully qualified name
-            if(warpName.contains("."))
+            if(warpName.contains(AppStrings.FQL_DELIMITER))
             {
                 for(Warp warp : availableWarpsForUser)
                 {
@@ -172,7 +172,8 @@ public class WarpManager
                         retVal = warp;
                 }
             }
-            else // otherwise, let's get all warps that have that name, then decide which to return
+
+            //let's get all warps that have that name, then decide which to return
             {
                 // build a list of matching warps
                 List<Warp> matchingWarps = new ArrayList<Warp>();
@@ -349,7 +350,7 @@ public class WarpManager
 
             // if we're changing one we don't own, we only need to change the name to the part after the dot
             if(!warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
-                newWarpName = newWarpName.substring(newWarpName.indexOf(".")+1);
+                newWarpName = newWarpName.substring(newWarpName.indexOf(AppStrings.FQL_DELIMITER)+1);
 
             boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
             boolean hasAdminRename = plugin.hasPermission(requestingPlayer,

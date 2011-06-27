@@ -18,13 +18,14 @@ import static org.mockito.Mockito.when;
 /**
  * Author: Mark Lozano
  */
+@SuppressWarnings({"JavaDoc"})
 public class WarpManagerTest
 {
     // some testing constants
     public static final String PLAYER_ONE_NAME   = "playerOne";
     public static final String PLAYER_TWO_NAME   = "playerTwo";
     public static final String PLAYER_THREE_NAME = "playerThree";
-    public static final String WORLD_NAME        = "world";
+    public static final String WORLD_NAME        = "testWorld";
 
     private NiftyWarp mockNiftyWarpPlugin = null;
 
@@ -344,6 +345,58 @@ public class WarpManagerTest
         assertEquals(expectedListedWarp, listedWarp);
     }
 
+    /**
+     * Tests getting a warp whose name contains the delimiter usually reserved for fully qualified names.  This ensures the ability to
+     * be able to get the warp even when it contains the fql delimiter.  This test also verifies ability to look up by the name and the
+     * fully qualified name.  Lastly this test also verifies ability to lookup when there are naming collisions between an owned and a
+     * non-owned warp
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getWarp_containsDelimiter() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        // mock player
+        Player mockPlayerOne = Mockito.mock(Player.class);
+        when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
+
+        // create and set a list of warps that will be returned from the persistence provider
+        List<Warp> warpList = new ArrayList<Warp>();
+
+        String warpName = "foo" + AppStrings.FQL_DELIMITER + "bar";
+        Warp playerOwned = new Warp(warpName, PLAYER_ONE_NAME, WarpType.PRIVATE, WORLD_NAME, 0, 0, 0, 1f, 1f);
+        Warp nonPlayerOwned = new Warp(warpName, PLAYER_TWO_NAME, WarpType.UNLISTED, WORLD_NAME, 0, 0, 0, 1f, 1f);
+        warpList.add(playerOwned);
+        warpList.add(nonPlayerOwned);
+
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        WarpManager warpManager = new WarpManager(mockNiftyWarpPlugin);
+        Warp poNameResult = warpManager.getWarp(playerOwned.getName(), mockPlayerOne, testPersistenceProvider);
+        Warp poFQLResult = warpManager.getWarp(playerOwned.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+        Warp npoNameResult = warpManager.getWarp(nonPlayerOwned.getName(), mockPlayerOne, testPersistenceProvider);
+        Warp npoFQLResult = warpManager.getWarp(nonPlayerOwned.getFullyQualifiedName(), mockPlayerOne, testPersistenceProvider);
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        assertEquals(playerOwned, poNameResult);
+        assertEquals(playerOwned, poFQLResult);
+        // this actually expects the player owned warp since the name passed in is not "fully qualified"
+        assertEquals(playerOwned, npoNameResult);
+        assertEquals(nonPlayerOwned, npoFQLResult);
+    }
+
     @Test
     public void addWarp() throws Exception
     {
@@ -356,7 +409,7 @@ public class WarpManagerTest
         when(mockPlayerOne.getDisplayName()).thenReturn(PLAYER_ONE_NAME);
         // mock world
         World mockWorld = Mockito.mock(World.class);
-        when(mockWorld.getName()).thenReturn("testWorld");
+        when(mockWorld.getName()).thenReturn(WORLD_NAME);
         // mock locations
         Location mockLocationPrivate = Mockito.mock(Location.class);
         when(mockLocationPrivate.getWorld()).thenReturn(mockWorld);
@@ -483,7 +536,7 @@ public class WarpManagerTest
 
         // create and warp for the test persistence provider that will me modified
         List<Warp> warpList = new ArrayList<Warp>();
-        warpList.add(new Warp("foo", PLAYER_ONE_NAME, WarpType.LISTED, "testWorld", 0, 0, 0, 1f, 2f));
+        warpList.add(new Warp("foo", PLAYER_ONE_NAME, WarpType.LISTED, WORLD_NAME, 0, 0, 0, 1f, 2f));
         UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
         testPersistenceProvider.setWarpList(warpList);
 

@@ -157,7 +157,7 @@ public class NiftyWarp extends JavaPlugin
                 worldName = inPlayer.getWorld().getName();
                 playerName = inPlayer.getName();
 
-                if (this.permissionHandler.has(worldName, playerName, inKey))
+                if (this.permissionHandler.has(inPlayer, inKey))
                 {
                     result = true;
                 }

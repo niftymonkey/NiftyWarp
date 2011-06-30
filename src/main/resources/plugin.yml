@@ -55,3 +55,15 @@ commands:
            /<command> hilltop
            /<command> niftymonkey.hilltop
            The owner parameter defaults to self if none is provided.  Owner only needs to be specified if you're not the owner
+   nwhome:
+      aliases: [nwh, home]
+      description: Warps you to your home location
+      permission: niftywarp.use.home
+      usage: |
+           /<command>
+   nwhomeset:
+      aliases: [nwhs, homeset, sethome]
+      description: Sets your home location
+      permission: niftywarp.use.homeset
+      usage: |
+           /<command>

@@ -20,6 +20,9 @@ public class AppStrings
     public static final String COMMAND_SET       = "nwset";
     public static final String COMMAND_WARP      = "nwwarp";
 
+    public static final String COMMAND_HOME      = "nwhome";
+    public static final String COMMAND_HOMESET   = "nwhomeset";
+
     // message strings (public)
     public static final String WARPED_TO_PREFIX           = "Warped to:  ";
     public static final String WARP_NOT_FOUND_PREFIX      = "No warp found for name:  ";
@@ -40,6 +43,8 @@ public class AppStrings
     public static final String WARPS_OTHERS               = "Other's Warps: ";
     public static final String PERM_CHECK_FAIL_LOG_PREFIX = "Failed permission check [ ";
 
+    public static final String HOME_SET_SUCCESS           = "Home warp set.";
+
     // message strings (private)
     private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";
     private static final String ENABLED_MSG_SUFFIX  = " has been enabled";
@@ -55,6 +60,7 @@ public class AppStrings
     public static final String WARP_TYPE_LISTED   = "listed";
     public static final String WARP_TYPE_UNLISTED = "unlisted";
 	public static final String FQL_DELIMITER      = ".";
+    public static final String HOME_WARP_NAME     = "nwhome";
 
     // command permissions Keys
     public static final String COMMAND_ADD_PERMISSION      = "niftywarp.use.add";
@@ -63,6 +69,9 @@ public class AppStrings
     public static final String COMMAND_RENAME_PERMISSION   = "niftywarp.use.rename";
     public static final String COMMAND_SET_PERMISSION      = "niftywarp.use.set";
     public static final String COMMAND_WARP_PERMISSION     = "niftywarp.use.warp";
+
+    public static final String COMMAND_HOME_PERMISSION     = "niftywarp.use.home";
+    public static final String COMMAND_HOMESET_PERMISSION  = "niftywarp.use.homeset";
 
     public static final String COMMAND_ADMIN_DELETE_PERMISSION = "niftywarp.admin.delete";
     public static final String COMMAND_ADMIN_RENAME_PERMISSION = "niftywarp.admin.rename";

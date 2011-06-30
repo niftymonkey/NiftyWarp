@@ -4,6 +4,8 @@ import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import net.niftymonkey.niftywarp.commands.AddWarpCommand;
 import net.niftymonkey.niftywarp.commands.DeleteWarpCommand;
+import net.niftymonkey.niftywarp.commands.HomeCommand;
+import net.niftymonkey.niftywarp.commands.HomeSetCommand;
 import net.niftymonkey.niftywarp.commands.ListWarpsCommand;
 import net.niftymonkey.niftywarp.commands.RenameWarpCommand;
 import net.niftymonkey.niftywarp.commands.SetWarpTypeCommand;
@@ -61,6 +63,8 @@ public class NiftyWarp extends JavaPlugin
         getCommand(AppStrings.COMMAND_ADD).setExecutor(new AddWarpCommand(this));
         getCommand(AppStrings.COMMAND_LIST).setExecutor(new ListWarpsCommand(this));
         getCommand(AppStrings.COMMAND_DELETE).setExecutor(new DeleteWarpCommand(this));
+        getCommand(AppStrings.COMMAND_HOME).setExecutor(new HomeCommand(this));
+        getCommand(AppStrings.COMMAND_HOMESET).setExecutor(new HomeSetCommand(this));
         getCommand(AppStrings.COMMAND_RENAME).setExecutor(new RenameWarpCommand(this));
         getCommand(AppStrings.COMMAND_SET).setExecutor(new SetWarpTypeCommand(this));
         getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));

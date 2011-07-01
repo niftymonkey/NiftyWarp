@@ -25,8 +25,8 @@ public class WarpManager
     {
         this.plugin = niftyWarp;
 
-        // create the warp provider
-        persistenceProvider = new EbeanServerPersistenceProvider(plugin.getDatabase());
+        // create the persistence provider
+        setPersistenceProvider(new EbeanServerPersistenceProvider(plugin.getDatabase()));
     }
 
     /**
@@ -39,6 +39,11 @@ public class WarpManager
         return persistenceProvider;
     }
 
+    public void setPersistenceProvider(IPersistenceProvider persistenceProvider)
+    {
+        this.persistenceProvider = persistenceProvider;
+    }
+
     /**
      * Gets the list of warps that can by used by the player
      *
@@ -48,20 +53,6 @@ public class WarpManager
      * @return a list of warps that the player in the playerName parameter can use
      */
     public List<Warp> getAvailableWarpsForUser(String playerName, Player requestingPlayer)
-    {
-        return getAvailableWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
-    }
-
-    /**
-     * Gets the list of warps that can by used by the player
-     *
-     * @param playerName the name of the player whose warps we're looking up
-     * @param requestingPlayer the name of the player requesting this list
-     * @param persistenceProvider the persistence provider implementation
-     *
-     * @return a list of warps that the player in the playerName parameter can use
-     */
-    public List<Warp> getAvailableWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
     {
         List<Warp> retVal = persistenceProvider.getAllWarps();
 
@@ -81,21 +72,7 @@ public class WarpManager
      */
     public List<Warp> getVisibleWarpsForUser(String playerName, Player requestingPlayer)
     {
-        return getVisibleWarpsForUser(playerName, requestingPlayer, getPersistenceProvider());
-    }
-
-    /**
-     * Gets the list of warps that the player should be able to see when listing warps
-     *
-     * @param playerName the name of the player whose warps we're looking up
-     * @param requestingPlayer the name of the player requesting this list
-     * @param persistenceProvider the persistence provider implementation
-     *
-     * @return a list of warps that the player in the playerName parameter can see
-     */
-    public List<Warp> getVisibleWarpsForUser(String playerName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
-    {
-        List<Warp> retVal = getAvailableWarpsForUser(playerName, requestingPlayer, persistenceProvider);
+        List<Warp> retVal = getAvailableWarpsForUser(playerName, requestingPlayer);
 
         // since the available warps should already have removed private warps that don't belong to this player,
         // all we have to do is remove unlisted ones
@@ -140,28 +117,13 @@ public class WarpManager
      */
     public Warp getWarp(String warpName, Player requestingPlayer)
     {
-        return getWarp(warpName, requestingPlayer, getPersistenceProvider());
-    }
-
-    /**
-     * Gets a named warp object from persistence
-     *
-     * @param warpName the name of the warp to get
-     * @param requestingPlayer the player who is requesting this warp
-     * @param persistenceProvider the persistence provider implementation
-     *
-     * @return a warp object
-     */
-    public Warp getWarp(String warpName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
-    {
         Warp retVal = null;
 
         if(warpName != null && requestingPlayer != null)
         {
             // start with the list of available warps.  This allows the available warps method to weed out anything we shouldn't see
             List<Warp> availableWarpsForUser = getAvailableWarpsForUser(requestingPlayer.getDisplayName(),
-                                                                        requestingPlayer,
-                                                                        persistenceProvider);
+                                                                        requestingPlayer);
 
             // if the warpName contains a dot, let's assume they're trying to use a fully qualified name
             if(warpName.contains(AppStrings.FQL_DELIMITER))
@@ -219,25 +181,8 @@ public class WarpManager
      */
     public Warp addWarp(String warpName, Player owner, WarpType warpType, Location location)
     {
-        return addWarp(warpName, owner, warpType, location, getPersistenceProvider());
-    }
-
-    /**
-     * Adds a warp to the list using the supplied parameters
-     *
-     *
-     * @param warpName the name of the warp
-     * @param owner the player creating this warp
-     * @param warpType the warpType for this warp
-     * @param location the {@link org.bukkit.Location} object that represents this warp
-     * @param persistenceProvider the persistence provider implementation
-     *
-     * @return the Warp that was created
-     */
-    public Warp addWarp(String warpName, Player owner, WarpType warpType, Location location, IPersistenceProvider persistenceProvider)
-    {
         // deleting then saving for now, since update seems to be failing me on location changes
-        Warp retVal = getWarp(warpName, owner, persistenceProvider);
+        Warp retVal = getWarp(warpName, owner);
         if( (retVal != null) && (retVal.getOwner().equalsIgnoreCase(owner.getDisplayName())) )
             persistenceProvider.delete(retVal);
 
@@ -265,28 +210,11 @@ public class WarpManager
     public boolean deleteWarp(String warpName, Player requestingPlayer)
         throws InternalPermissionsException
     {
-        return deleteWarp(warpName, requestingPlayer, getPersistenceProvider());
-    }
-
-    /**
-     * Deletes a warp from the list
-     *
-     * @param warpName the name of the warp
-     * @param requestingPlayer the player requesting this action
-     * @param persistenceProvider the persistence provider implementation
-     *
-     * @return true if deleted, false if not
-     *
-     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
-     */
-    public boolean deleteWarp(String warpName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
-        throws InternalPermissionsException
-    {
         boolean retVal = false;
 
         if(warpName != null && requestingPlayer != null)
         {
-            Warp warp = getWarp(warpName, requestingPlayer, persistenceProvider);
+            Warp warp = getWarp(warpName, requestingPlayer);
             if(warp != null)
             {
                 boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
@@ -323,30 +251,12 @@ public class WarpManager
     public boolean renameWarp(String warpName, String newWarpName, Player requestingPlayer)
         throws InternalPermissionsException
     {
-        return renameWarp(warpName, newWarpName, requestingPlayer, getPersistenceProvider());
-    }
-
-    /**
-     * Renames a warp in the system.
-     *
-     * @param warpName the name of the warp to rename
-     * @param newWarpName the new name of the warp
-     * @param requestingPlayer the player requesting this action
-     * @param persistenceProvider the persistence provider implementation
-     *
-     * @return true if renamed, false if not
-     *
-     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
-     */
-    public boolean renameWarp(String warpName, String newWarpName, Player requestingPlayer, IPersistenceProvider persistenceProvider)
-        throws InternalPermissionsException
-    {
         boolean retVal = false;
 
         if(warpName != null && newWarpName != null && requestingPlayer != null)
         {
             // since it exists, let's get it out so we can modify it
-            Warp warp = getWarp(warpName, requestingPlayer, persistenceProvider);
+            Warp warp = getWarp(warpName, requestingPlayer);
 
             // if we're changing one we don't own, we only need to change the name to the part after the dot
             if(!warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName()))
@@ -390,31 +300,13 @@ public class WarpManager
     public boolean setWarpType(String warpName, WarpType type, Player requestingPlayer)
         throws InternalPermissionsException
     {
-        return setWarpType(warpName, type, requestingPlayer, getPersistenceProvider());
-    }
-
-    /**
-     * Sets the warp type of an existing named warp
-     *
-     * @param warpName the name of the warp we're going to modify
-     * @param type the type to set that warp to
-     * @param requestingPlayer the player requesting this action
-     * @param persistenceProvider the persistence provider implementation
-     *
-     * @return true if type was set, false if not
-     *
-     * @throws InternalPermissionsException if a method required permissions that the requesting player does not have
-     */
-    public boolean setWarpType(String warpName, WarpType type, Player requestingPlayer, IPersistenceProvider persistenceProvider)
-        throws InternalPermissionsException
-    {
         boolean retVal = false;
 
         // make sure we have valid params
         if(warpName != null && type != null && requestingPlayer != null)
         {
             // get our warp
-            Warp warp = getWarp(warpName, requestingPlayer, persistenceProvider);
+            Warp warp = getWarp(warpName, requestingPlayer);
 
             if (warp != null)
             {

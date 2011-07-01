@@ -95,6 +95,11 @@ public class NiftyWarp extends JavaPlugin
         return this.permissionHandler;
     }
 
+    public void setPermissionHandler(PermissionHandler permissionHandler)
+    {
+        this.permissionHandler = permissionHandler;
+    }
+
     /**
      * Courtesy of the example:
      * https://github.com/TheYeti/Permissions/wiki/API-Reference
@@ -267,6 +272,11 @@ public class NiftyWarp extends JavaPlugin
         {
             log.warning(e.getMessage());
         }
+    }
+
+    void setConfiguration(Configuration configuration)
+    {
+        this.configuration = configuration;
     }
 
     @Override

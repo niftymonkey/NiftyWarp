@@ -1,6 +1,7 @@
 package net.niftymonkey.niftywarp;
 
 import net.niftymonkey.niftywarp.commands.AddWarpCommand;
+import net.niftymonkey.niftywarp.commands.DeleteWarpCommand;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -8,6 +9,10 @@ import org.bukkit.util.config.Configuration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -32,6 +37,11 @@ public class CommandsTest
 
     }
 
+    /**
+     * Simple success check.
+     *
+     * @throws Exception
+     */
     @Test
     public void addWarp_success() throws Exception
     {
@@ -44,6 +54,10 @@ public class CommandsTest
         Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
         Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
         NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
+
+        // create a test persistence provider and set that as our warp manager's provider
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
+        mockNiftyWarpPlugin.getWarpManager().setPersistenceProvider(testPersistenceProvider);
 
         AddWarpCommand addWarpCommand = new AddWarpCommand(mockNiftyWarpPlugin);
 
@@ -68,11 +82,15 @@ public class CommandsTest
         assertTrue(success);
 
         // deeper equality check on the warp created
-        IPersistenceProvider persistenceProvider = mockNiftyWarpPlugin.getWarpManager().getPersistenceProvider();
-        assertEquals(persistenceProvider.getAllWarps().get(0).getName(), testWarpName);
-        assertEquals(persistenceProvider.getAllWarps().get(0).getOwner(), mockPlayerOne.getDisplayName());
+        assertEquals(testPersistenceProvider.getAllWarps().get(0).getName(), testWarpName);
+        assertEquals(testPersistenceProvider.getAllWarps().get(0).getOwner(), mockPlayerOne.getDisplayName());
     }
 
+    /**
+     * Failure check for the "no warp name provided" scenario
+     *
+     * @throws Exception
+     */
     @Test
     public void addWarp_failure_noWarpName() throws Exception
     {
@@ -85,6 +103,10 @@ public class CommandsTest
         Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
         Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
         NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
+
+        // create a test persistence provider and set that as our warp manager's provider
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
+        mockNiftyWarpPlugin.getWarpManager().setPersistenceProvider(testPersistenceProvider);
 
         AddWarpCommand addWarpCommand = new AddWarpCommand(mockNiftyWarpPlugin);
 
@@ -108,7 +130,120 @@ public class CommandsTest
         assertFalse(success);
 
         // make sure there's no warp stored
-        IPersistenceProvider persistenceProvider = mockNiftyWarpPlugin.getWarpManager().getPersistenceProvider();
-        assertEquals(persistenceProvider.getAllWarps().size(), 0);
+        assertEquals(testPersistenceProvider.getAllWarps().size(), 0);
+    }
+
+    /**
+     * Simple success check.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void deleteWarp_success() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        World mockWorld = ConstantsAndSMocks.getStubbedWorldMock(ConstantsAndSMocks.WORLD_NAME);
+        Location mockLocation = ConstantsAndSMocks.getStubbedLocationMock(mockWorld, 0, 0, 0, 0, 0);
+        Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
+        Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
+        NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
+
+        List<Warp> warpList = new ArrayList<Warp>();
+        String testWarpName = "testWarpName";
+        // make a warp for deletion
+        Warp warpToDelete = new Warp(testWarpName, mockPlayerOne.getDisplayName(), WarpType.PRIVATE, mockWorld.getName(), 0, 0, 0, 0, 0);
+        // add it to the list we're pre-populating the persistence provider with
+        warpList.add(warpToDelete);
+
+        // "put it in the database"
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        // set this provider as the one to use
+        mockNiftyWarpPlugin.getWarpManager().setPersistenceProvider(testPersistenceProvider);
+
+        DeleteWarpCommand deleteWarpCommand = new DeleteWarpCommand(mockNiftyWarpPlugin);
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        String[] args = new String[1];
+        args[0] = testWarpName;
+
+        boolean success = deleteWarpCommand.onCommand(mockPlayerOne,     // player one is the sender
+                                                      null,              // currently my command executors don't use the command object
+                                                      null,              // currently my command executors don't use the label object
+                                                      args);             // command arguments
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        // check simple success first
+        assertTrue(success);
+
+        // deeper equality check on the warp created
+        assertFalse(testPersistenceProvider.getAllWarps().contains(warpToDelete));
+    }
+
+    /**
+     * Failure check for the "no warp name provided" scenario
+     *
+     * @throws Exception
+     */
+    @Test
+    public void deleteWarp_failure_noWarpName() throws Exception
+    {
+        ////////////////////////////////////////////////////////
+        // Setup test-specific mocks, stubs, and data
+        ////////////////////////////////////////////////////////
+
+        World mockWorld = ConstantsAndSMocks.getStubbedWorldMock(ConstantsAndSMocks.WORLD_NAME);
+        Location mockLocation = ConstantsAndSMocks.getStubbedLocationMock(mockWorld, 0, 0, 0, 0, 0);
+        Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
+        Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
+        NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
+
+        List<Warp> warpList = new ArrayList<Warp>();
+        String testWarpName = "testWarpName";
+        // make a warp for deletion
+        Warp warpToDelete = new Warp(testWarpName, mockPlayerOne.getDisplayName(), WarpType.PRIVATE, mockWorld.getName(), 0, 0, 0, 0, 0);
+        // add it to the list we're pre-populating the persistence provider with
+        warpList.add(warpToDelete);
+
+        // "put it in the database"
+        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
+        testPersistenceProvider.setWarpList(warpList);
+
+        // set this provider as the one to use
+        mockNiftyWarpPlugin.getWarpManager().setPersistenceProvider(testPersistenceProvider);
+
+        DeleteWarpCommand deleteWarpCommand = new DeleteWarpCommand(mockNiftyWarpPlugin);
+
+        ////////////////////////////////////////////////////////
+        // Run Test(s)
+        ////////////////////////////////////////////////////////
+
+        // passing in an empty argument list should fail, since no warp name was provided
+        String[] args = new String[]{};
+
+        boolean success = deleteWarpCommand.onCommand(mockPlayerOne,     // player one is the sender
+                                                      null,              // currently my command executors don't use the command object
+                                                      null,              // currently my command executors don't use the label object
+                                                      args);             // command arguments
+
+        ////////////////////////////////////////////////////////
+        // Assert/Verify results
+        ////////////////////////////////////////////////////////
+
+        // check simple failure first
+        assertFalse(success);
+
+        // deeper equality check to ensure our warp wasn't deleted
+        assertTrue(testPersistenceProvider.getAllWarps().contains(warpToDelete));
     }
 }

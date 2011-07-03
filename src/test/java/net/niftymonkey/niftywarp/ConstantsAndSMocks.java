@@ -29,13 +29,12 @@ public class ConstantsAndSMocks
     public static NiftyWarp getStubbedNWPluginMock(Configuration configuration)
     {
         NiftyWarp retVal = Mockito.mock(NiftyWarp.class);
-        // create our test persistence provider and set that as the persistence provider for
-        UnitTestPersistenceProvider testPersistenceProvider = new UnitTestPersistenceProvider();
+        WarpManager warpManager = new WarpManager(retVal);
+
         // set the plugin to give our mock config and an instance of warp manager
         when(retVal.getConfiguration()).thenReturn(configuration);
-        WarpManager warpManager = new WarpManager(retVal);
-        warpManager.setPersistenceProvider(testPersistenceProvider);
         when(retVal.getWarpManager()).thenReturn(warpManager);
+
         // also stub out permission checks to return true
         when(retVal.hasPermission(Matchers.<Player>any(), anyString(), anyString())).thenReturn(true);
 

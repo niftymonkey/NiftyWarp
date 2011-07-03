@@ -34,6 +34,11 @@ public class WarpManagerTest
 
     }
 
+    /**
+     * Tests getting all the warps a player can use.
+     *
+     * @throws Exception
+     */
     @Test
     public void getAvailableWarpsForUser() throws Exception
     {
@@ -70,6 +75,11 @@ public class WarpManagerTest
         assertEquals(warpList, warpsForUser);
     }
 
+    /**
+     * This tests getting all the warps that a player can see (useful in listing warps)
+     *
+     * @throws Exception
+     */
     @Test
     public void getVisibleWarpsForUser() throws Exception
     {
@@ -107,6 +117,11 @@ public class WarpManagerTest
         assertEquals(warpList, warpsForUser);
     }
 
+    /**
+     * Tests getting a warp by name, where the warp is owned by the player requesting the warp
+     *
+     * @throws Exception
+     */
     @Test
     public void getWarp_byName_playerOwned() throws Exception
     {
@@ -164,6 +179,13 @@ public class WarpManagerTest
         assertEquals(expectedListedWarp, listedWarp);
     }
 
+    /**
+     * Tests getting a warp by fully qualified name, where the warp is owned by the player requesting the warp
+     *
+     * FQL = [owner].[warpName]
+     *
+     * @throws Exception
+     */
     @Test
     public void getWarp_byFQName_playerOwned() throws Exception
     {
@@ -221,6 +243,11 @@ public class WarpManagerTest
         assertEquals(expectedListedWarp, listedWarp);
     }
 
+    /**
+     * Tests getting a warp by name, where the warp is NOT owned by the player requesting the warp
+     *
+     * @throws Exception
+     */
     @Test
     public void getWarp_byName_notPlayerOwned() throws Exception
     {
@@ -282,6 +309,13 @@ public class WarpManagerTest
         assertEquals(expectedListedWarp, listedWarp);
     }
 
+    /**
+     * Tests getting a warp by fully qualified name, where the warp is NOT owned by the player requesting the warp
+     *
+     * FQL = [owner].[warpName]
+     *
+     * @throws Exception
+     */
     @Test
     public void getWarp_byFQName_notPlayerOwned() throws Exception
     {
@@ -402,6 +436,11 @@ public class WarpManagerTest
         assertEquals(nonPlayerOwned, npoFQLResult);
     }
 
+    /**
+     * Tests adding a warp
+     *
+     * @throws Exception
+     */
     @Test
     public void addWarp() throws Exception
     {
@@ -443,6 +482,11 @@ public class WarpManagerTest
         assertEquals(testList3.get(0), listedWarp);
     }
 
+    /**
+     * Tests deleting a warp
+     *
+     * @throws Exception
+     */
     @Test
     public void deleteWarp() throws Exception
     {
@@ -476,6 +520,11 @@ public class WarpManagerTest
         assertFalse(testPersistenceProvider.getAllWarps().contains(warpToDelete));
     }
 
+    /**
+     * Tests renaming a warp
+     *
+     * @throws Exception
+     */
     @Test
     public void renameWarp() throws Exception
     {
@@ -514,6 +563,11 @@ public class WarpManagerTest
         assertEquals(1, afterRename.size());
     }
 
+    /**
+     * Tests changing the warp type on an existing warp
+     *
+     * @throws Exception
+     */
     @Test
     public void setWarpType() throws Exception
     {

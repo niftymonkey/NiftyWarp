@@ -49,7 +49,7 @@ public class HomeSetCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_HOMESET_PERMISSION, AppStrings.COMMAND_HOMESET))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_HOMESET, false, true))
         {
             // add this warp to the warp map
             Warp warp = plugin.getWarpManager().addWarp(AppStrings.HOME_WARP_NAME,

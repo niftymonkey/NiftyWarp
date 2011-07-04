@@ -1,6 +1,8 @@
 package net.niftymonkey.niftywarp;
 
 import net.niftymonkey.niftywarp.exceptions.InternalPermissionsException;
+import net.niftymonkey.niftywarp.persistence.EbeanServerPersistenceProvider;
+import net.niftymonkey.niftywarp.persistence.IPersistenceProvider;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -219,8 +221,8 @@ public class WarpManager
             {
                 boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
                 boolean hasAdminDelete = plugin.hasPermission(requestingPlayer,
-                                                              AppStrings.COMMAND_ADMIN_DELETE_PERMISSION,
                                                               AppStrings.COMMAND_DELETE,
+                                                              true,
                                                               false);
 
                 // either they're deleting their own, or they aren't but they have the admin delete priv
@@ -264,8 +266,8 @@ public class WarpManager
 
             boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
             boolean hasAdminRename = plugin.hasPermission(requestingPlayer,
-                                                          AppStrings.COMMAND_ADMIN_RENAME_PERMISSION,
                                                           AppStrings.COMMAND_RENAME,
+                                                          true,
                                                           false);
 
             // either they're renaming their own, or they aren't but they have the admin rename priv
@@ -312,8 +314,8 @@ public class WarpManager
             {
                 boolean isOwner = warp.getOwner().equalsIgnoreCase(requestingPlayer.getDisplayName());
                 boolean hasAdminSetType = plugin.hasPermission(requestingPlayer,
-                                                               AppStrings.COMMAND_ADMIN_SET_PERMISSION,
                                                                AppStrings.COMMAND_SET,
+                                                               true,
                                                                false);
 
                 // either they're setting type on their own, or they aren't but they have the admin set type priv

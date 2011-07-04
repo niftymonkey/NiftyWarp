@@ -48,7 +48,7 @@ public class HomeCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_WARP_PERMISSION, AppStrings.COMMAND_WARP))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_HOME, false, true))
         {
             // find that in the warp map
             Warp warp = plugin.getWarpManager().getWarp(AppStrings.HOME_WARP_NAME, player);

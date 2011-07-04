@@ -24,6 +24,7 @@ public class AppStrings
     public static final String COMMAND_HOMESET   = "nwhomeset";
 
     // message strings (public)
+    public static final String ADDON_MSG_PREFIX           = "[NiftyWarp] - ";
     public static final String WARPED_TO_PREFIX           = "Warped to:  ";
     public static final String WARP_NOT_FOUND_PREFIX      = "No warp found for name:  ";
     public static final String WARP_ADDED_PREFIX          = "Added warp: ";
@@ -33,7 +34,7 @@ public class AppStrings
     public static final String AVAILABLE_WARPS_PREFIX     = "Available warps: ";
     public static final String NO_AVAILABLE_WARPS         = "No warps found.";
     public static final String DB_INSTALL_PREFIX          = "Installing database due to first time usage for:  ";
-    public static final String INSUFFICIENT_PRIVELEGES_1  = "Sorry, you don't have permission to use '{0}'.";
+    public static final String INSUFFICIENT_PRIVELEGES_1  = "Sorry, you don't have permission to use that command.";
     public static final String INSUFFICIENT_PRIVELEGES_2  = "Please ask your server administrator about permission:";
     public static final String WARP_TYPE_NOT_FOUND_SUFFIX = " is not a valid warp type.";
     public static final String WARP_CANNOT_REMOVE_OTHERS  = "You do not have permission to delete someone else's warp.";
@@ -46,7 +47,6 @@ public class AppStrings
     public static final String HOME_SET_SUCCESS           = "Home warp set.";
 
     // message strings (private)
-    private static final String ADDON_MSG_PREFIX    = "[NiftyWarp] - ";
     private static final String ENABLED_MSG_SUFFIX  = " has been enabled";
     private static final String DISABLED_MSG_SUFFIX = " has been disabled";
 
@@ -54,13 +54,18 @@ public class AppStrings
     public static final String PROPERTY_MSG_SHOWPREFIX        = "messages.show-prefix";
     public static final String PROPERTY_MSG_SHOWPERM_FAILURE  = "messages.permissions.show-fail-message";
     public static final String PROPERTY_WARP_DEFAULT_WARPTYPE = "warps.default-type";
+    public static final String PROPERTY_PERMISSION_USE_PLUGIN = "permissions.use-plugin";
+    public static final String PROPERTY_PERMISSION_RULESET    = "permissions.ruleset";
 
     // constants
-    public static final String WARP_TYPE_PRIVATE  = "private";
-    public static final String WARP_TYPE_LISTED   = "listed";
-    public static final String WARP_TYPE_UNLISTED = "unlisted";
-	public static final String FQL_DELIMITER      = ".";
-    public static final String HOME_WARP_NAME     = "nwhome";
+    public static final String WARP_TYPE_PRIVATE     = "private";
+    public static final String WARP_TYPE_LISTED      = "listed";
+    public static final String WARP_TYPE_UNLISTED    = "unlisted";
+	public static final String FQL_DELIMITER         = ".";
+    public static final String HOME_WARP_NAME        = "home";
+    public static final String RULESET_FFA           = "ffa";
+    public static final String RULESET_OPS_ONLY      = "ops-only";
+    public static final String RULESET_OPS_FOR_ADMIN = "ops-for-admin";
 
     // command permissions Keys
     public static final String COMMAND_ADD_PERMISSION      = "niftywarp.use.add";
@@ -91,7 +96,7 @@ public class AppStrings
 
         PluginDescriptionFile desc = plugin.getDescription();
         if(desc != null)
-            retVal = desc.getFullName() + ENABLED_MSG_SUFFIX;
+            retVal = ADDON_MSG_PREFIX + desc.getFullName() + ENABLED_MSG_SUFFIX;
 
         return retVal;
     }

@@ -1,6 +1,5 @@
 package net.niftymonkey.niftywarp;
 
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import net.niftymonkey.niftywarp.commands.AddWarpCommand;
 import net.niftymonkey.niftywarp.commands.DeleteWarpCommand;
@@ -10,6 +9,13 @@ import net.niftymonkey.niftywarp.commands.ListWarpsCommand;
 import net.niftymonkey.niftywarp.commands.RenameWarpCommand;
 import net.niftymonkey.niftywarp.commands.SetWarpTypeCommand;
 import net.niftymonkey.niftywarp.commands.WarpCommand;
+import net.niftymonkey.niftywarp.permissions.FreeForAllAdapter;
+import net.niftymonkey.niftywarp.permissions.IPermissionsAdapter;
+import net.niftymonkey.niftywarp.permissions.OpsForAdminFunctionsAdapter;
+import net.niftymonkey.niftywarp.permissions.OpsOnlyAdapter;
+import net.niftymonkey.niftywarp.permissions.PermissionNodeMapper;
+import net.niftymonkey.niftywarp.permissions.PermissionsV2Adapter;
+import net.niftymonkey.niftywarp.permissions.PermissionsV3Adapter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -36,11 +42,10 @@ public class NiftyWarp extends JavaPlugin
 {
     private static Logger log = Logger.getLogger("Minecraft");
 
-    public PermissionHandler permissionHandler;
+    public IPermissionsAdapter permissionAdapter;
 
     private WarpManager warpManager;
     private Configuration configuration;
-    private boolean permissionsPluginEnabled;
 
     /**
      * Called when the plugin is enabled
@@ -50,11 +55,11 @@ public class NiftyWarp extends JavaPlugin
         // setup the persistence database
         setupDatabase();
 
-        // setup permissions
-        this.setupPermissions();
-
         // setup config
         this.setupConfiguration();
+
+        // setup permissions
+        this.setupPermissions();
 
         // create the warp manager
         warpManager = new WarpManager(this);
@@ -83,145 +88,111 @@ public class NiftyWarp extends JavaPlugin
 
     /**
      * Gets the WarpManager object to be used for doing any warp-related tasks
-     * @return
+     *
+     * @return the instance of warp manager
      */
     public WarpManager getWarpManager()
     {
         return warpManager;
     }
 
-    public PermissionHandler getPermissionHandler()
+    public IPermissionsAdapter getPermissionAdapter()
     {
-        return this.permissionHandler;
+        return this.permissionAdapter;
     }
 
-    public void setPermissionHandler(PermissionHandler permissionHandler)
+    public void setPermissionAdapter(IPermissionsAdapter permissionAdapter)
     {
-        this.permissionHandler = permissionHandler;
+        this.permissionAdapter = permissionAdapter;
     }
 
     /**
-     * Courtesy of the example:
-     * https://github.com/TheYeti/Permissions/wiki/API-Reference
+     *
      */
     private void setupPermissions()
     {
-      Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
+        boolean usePermissionsPlugin = getConfiguration().getBoolean(AppStrings.PROPERTY_PERMISSION_USE_PLUGIN, true);
 
-      if (this.permissionHandler == null) {
-          if (permissionsPlugin != null) {
-              this.permissionHandler = ((Permissions) permissionsPlugin).getHandler();
-              permissionsPluginEnabled = true;
-          } else {
-              log.info("Permission system not detected, defaulting to OP");
-              permissionsPluginEnabled = false;
-          }
-      }
-    }
+        // attempt to use the Permissions plugin
+        if (usePermissionsPlugin)
+        {
+            Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
+            if (permissionsPlugin != null)
+            {
+                String version = permissionsPlugin.getDescription().getVersion();
 
-    /**
-     * Indicates whether or not the permission plugin is enabled
-     *
-     * @return true if permissions should be used, false if not
-     */
-    public boolean isPermissionsPluginEnabled()
-    {
-        return permissionsPluginEnabled;
+                if(version.startsWith("2"))
+                    this.permissionAdapter = new PermissionsV2Adapter((Permissions) permissionsPlugin);
+                if(version.startsWith("3"))
+                    this.permissionAdapter = new PermissionsV3Adapter((Permissions) permissionsPlugin);
+            }
+        }
+        else
+        {
+            String ruleset = getConfiguration().getString(AppStrings.PROPERTY_PERMISSION_RULESET);
+            if(ruleset.equalsIgnoreCase(AppStrings.RULESET_FFA))
+                this.permissionAdapter = new FreeForAllAdapter();
+            if(ruleset.equalsIgnoreCase(AppStrings.RULESET_OPS_ONLY))
+                this.permissionAdapter = new OpsOnlyAdapter();
+            if(ruleset.equalsIgnoreCase(AppStrings.RULESET_OPS_FOR_ADMIN))
+                this.permissionAdapter = new OpsForAdminFunctionsAdapter();
+        }
+
+        // default to the FFA permissions if no configuration could be found
+        if(this.permissionAdapter == null)
+        {
+            // if they did specify permissions plugin usage, let's warn them that we couldn't find a proper adapter
+            if(usePermissionsPlugin)
+            {
+                log.warning("Unable to integrate with the Permissions plugin.  Defaulting to free for all permission set");
+            }
+
+            this.permissionAdapter = new FreeForAllAdapter();
+        }
     }
 
     /**
      * Delegates to the permissions plugin
-     * @param inPlayer The Player
-     * @param inKey The string that represents the permission key, for example "niftywarp.add"
-     * @param inCommandString the command string that the user typed, for example "nwadd"
      *
-     * @return true if the user has permission, false if not
-     */
-    public boolean hasPermission(Player inPlayer, String inKey, String inCommandString)
-    {
-        return hasPermission(inPlayer, inKey, inCommandString, true);
-    }
-
-    /**
-     * Delegates to the permissions plugin
-     *
-     * @param inPlayer The Player
-     * @param inKey The string that represents the permission key, for example "niftywarp.add"
-     * @param inCommandString the command string that the user typed, for example "nwadd"
+     * @param player The Player
+     * @param commandRequested the command string that the user typed, for example "nwadd"
+     * @param isAdminFunctionality specifies whether or not this permission check is for admin functionality.  This comes into play when
+     *                             the player is attempting to do things to other people's warps.
      * @param displayDenialMessage specifies whether or not to display a message when permission is denied
      *
      * @return true if the user has permission, false if not
      */
-    public boolean hasPermission(Player inPlayer, String inKey, String inCommandString, boolean displayDenialMessage)
+    public boolean hasPermission(Player player, String commandRequested, boolean isAdminFunctionality, boolean displayDenialMessage)
     {
         boolean result = false;
 
-        if(isPermissionsPluginEnabled())
+        if (this.permissionAdapter.hasPermission(player, commandRequested, isAdminFunctionality))
         {
-            String worldName = null;
-            String playerName = null;
+            result = true;
+        }
 
-            if(inPlayer != null && inKey != null)
+        // only bother doing this if they passed in true to this method
+        if(displayDenialMessage)
+        {
+            boolean showFailureMessage = getConfiguration().getBoolean(AppStrings.PROPERTY_MSG_SHOWPERM_FAILURE, true);
+
+            // Notify player if permission was denied if they failed ... but only if the config says the user of this addon
+            // wants these messages displayed
+            if(!result && showFailureMessage)
             {
-                worldName = inPlayer.getWorld().getName();
-                playerName = inPlayer.getName();
+                String permissonNode = (isAdminFunctionality)?
+                                       (PermissionNodeMapper.getAdminPermissionNode(commandRequested)):
+                                       (PermissionNodeMapper.getPermissionNode(commandRequested));
 
-                if (this.permissionHandler.has(inPlayer, inKey))
-                {
-                    result = true;
-                }
-
-                // let's only log permission check on failure to reduce logfile chattiness
-                if(!result)
-                {
-                    if(log.isLoggable(Level.INFO))
-                    {
-                        log.info(AppStrings.PERM_CHECK_FAIL_LOG_PREFIX +
-                                 "player:"  + playerName + ", " +
-                                 "key:" + inKey + ", " +
-                                 "command:" + inCommandString + " ]");
-                    }
-                }
-
-                // only bother doing this if they passed in true to this method
-                if(displayDenialMessage)
-                {
-                    boolean showFailureMessage = getConfiguration().getBoolean(AppStrings.PROPERTY_MSG_SHOWPERM_FAILURE, true);
-                    //--Notify player if permission was denied if they failed and the config says the user of this addon
-                    // wants these messages displayed --
-                    if(!result && showFailureMessage)
-                    {
-                        String usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_1, inCommandString);
-                        //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg1 = " + usrMsg);
-                        inPlayer.sendMessage(ChatColor.RED + usrMsg);
-                        usrMsg = MessageFormat.format(AppStrings.INSUFFICIENT_PRIVELEGES_2, inKey);
-                        //if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): usrMsg2 = " + usrMsg);
-                        inPlayer.sendMessage(ChatColor.RED + usrMsg);
-                        inPlayer.sendMessage(ChatColor.RED + inKey);
-                    }
-                }
-            }
-            else
-            {
-                if(log.isLoggable(Level.WARNING)) log.warning("hasPermission(): Player or key was NULL");
+                player.sendMessage(ChatColor.RED + AppStrings.INSUFFICIENT_PRIVELEGES_1);
+                player.sendMessage(ChatColor.RED + AppStrings.INSUFFICIENT_PRIVELEGES_2);
+                player.sendMessage(ChatColor.RED + permissonNode);
             }
         }
-        else // if the permissions plugin isn't enabled, only ops can warp
-        {
-            if(inPlayer.isOp())
-                result = true;
-            else
-            {
-                if(log.isLoggable(Level.INFO))
-                {
-                    log.info(inPlayer.getDisplayName() + " is not an Op and consequently cannot use the command: " + inCommandString);
-                }
-            }
-        }
+
+
         return result;
     }
-
-
 
     /**
      * Sets up the database

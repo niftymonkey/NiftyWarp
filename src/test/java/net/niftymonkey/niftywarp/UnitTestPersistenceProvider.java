@@ -1,5 +1,7 @@
 package net.niftymonkey.niftywarp;
 
+import net.niftymonkey.niftywarp.persistence.IPersistenceProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 

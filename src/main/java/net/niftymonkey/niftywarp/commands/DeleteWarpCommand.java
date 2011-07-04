@@ -48,7 +48,7 @@ public class DeleteWarpCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_DELETE_PERMISSION, AppStrings.COMMAND_DELETE))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_DELETE, false, true))
         {
             // make sure we have one argument, which is the name for the warp we're about to add
             if (args.length == 1)

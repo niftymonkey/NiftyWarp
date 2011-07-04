@@ -49,7 +49,7 @@ public class SetWarpTypeCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_SET_PERMISSION, AppStrings.COMMAND_SET))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_SET, false, true))
         {
             // make sure we have two arguments (warp name and new type)
             if (args.length == 2)

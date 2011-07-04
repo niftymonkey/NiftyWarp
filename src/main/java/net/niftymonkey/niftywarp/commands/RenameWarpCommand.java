@@ -48,7 +48,7 @@ public class RenameWarpCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_RENAME_PERMISSION, AppStrings.COMMAND_RENAME))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_RENAME, false, true))
         {
             // make sure we have two arguments (name and new name)
             if (args.length == 2)

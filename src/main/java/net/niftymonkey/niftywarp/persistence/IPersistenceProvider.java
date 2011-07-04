@@ -1,4 +1,6 @@
-package net.niftymonkey.niftywarp;
+package net.niftymonkey.niftywarp.persistence;
+
+import net.niftymonkey.niftywarp.Warp;
 
 import java.util.List;
 

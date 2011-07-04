@@ -7,6 +7,7 @@ import org.bukkit.util.config.Configuration;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +37,7 @@ public class ConstantsAndSMocks
         when(retVal.getWarpManager()).thenReturn(warpManager);
 
         // also stub out permission checks to return true
-        when(retVal.hasPermission(Matchers.<Player>any(), anyString(), anyString())).thenReturn(true);
+        when(retVal.hasPermission(Matchers.<Player>any(), anyString(), anyBoolean(), anyBoolean())).thenReturn(true);
 
         return retVal;
     }

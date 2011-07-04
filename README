@@ -62,7 +62,6 @@ CONFIGURATION:
 ---------------------------------
 Currently there are only a few configuration options.  They are stored in the <pluginsDir>/NiftyWarp/NiftyWarp.yml file
 
-# message-related options
 messages:
 
     # this specifies whether or not to prefix all the NiftWarp-related messages with: [NiftyWarp] -
@@ -76,10 +75,23 @@ messages:
     permissions:
         show-fail-message: true
 
-# warp-related options
+
 warps:
 
     # this specifies the type to use when creating new warps without specifying the type
-    # value: private | unlisted | listed  (defaults to unlisted)
+    # values: private | unlisted | listed  (defaults to unlisted)
     default-type: unlisted
 
+
+permissions:
+
+    # this specifies whether or not to attempt to use the permissions plugin.  If set to false, the ruleset property
+    # below will be used to determine permissions
+    # values:  true | false  (defaults to true)
+    use-plugin: true
+
+    # this specifies what non-Permissions-plugin type ruleset you want to use.  This value is only used if use-plugin is set to false
+    # ops-only means only Ops can use this plugin's commands.  ops-for-admin means only Ops can use the admin type functionality
+    # (such as renaming other people's warps).  ffa means Free For All ... meaning anyone can use any commands/functionality
+    # values: ops-only | ops-for-admin | ffa (defaults to ffa)
+    ruleset: ffa

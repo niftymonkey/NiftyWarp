@@ -48,7 +48,7 @@ public class WarpCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_WARP_PERMISSION, AppStrings.COMMAND_WARP))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_WARP, false, true))
         {
             // make sure we have one argument, which is the name of the warp
             if (args.length == 1)

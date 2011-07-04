@@ -49,7 +49,7 @@ public class AddWarpCommand implements CommandExecutor
         Player player = (Player) sender;
 
         // Check permission
-        if(this.plugin.hasPermission(player, AppStrings.COMMAND_ADD_PERMISSION, AppStrings.COMMAND_ADD))
+        if(this.plugin.hasPermission(player, AppStrings.COMMAND_ADD, false, true))
         {
             // make sure we have one argument, which is the name for the warp we're about to add
             if (args.length > 0)

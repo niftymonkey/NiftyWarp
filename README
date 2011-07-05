@@ -31,12 +31,12 @@ Delete a warp
 - Alternates:  nwd, deletewarp, removewarp
 
 Set your home warp (currently just makes a warp named "home")
-- Command: /nwhomeset
-- Alternates: /nwhs, /homeset, /sethome
+- Command:     nwhomeset
+- Alternates:  nwhs, homeset, sethome
 
 Warp to your home (currently just warps to your "home" warp)
-- Command: /nwhome
-- Alternates: /nwh, /home
+- Command:     nwhome
+- Alternates:  nwh, home
 
 Get the list of warps
 - Command:     nwlist

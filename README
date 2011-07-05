@@ -29,6 +29,14 @@ Delete a warp
 - Command:     nwdelete
 - Alternates:  nwd, deletewarp, removewarp
 
+Set your home warp (currently just makes a warp named "home")
+- Command: /nwhomeset
+- Alternates: /nwhs, /homeset, /sethome
+
+Warp to your home (currently just warps to your "home" warp)
+- Command: /nwhome
+- Alternates: /nwh, /home
+
 Get the list of warps
 - Command:     nwlist
 - Alternates:  nwl, listwarps
@@ -90,8 +98,9 @@ permissions:
     # values:  true | false  (defaults to true)
     use-plugin: true
 
-    # this specifies what non-Permissions-plugin type ruleset you want to use.  This value is only used if use-plugin is set to false
-    # ops-only means only Ops can use this plugin's commands.  ops-for-admin means only Ops can use the admin type functionality
-    # (such as renaming other people's warps).  ffa means Free For All ... meaning anyone can use any commands/functionality
+    # this specifies what non-Permissions-plugin type ruleset you want to use.  This value is only used if use-plugin
+    # is set to false.  ops-only means only Ops can use this plugin's commands.  ops-for-admin means only Ops can use 
+    # the admin type functionality (such as renaming other people's warps).  ffa means Free For All ... meaning anyone 
+    # can use any commands/functionality
     # values: ops-only | ops-for-admin | ffa (defaults to ffa)
     ruleset: ffa

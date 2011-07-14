@@ -1,6 +1,7 @@
 package net.niftymonkey.niftywarp;
 
 import net.niftymonkey.niftywarp.persistence.IPersistenceProvider;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,27 @@ class UnitTestPersistenceProvider implements IPersistenceProvider
     {
         this.warpList = warpList;
     }
+
+    /**
+     * Gets the number of warps that are owned by the player specified
+     *
+     * @param player the player we're getting a warp count for
+     * @return the number of warps owned by this player
+     */
+    @Override
+    public int getWarpsForPlayerCount(Player player)
+    {
+        int retVal = 0;
+
+        for (Warp warp : warpList)
+        {
+            if (warp.getOwner().equalsIgnoreCase(player.getDisplayName()))
+                retVal++;
+        }
+
+        return retVal;
+    }
+
     /**
      * Gets all warps out of persistence
      *

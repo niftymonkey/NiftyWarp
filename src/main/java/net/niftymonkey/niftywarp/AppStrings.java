@@ -55,6 +55,7 @@ public class AppStrings
     public static final String PROPERTY_MSG_SHOWPREFIX        = "messages.show-prefix";
     public static final String PROPERTY_MSG_SHOWPERM_FAILURE  = "messages.permissions.show-fail-message";
     public static final String PROPERTY_WARP_DEFAULT_WARPTYPE = "warps.default-type";
+    public static final String PROPERTY_WARP_MAXWARPS         = "warps.max-warps";
     public static final String PROPERTY_PERMISSION_USE_PLUGIN = "permissions.use-plugin";
     public static final String PROPERTY_PERMISSION_RULESET    = "permissions.ruleset";
 

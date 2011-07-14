@@ -20,39 +20,56 @@ WARP TYPES:
 
 COMMANDS AND ALIASES
 ---------------------------------
-Here's the simple list.  See the usage for complete details.
+In order to be able to function alongside other warp plugins, all of the main commands are unique to NiftyWarp and prefixed
+with "nw". However, for ease of use, I've also included quite a few common and intuitive aliases. Here are the commands
+listed using the aliases people are most likely to use. Below them are the main command and other alternates if you need to
+use this in conjunction with another addon.
 
+/addwarp <warpName>
 Add a warp
-- Command:     nwadd
-- Alternates:  nwa, addwarp, createwarp, setwarp
+- Command:    /nwadd
+- Alternates: /nwa, /addwarp, /createwarp, /setwarp
 
+/deletewarp <warpName>
 Delete a warp
-- Command:     nwdelete
-- Alternates:  nwd, deletewarp, removewarp
+- Command:    /nwdelete
+- Alternates: /nwd, /deletewarp, /removewarp
 
+/sethome
 Set your home warp (currently just makes a warp named "home")
-- Command:     nwhomeset
-- Alternates:  nwhs, homeset, sethome
+- Command:    /nwhomeset
+- Alternates: /nwhs, /homeset, /sethome
 
+/home
 Warp to your home (currently just warps to your "home" warp)
-- Command:     nwhome
-- Alternates:  nwh, home
+- Command:    /nwhome
+- Alternates: /nwh, /home
 
+/listwarps
 Get the list of warps
-- Command:     nwlist
-- Alternates:  nwl, listwarps
+- Command:    /nwlist
+- Alternates: /nwl, /listwarps
 
+/renamewarp <warpName> <newWarpName>
 Rename an existing warp
-- Command:     nwrename
-- Alternates:  nwr, renamewarp
+- Command:    /nwrename
+- Alternates: /nwr, /renamewarp
 
+/setwarptype <warpName> private | unlisted | listed
 Set the privacy/visibility of a warp after creation
-- Command:     nwset
-- Alternates:  nws, settype, setwarptype
+- Command:    /nwset
+- Alternates: /nws, /settype, /setwarptype
 
+/warp <warpName>
 Use a warp
-- Command:     nwwarp
-- Alternates:  nw, nww, warp
+- Command:    /nwwarp
+- Alternates: /nw, /nww, /warp
+
+/warptocoord
+Warp to a specific coordinate
+- Command:    /nwwarptocoord
+- Alternates: /nwwtc, warptocoord, wtc, w2c
+
 
 
 WARPING:
@@ -90,6 +107,10 @@ warps:
     # this specifies the type to use when creating new warps without specifying the type
     # values: private | unlisted | listed  (defaults to unlisted)
     default-type: unlisted
+
+    # this specifies the maximum number of warps to allow a user to create
+    # value: a number  (defaults to 20)
+    max-warps: 20
 
 
 permissions:

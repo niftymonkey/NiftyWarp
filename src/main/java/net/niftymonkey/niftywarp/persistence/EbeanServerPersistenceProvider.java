@@ -2,6 +2,7 @@ package net.niftymonkey.niftywarp.persistence;
 
 import com.avaje.ebean.EbeanServer;
 import net.niftymonkey.niftywarp.Warp;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -19,6 +20,18 @@ public class EbeanServerPersistenceProvider implements IPersistenceProvider
     public EbeanServerPersistenceProvider(EbeanServer database)
     {
         this.database = database;
+    }
+
+    /**
+     * Gets the number of warps that are owned by the player specified
+     *
+     * @param player the player we're getting a warp count for
+     * @return the number of warps owned by this player
+     */
+    @Override
+    public int getWarpsForPlayerCount(Player player)
+    {
+        return database.find(Warp.class).where().ieq("owner", player.getDisplayName()).findRowCount();
     }
 
     /**

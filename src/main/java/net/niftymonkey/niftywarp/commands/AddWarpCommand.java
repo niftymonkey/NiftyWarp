@@ -70,19 +70,33 @@ public class AddWarpCommand implements CommandExecutor
                         warpType = warpParamType;
                 }
 
-                // add this warp to the warp map
-                Warp warp = plugin.getWarpManager().addWarp(warpName,
-                                                            player,
-                                                            warpType,
-                                                            player.getLocation());
+                int maxWarps = plugin.getConfiguration().getInt(AppStrings.PROPERTY_WARP_MAXWARPS, 20);
+                int warpsForPlayerCount = plugin.getWarpManager().getPersistenceProvider().getWarpsForPlayerCount(player);
 
                 // get the addon message prefix
                 String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
-                // let them know that we successfully created the warp
-                player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                   ChatColor.GREEN + AppStrings.WARP_ADDED_PREFIX +
-                                   warp.getWarpType().getTypeColor() + warpName);
+                if(maxWarps > warpsForPlayerCount)
+                {
+                    // add this warp to the warp map
+                    Warp warp = plugin.getWarpManager().addWarp(warpName,
+                                                                player,
+                                                                warpType,
+                                                                player.getLocation());
+
+
+                    // let them know that we successfully created the warp
+                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                       ChatColor.GREEN + AppStrings.WARP_ADDED_PREFIX +
+                                       warp.getWarpType().getTypeColor() + warpName);
+                }
+                else
+                {
+                    // let them know they aren't allowed to make any more
+                    player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                                       ChatColor.RED + "You have used all of your warp slots [" +
+                                       maxWarps + "].  Remove warps to clear up warp slots");
+                }
 
                 retVal = true;
             }

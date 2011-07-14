@@ -26,6 +26,7 @@ public class ConstantsAndSMocks
     public static final String WORLD_NAME        = "testWorld";
 
     public static final String CONFIG_DEFAULT_WARP_TYPE = AppStrings.WARP_TYPE_UNLISTED;
+    public static final int CONFIG_DEFAULT_MAXWARPS  = 5;
 
     public static NiftyWarp getStubbedNWPluginMock(Configuration configuration)
     {
@@ -49,6 +50,10 @@ public class ConstantsAndSMocks
         // stub a default warp type config option
         when(retVal.getString(AppStrings.PROPERTY_WARP_DEFAULT_WARPTYPE, AppStrings.WARP_TYPE_UNLISTED))
              .thenReturn(CONFIG_DEFAULT_WARP_TYPE);
+
+        // stub a default max-warps config option value
+        when(retVal.getInt(AppStrings.PROPERTY_WARP_MAXWARPS, 20))
+             .thenReturn(CONFIG_DEFAULT_MAXWARPS);
 
         return retVal;
     }

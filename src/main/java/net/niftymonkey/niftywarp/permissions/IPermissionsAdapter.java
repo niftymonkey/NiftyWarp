@@ -3,7 +3,7 @@ package net.niftymonkey.niftywarp.permissions;
 import org.bukkit.entity.Player;
 
 /**
- * User: Mark Lozano
+ * User: Mark
  * Date: 7/2/11
  * Time: 9:03 PM
  */

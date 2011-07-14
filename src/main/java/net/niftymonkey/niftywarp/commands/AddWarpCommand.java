@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/13/11
  * Time: 2:34 AM
  */

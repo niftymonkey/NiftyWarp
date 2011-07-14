@@ -1,7 +1,7 @@
 package net.niftymonkey.niftywarp.exceptions;
 
 /**
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/20/11
  * Time: 1:58 AM
  */

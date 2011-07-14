@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.util.config.Configuration;
 
 /**
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/18/11
  * Time: 12:42 AM
  */

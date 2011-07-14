@@ -10,7 +10,7 @@ import java.util.List;
  * This may prove useful for providing an alternative persistence model (like direct JPA, or the Persistence plugin).  
  * In addition, this provides a simple programmatic way to setup test data for unit testing.
  * 
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/22/11
  * Time: 11:07 PM
  */

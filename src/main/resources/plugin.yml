@@ -67,3 +67,9 @@ commands:
       permission: niftywarp.use.homeset
       usage: |
            /<command>
+   nwwarptocoord:
+      aliases: [nwwtc, warptocoord, wtc, w2c]
+      description: Warps you to a specific location
+      permission: niftywarp.use.warptocoord
+      usage: |
+           /<command> <x> <y> <z> [world]

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Implementation of the persistence provider that uses EbeanServer
  * 
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/22/11
  * Time: 11:08 PM
  */

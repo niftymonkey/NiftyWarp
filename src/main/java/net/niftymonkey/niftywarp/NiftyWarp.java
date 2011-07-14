@@ -9,6 +9,7 @@ import net.niftymonkey.niftywarp.commands.ListWarpsCommand;
 import net.niftymonkey.niftywarp.commands.RenameWarpCommand;
 import net.niftymonkey.niftywarp.commands.SetWarpTypeCommand;
 import net.niftymonkey.niftywarp.commands.WarpCommand;
+import net.niftymonkey.niftywarp.commands.WarpToCoordCommand;
 import net.niftymonkey.niftywarp.permissions.FreeForAllAdapter;
 import net.niftymonkey.niftywarp.permissions.IPermissionsAdapter;
 import net.niftymonkey.niftywarp.permissions.OpsForAdminFunctionsAdapter;
@@ -25,16 +26,14 @@ import org.bukkit.util.config.Configuration;
 import javax.persistence.PersistenceException;
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Main plugin class
  *
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/12/11
  * Time: 10:06 PM
  */
@@ -73,6 +72,7 @@ public class NiftyWarp extends JavaPlugin
         getCommand(AppStrings.COMMAND_RENAME).setExecutor(new RenameWarpCommand(this));
         getCommand(AppStrings.COMMAND_SET).setExecutor(new SetWarpTypeCommand(this));
         getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));
+        getCommand(AppStrings.COMMAND_WARPTOCOORD).setExecutor(new WarpToCoordCommand(this));
 
         // log enable success to console
         log.info(AppStrings.getEnabledMessage(this));

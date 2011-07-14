@@ -18,7 +18,7 @@ import static javax.persistence.EnumType.STRING;
 /**
  * Warp object
  *
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/14/11
  * Time: 12:30 AM
  */

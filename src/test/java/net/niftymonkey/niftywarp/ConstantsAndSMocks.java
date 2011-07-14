@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 /**
  * Helper class that is used for constants and for retrieving stubbed mock objects
  *
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/30/11
  * Time: 6:42 PM
  */

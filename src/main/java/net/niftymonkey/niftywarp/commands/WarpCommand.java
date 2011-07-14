@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/13/11
  * Time: 2:34 AM
  */
@@ -69,15 +69,15 @@ public class WarpCommand implements CommandExecutor
 
                     // let them know it worked
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                   ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
-                                   warp.getWarpType().getTypeColor() + warpName);
+                                       ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
+                                       warp.getWarpType().getTypeColor() + warpName);
                 }
                 else
                 {
                     // let them know we couldn't find a warp with that name
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                   ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                   ChatColor.WHITE + warpName);
+                                       ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
+                                       ChatColor.WHITE + warpName);
                 }
 
                 retVal = true;

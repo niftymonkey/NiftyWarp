@@ -6,22 +6,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * In lieu of implementing real i18n right now, I'm going to just centralize my strings here so that I can do that later
  *
- * User: Mark Lozano
+ * User: Mark
  * Date: 6/13/11
  * Time: 11:16 PM
  */
 public class AppStrings
 {
     // commands
-    public static final String COMMAND_ADD       = "nwadd";
-    public static final String COMMAND_LIST      = "nwlist";
-    public static final String COMMAND_DELETE    = "nwdelete";
-    public static final String COMMAND_RENAME    = "nwrename";
-    public static final String COMMAND_SET       = "nwset";
-    public static final String COMMAND_WARP      = "nwwarp";
-
-    public static final String COMMAND_HOME      = "nwhome";
-    public static final String COMMAND_HOMESET   = "nwhomeset";
+    public static final String COMMAND_ADD          = "nwadd";
+    public static final String COMMAND_LIST         = "nwlist";
+    public static final String COMMAND_DELETE       = "nwdelete";
+    public static final String COMMAND_RENAME       = "nwrename";
+    public static final String COMMAND_SET          = "nwset";
+    public static final String COMMAND_WARP         = "nwwarp";
+    public static final String COMMAND_HOME         = "nwhome";
+    public static final String COMMAND_HOMESET      = "nwhomeset";
+    public static final String COMMAND_WARPTOCOORD  = "nwwarptocoord";
 
     // message strings (public)
     public static final String ADDON_MSG_PREFIX           = "[NiftyWarp] - ";
@@ -43,6 +43,7 @@ public class AppStrings
     public static final String WARPS_YOURS                = "Your Warps: ";
     public static final String WARPS_OTHERS               = "Other's Warps: ";
     public static final String PERM_CHECK_FAIL_LOG_PREFIX = "Failed permission check [ ";
+    public static final String WARPTOCOORD_INVALID_COORD  = "Invalid coordinates specified.";
 
     public static final String HOME_SET_SUCCESS           = "Home warp set.";
 
@@ -68,15 +69,15 @@ public class AppStrings
     public static final String RULESET_OPS_FOR_ADMIN = "ops-for-admin";
 
     // command permissions Keys
-    public static final String COMMAND_ADD_PERMISSION      = "niftywarp.use.add";
-    public static final String COMMAND_LIST_PERMISSION     = "niftywarp.use.list";
-    public static final String COMMAND_DELETE_PERMISSION   = "niftywarp.use.delete";
-    public static final String COMMAND_RENAME_PERMISSION   = "niftywarp.use.rename";
-    public static final String COMMAND_SET_PERMISSION      = "niftywarp.use.set";
-    public static final String COMMAND_WARP_PERMISSION     = "niftywarp.use.warp";
-
-    public static final String COMMAND_HOME_PERMISSION     = "niftywarp.use.home";
-    public static final String COMMAND_HOMESET_PERMISSION  = "niftywarp.use.homeset";
+    public static final String COMMAND_ADD_PERMISSION          = "niftywarp.use.add";
+    public static final String COMMAND_LIST_PERMISSION         = "niftywarp.use.list";
+    public static final String COMMAND_DELETE_PERMISSION       = "niftywarp.use.delete";
+    public static final String COMMAND_RENAME_PERMISSION       = "niftywarp.use.rename";
+    public static final String COMMAND_SET_PERMISSION          = "niftywarp.use.set";
+    public static final String COMMAND_WARP_PERMISSION         = "niftywarp.use.warp";
+    public static final String COMMAND_HOME_PERMISSION         = "niftywarp.use.home";
+    public static final String COMMAND_HOMESET_PERMISSION      = "niftywarp.use.homeset";
+    public static final String COMMAND_WARPTOCOORD_PERMISSION  = "niftywarp.use.warptocoord";
 
     public static final String COMMAND_ADMIN_DELETE_PERMISSION = "niftywarp.admin.delete";
     public static final String COMMAND_ADMIN_RENAME_PERMISSION = "niftywarp.admin.rename";

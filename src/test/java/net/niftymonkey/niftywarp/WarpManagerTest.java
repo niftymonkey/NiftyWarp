@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 
 /**
- * Author: Mark Lozano
+ * Author: Mark
  */
 @SuppressWarnings({"JavaDoc"})
 public class WarpManagerTest

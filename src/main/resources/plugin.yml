@@ -27,8 +27,12 @@ commands:
       description: Lists all of the warps available to you
       permission: niftywarp.use.list
       usage: |
-           /<command> [private|listed|unlisted]
-           If no type is provided, will show all warps you own, plus any public-listed warps.
+           /<command> [world] [private|listed|unlisted]
+           If no type is provided, will show all warps you own, plus any listed warps.  You can use * to get all world's warps when specifying type.
+           Example Usages:
+           /<command> mainworld
+           /<command> creativeworld listed
+           /<command> * unlisted
    nwrename:
       aliases: [nwr, renamewarp]
       description: Renames a named warp

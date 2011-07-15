@@ -1,6 +1,7 @@
 package net.niftymonkey.niftywarp.commands;
 
 import net.niftymonkey.niftywarp.AppStrings;
+import net.niftymonkey.niftywarp.NWUtils;
 import net.niftymonkey.niftywarp.NiftyWarp;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -63,20 +64,19 @@ public class WarpToCoordCommand implements CommandExecutor
                 String z = args[2];
 
                 // make sure these are valid before we do anything else
-                if(isValidDouble(x) || isValidDouble(y) || isValidDouble(z))
+                if(NWUtils.isValidDouble(x) || NWUtils.isValidDouble(y) || NWUtils.isValidDouble(z))
                 {
                     World world = null;
                     if(args.length == 4)
                     {
                         // check for world ... if none specified, use the player's current world
-                        if(isValidWorld(args[3]))
+                        if(NWUtils.isValidWorld(args[3], plugin.getServer()))
                             world = plugin.getServer().getWorld(args[3]);
                         else
                         {
                             // let them know that's an invalid world
                             player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
                                                ChatColor.RED + "\"" + args[3] + "\" is not a valid world.");
-
                         }
 
                     }
@@ -107,33 +107,6 @@ public class WarpToCoordCommand implements CommandExecutor
         }
         else
             retVal = true; // in the case of permissions failure, we still need to return true so that no usage is printed
-
-        return retVal;
-    }
-
-    private boolean isValidDouble(String doubleValStr)
-    {
-        boolean retVal = false;
-
-        try
-        {
-            Double doubleVal = Double.valueOf(doubleValStr);
-            retVal = true;
-        }
-        catch (NumberFormatException ignored)
-        {
-        }
-
-        return retVal;
-    }
-
-    private boolean isValidWorld(String worldValStr)
-    {
-        boolean retVal = false;
-
-        World world = plugin.getServer().getWorld(worldValStr);
-        if(world != null)
-            retVal = true;
 
         return retVal;
     }

@@ -4,6 +4,7 @@ import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
 import net.niftymonkey.niftywarp.Warp;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -64,6 +65,10 @@ public class WarpCommand implements CommandExecutor
 
                 if (warp != null)
                 {
+                    // let's load the destination chunk first
+                    Chunk destinationChunk = warp.getLocation().getBlock().getChunk();
+                    warp.getLocation().getWorld().loadChunk(destinationChunk);
+
                     // send the player there
                     player.teleport(warp.getLocation());
 

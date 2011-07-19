@@ -45,7 +45,7 @@ Warp to your home (currently just warps to your "home" warp)
 - Command:    /nwhome
 - Alternates: /nwh, /home
 
-/listwarps
+/listwarps <worldName> <private | unlisted | listed>
 Get the list of warps
 - Command:    /nwlist
 - Alternates: /nwl, /listwarps
@@ -65,7 +65,7 @@ Use a warp
 - Command:    /nwwarp
 - Alternates: /nw, /nww, /warp
 
-/warptocoord
+/warptocoord x y z <worldName>
 Warp to a specific coordinate
 - Command:    /nwwarptocoord
 - Alternates: /nwwtc, warptocoord, wtc, w2c

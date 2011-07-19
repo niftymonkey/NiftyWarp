@@ -72,7 +72,7 @@ commands:
       usage: |
            /<command>
    nwwarptocoord:
-      aliases: [nwwtc, warptocoord, wtc, w2c]
+      aliases: [nwwtc, nww2c, warptocoord, warp2coord, wtc, w2c]
       description: Warps you to a specific location
       permission: niftywarp.use.warptocoord
       usage: |

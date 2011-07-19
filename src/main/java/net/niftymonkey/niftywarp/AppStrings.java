@@ -3,6 +3,9 @@ package net.niftymonkey.niftywarp;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * In lieu of implementing real i18n right now, I'm going to just centralize my strings here so that I can do that later
  *
@@ -12,7 +15,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class AppStrings
 {
+
+    ///////////////////////////////////
     // commands
+    ///////////////////////////////////
+
     public static final String COMMAND_ADD          = "nwadd";
     public static final String COMMAND_LIST         = "nwlist";
     public static final String COMMAND_DELETE       = "nwdelete";
@@ -23,35 +30,49 @@ public class AppStrings
     public static final String COMMAND_HOMESET      = "nwhomeset";
     public static final String COMMAND_WARPTOCOORD  = "nwwarptocoord";
 
-    // message strings (public)
+    ///////////////////////////////////
+    // message bundle lookup keys
+    ///////////////////////////////////
+
+    // info & success
+    public static final String WARP_ADDED          = "WARP_ADDED";
+    public static final String WARP_DELETED        = "WARP_DELETED";
+    public static final String WARPED_TO           = "WARPED_TO";
+    public static final String HOME_SET            = "HOME_SET";
+    public static final String NO_AVAILABLE_WARPS  = "NO_AVAILABLE_WARPS";
+    public static final String WARPS_YOURS         = "WARPS_YOURS";
+    public static final String WARPS_OTHERS        = "WARPS_OTHERS";
+    public static final String WARP_RENAMED        = "WARP_RENAMED";
+    public static final String WARP_TYPE_SET       = "WARP_TYPE_SET";
+    public static final String WARPED_TO_COORD     = "WARPED_TO_COORD";
+
+    // error
+    public static final String ERR_ALL_WARP_SLOTS_USED = "ERR_ALL_WARP_SLOTS_USED";
+    public static final String ERR_WARP_NOT_FOUND      = "ERR_WARP_NOT_FOUND";
+    public static final String ERR_INVALID_WORLD       = "ERR_INVALID_WORLD";
+    public static final String ERR_INVALID_WARP_TYPE   = "ERR_INVALID_WARP_TYPE";
+    public static final String ERR_INVALID_COORDINATE  = "ERR_INVALID_COORDINATE";
+    public static final String ERR_PERMISSION_FAIL_1   = "ERR_PERMISSION_FAIL_1";
+    public static final String ERR_PERMISSION_FAIL_2   = "ERR_PERMISSION_FAIL_2";
+    public static final String ERR_REMOVE_OTHERS_WARP  = "ERR_REMOVE_OTHERS_WARP";
+    public static final String ERR_RENAME_OTHERS_WARP  = "ERR_RENAME_OTHERS_WARP";
+    public static final String ERR_SETTYPE_OTHERS_WARP = "ERR_SETTYPE_OTHERS_WARP";
+
+    ///////////////////////////////////
+    // log messages
+    ///////////////////////////////////
+
     public static final String ADDON_MSG_PREFIX           = "[NiftyWarp] - ";
-    public static final String WARPED_TO_PREFIX           = "Warped to:  ";
-    public static final String WARP_NOT_FOUND_PREFIX      = "No warp found for name:  ";
-    public static final String WARP_ADDED_PREFIX          = "Added warp: ";
-    public static final String WARP_REMOVED_PREFIX        = "Removed warp: ";
-    public static final String WARP_RENAMED_PREFIX        = "Renamed warp: ";
-    public static final String WARP_SET_PREFIX            = "Type set for warp: ";
-    public static final String AVAILABLE_WARPS_PREFIX     = "Available warps: ";
-    public static final String NO_AVAILABLE_WARPS         = "No warps found.";
     public static final String DB_INSTALL_PREFIX          = "Installing database due to first time usage for:  ";
-    public static final String INSUFFICIENT_PRIVELEGES_1  = "Sorry, you don't have permission to use that command.";
-    public static final String INSUFFICIENT_PRIVELEGES_2  = "Please ask your server administrator about permission:";
-    public static final String WARP_TYPE_NOT_FOUND_SUFFIX = " is not a valid warp type.";
-    public static final String WARP_CANNOT_REMOVE_OTHERS  = "You do not have permission to delete someone else's warp.";
-    public static final String WARP_CANNOT_RENAME_OTHERS  = "You do not have permission to rename someone else's warp.";
-    public static final String WARP_CANNOT_SET_OTHERS     = "You do not have permission to set someone else's warp type.";
-    public static final String WARPS_YOURS                = "Your Warps: ";
-    public static final String WARPS_OTHERS               = "Other's Warps: ";
     public static final String PERM_CHECK_FAIL_LOG_PREFIX = "Failed permission check [ ";
-    public static final String WARPTOCOORD_INVALID_COORD  = "Invalid coordinates specified.";
 
-    public static final String HOME_SET_SUCCESS           = "Home warp set.";
-
-    // message strings (private)
     private static final String ENABLED_MSG_SUFFIX  = " has been enabled";
     private static final String DISABLED_MSG_SUFFIX = " has been disabled";
 
+    ///////////////////////////////////
     // properties
+    ///////////////////////////////////
+
     public static final String PROPERTY_MSG_SHOWPREFIX        = "messages.show-prefix";
     public static final String PROPERTY_MSG_SHOWPERM_FAILURE  = "messages.permissions.show-fail-message";
     public static final String PROPERTY_WARP_DEFAULT_WARPTYPE = "warps.default-type";
@@ -59,7 +80,10 @@ public class AppStrings
     public static final String PROPERTY_PERMISSION_USE_PLUGIN = "permissions.use-plugin";
     public static final String PROPERTY_PERMISSION_RULESET    = "permissions.ruleset";
 
+    ///////////////////////////////////
     // constants
+    ///////////////////////////////////
+
     public static final String WARP_TYPE_PRIVATE     = "private";
     public static final String WARP_TYPE_LISTED      = "listed";
     public static final String WARP_TYPE_UNLISTED    = "unlisted";
@@ -69,7 +93,10 @@ public class AppStrings
     public static final String RULESET_OPS_ONLY      = "ops-only";
     public static final String RULESET_OPS_FOR_ADMIN = "ops-for-admin";
 
+    ///////////////////////////////////
     // command permissions Keys
+    ///////////////////////////////////
+
     public static final String COMMAND_ADD_PERMISSION          = "niftywarp.use.add";
     public static final String COMMAND_LIST_PERMISSION         = "niftywarp.use.list";
     public static final String COMMAND_DELETE_PERMISSION       = "niftywarp.use.delete";

@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
+
 /**
  * User: Mark
  * Date: 6/14/11
@@ -64,17 +66,23 @@ public class DeleteWarpCommand implements CommandExecutor
                     boolean removed = plugin.getWarpManager().deleteWarp(warpName, player);
                     if (removed)
                     {
+                        String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.WARP_DELETED);
+                        Object[] formatValues = new Object[] { warpName };
+                        String message = MessageFormat.format(msgFromBundle, formatValues);
+
                         // let them know that we successfully removed the warp
                         player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                           ChatColor.GREEN + AppStrings.WARP_REMOVED_PREFIX +
-                                           ChatColor.WHITE + warpName);
+                                           ChatColor.GREEN + message);
                     }
                     else
                     {
+                        String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_WARP_NOT_FOUND);
+                        Object[] formatValues = new Object[] { warpName };
+                        String message = MessageFormat.format(msgFromBundle, formatValues);
+
                         // let them know that we couldn't find that warp
                         player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                           ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                           ChatColor.WHITE + warpName);
+                                           ChatColor.RED + message);
                     }
                 }
                 catch (InternalPermissionsException e)

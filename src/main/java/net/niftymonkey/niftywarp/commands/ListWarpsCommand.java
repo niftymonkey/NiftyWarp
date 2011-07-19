@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,9 +75,13 @@ public class ListWarpsCommand implements CommandExecutor
                 {
                     if(!NWUtils.isValidWorld(worldStrFilter, plugin.getServer()))
                     {
+                        String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_INVALID_WORLD);
+                        Object[] formatValues = new Object[] { worldStrFilter };
+                        String message = MessageFormat.format(msgFromBundle, formatValues);
+
                         // let them know that's an invalid world
                         player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                           ChatColor.RED + "\"" + worldStrFilter + "\" is not a valid world.");
+                                           ChatColor.RED + message);
 
                         return false;
                     }
@@ -94,9 +99,13 @@ public class ListWarpsCommand implements CommandExecutor
                 warpTypeFilter = WarpType.getTypeForString(typeStr);
                 if(warpTypeFilter == null)
                 {
+                    String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_INVALID_WARP_TYPE);
+                    Object[] formatValues = new Object[] { typeStr };
+                    String message = MessageFormat.format(msgFromBundle, formatValues);
+
                     // let them know that's an invalid warp type
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.RED + "\"" + typeStr + "\" is not a valid warp type.");
+                                       ChatColor.RED + message);
 
                     return false;
                 }
@@ -220,16 +229,26 @@ public class ListWarpsCommand implements CommandExecutor
 
                 // output warps
                 player.sendMessage(ChatColor.AQUA + addonMsgPrefix + warpTypesInfo);
-                player.sendMessage(ChatColor.GREEN + AppStrings.WARPS_YOURS + playerOwnedWarpsStr);
-                player.sendMessage(ChatColor.GREEN + AppStrings.WARPS_OTHERS + otherOwnedWarpStr);
+
+                String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.WARPS_YOURS);
+                Object[] formatValues = new Object[] { playerOwnedWarpsStr };
+                String message = MessageFormat.format(msgFromBundle, formatValues);
+
+                player.sendMessage(ChatColor.GREEN + message);
+
+                msgFromBundle = plugin.getMessageBundle().getString(AppStrings.WARPS_OTHERS);
+                formatValues = new Object[] { otherOwnedWarpStr };
+                message = MessageFormat.format(msgFromBundle, formatValues);
+
+                player.sendMessage(ChatColor.GREEN + message);
 
             }
             else
             {
                 // inform of no warps
+                String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.NO_AVAILABLE_WARPS);
                 player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                   ChatColor.GREEN + AppStrings.AVAILABLE_WARPS_PREFIX +
-                                   ChatColor.WHITE + AppStrings.NO_AVAILABLE_WARPS);
+                                   ChatColor.GREEN + msgFromBundle);
             }
 
             retVal = true;

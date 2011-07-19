@@ -3,6 +3,7 @@ package net.niftymonkey.niftywarp;
 import net.niftymonkey.niftywarp.exceptions.InternalPermissionsException;
 import net.niftymonkey.niftywarp.persistence.EbeanServerPersistenceProvider;
 import net.niftymonkey.niftywarp.persistence.IPersistenceProvider;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -232,7 +233,10 @@ public class WarpManager
                     retVal = true;
                 }
                 else
-                    throw new InternalPermissionsException(AppStrings.WARP_CANNOT_REMOVE_OTHERS);
+                {
+                    String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_REMOVE_OTHERS_WARP);
+                    throw new InternalPermissionsException(msgFromBundle);
+                }
             }
         }
 
@@ -282,7 +286,10 @@ public class WarpManager
                 retVal = true;
             }
             else
-                throw new InternalPermissionsException(AppStrings.WARP_CANNOT_RENAME_OTHERS);
+            {
+                String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_RENAME_OTHERS_WARP);
+                throw new InternalPermissionsException(msgFromBundle);
+            }
         }
 
         return retVal;
@@ -328,9 +335,37 @@ public class WarpManager
                     retVal = true;
                 }
                 else
-                    throw new InternalPermissionsException(AppStrings.WARP_CANNOT_SET_OTHERS);
+                {
+                    String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_SETTYPE_OTHERS_WARP);
+                    throw new InternalPermissionsException(msgFromBundle);
+                }
             }
         }
+
+        return retVal;
+    }
+
+    /**
+     * Sends a player to the location specified
+     *
+     * @param playerToWarp the player to be teleported/warped
+     * @param location the location to send them to
+     * @param requestingPlayer the player requesting the warp occurrence
+     *
+     * @return true if player sent
+     */
+    public boolean sendPlayerToWarp(Player playerToWarp, Location location, Player requestingPlayer)
+    {
+        boolean retVal = false;
+
+        // let's load the destination chunk first
+        Chunk destinationChunk = location.getBlock().getChunk();
+        location.getWorld().loadChunk(destinationChunk);
+
+        // send the player there
+        playerToWarp.teleport(location);
+
+        retVal = true;
 
         return retVal;
     }

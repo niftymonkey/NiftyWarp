@@ -60,9 +60,10 @@ public class HomeSetCommand implements CommandExecutor
             // get the addon message prefix
             String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
 
-            // let them know that we successfully created the warp
+            // let them know it worked
+            String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.HOME_SET);
             player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                               ChatColor.GREEN + AppStrings.HOME_SET_SUCCESS);
+                               ChatColor.GREEN + msgFromBundle);
 
             retVal = true;
         }

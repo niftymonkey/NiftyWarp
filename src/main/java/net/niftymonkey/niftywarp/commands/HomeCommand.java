@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
+
 /**
  * User: Mark
  * Date: 6/30/11
@@ -58,20 +60,25 @@ public class HomeCommand implements CommandExecutor
 
             if (warp != null)
             {
-                // send the player there
-                player.teleport(warp.getLocation());
+                plugin.getWarpManager().sendPlayerToWarp(player, warp.getLocation(), player);
+
+                String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.WARPED_TO);
+                Object[] formatValues = new Object[] { warp.getWarpType().getTypeColor() + AppStrings.HOME_WARP_NAME };
+                String message = MessageFormat.format(msgFromBundle, formatValues);
 
                 // let them know it worked
                 player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                   ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
-                                   warp.getWarpType().getTypeColor() + AppStrings.HOME_WARP_NAME);
+                                   ChatColor.GREEN + message);
             }
             else
             {
-                // let them know we couldn't find a warp with that name
+                String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_WARP_NOT_FOUND);
+                Object[] formatValues = new Object[] { AppStrings.HOME_WARP_NAME };
+                String message = MessageFormat.format(msgFromBundle, formatValues);
+
+                // let them know that we couldn't find that warp
                 player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                   ChatColor.RED + AppStrings.WARP_NOT_FOUND_PREFIX +
-                                   ChatColor.WHITE + AppStrings.HOME_WARP_NAME);
+                                   ChatColor.RED + message);
             }
 
             retVal = true;

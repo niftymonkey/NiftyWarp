@@ -3,6 +3,7 @@ package net.niftymonkey.niftywarp.commands;
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NWUtils;
 import net.niftymonkey.niftywarp.NiftyWarp;
+import net.niftymonkey.niftywarp.Warp;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -10,6 +11,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.text.MessageFormat;
 
 /**
  * User: Mark
@@ -69,14 +72,20 @@ public class WarpToCoordCommand implements CommandExecutor
                     World world = null;
                     if(args.length == 4)
                     {
+                        String worldString = args[3];
+
                         // check for world ... if none specified, use the player's current world
-                        if(NWUtils.isValidWorld(args[3], plugin.getServer()))
-                            world = plugin.getServer().getWorld(args[3]);
+                        if(NWUtils.isValidWorld(worldString, plugin.getServer()))
+                            world = plugin.getServer().getWorld(worldString);
                         else
                         {
+                            String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_INVALID_WORLD);
+                            Object[] formatValues = new Object[] { worldString };
+                            String message = MessageFormat.format(msgFromBundle, formatValues);
+
                             // let them know that's an invalid world
                             player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                               ChatColor.RED + "\"" + args[3] + "\" is not a valid world.");
+                                               ChatColor.RED + message);
                         }
 
                     }
@@ -86,22 +95,29 @@ public class WarpToCoordCommand implements CommandExecutor
                     if(world != null)
                     {
                         // send the player there
-                        player.teleport(new Location(world, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z)));
+                        Location location = new Location(world, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z));
+                        plugin.getWarpManager().sendPlayerToWarp(player, location, player);
+
+                        String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.WARPED_TO_COORD);
+                        Object[] formatValues = new Object[] { x, y, z, world.getName() };
+                        String message = MessageFormat.format(msgFromBundle, formatValues);
 
                         // let them know it worked
                         player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                           ChatColor.GREEN + AppStrings.WARPED_TO_PREFIX +
-                                           "x:" + x + ", y:" + y + ", z:" + z + " - [" + world.getName() + "]");
+                                           ChatColor.GREEN + message);
                     }
 
                     retVal = true;
                 }
                 else
                 {
+                    String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_INVALID_COORDINATE);
+                    Object[] formatValues = new Object[] { x, y, z };
+                    String message = MessageFormat.format(msgFromBundle, formatValues);
+
                     // let them know we couldn't warp to that spot
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.RED + AppStrings.WARPTOCOORD_INVALID_COORD +
-                                       ChatColor.WHITE + "x: " + x + " - y: " + y + " - z: " + z);
+                                       ChatColor.RED + message);
                 }
             }
         }

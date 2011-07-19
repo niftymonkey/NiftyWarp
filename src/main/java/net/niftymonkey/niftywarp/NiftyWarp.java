@@ -26,8 +26,11 @@ import org.bukkit.util.config.Configuration;
 import javax.persistence.PersistenceException;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -46,19 +49,24 @@ public class NiftyWarp extends JavaPlugin
     private WarpManager warpManager;
     private Configuration configuration;
 
+    private ResourceBundle messageBundle;
+
     /**
      * Called when the plugin is enabled
      */
     public void onEnable()
     {
+        // setup config
+        setupConfiguration();
+
+        // setup i18n
+        setupResourceBundle();
+
         // setup the persistence database
         setupDatabase();
 
-        // setup config
-        this.setupConfiguration();
-
         // setup permissions
-        this.setupPermissions();
+        setupPermissions();
 
         // create the warp manager
         warpManager = new WarpManager(this);
@@ -84,6 +92,23 @@ public class NiftyWarp extends JavaPlugin
     public void onDisable()
     {
         log.info(AppStrings.getDisabledMessage(this));
+    }
+
+    /**
+     * Sets up the resource bundle for internationalization based on config.  Defaults to United States English.
+     */
+    public void setupResourceBundle()
+    {
+        // get localization values from config and initialize the locale/bundle
+        String language = getConfiguration().getString("i18n.language", "en");
+        String country = getConfiguration().getString("i18n.country", "US");
+        Locale currentLocale = new Locale(language, country);
+        messageBundle = ResourceBundle.getBundle("MessageBundle", currentLocale);
+    }
+
+    public ResourceBundle getMessageBundle()
+    {
+        return messageBundle;
     }
 
     /**
@@ -184,9 +209,13 @@ public class NiftyWarp extends JavaPlugin
                                        (PermissionNodeMapper.getAdminPermissionNode(commandRequested)):
                                        (PermissionNodeMapper.getPermissionNode(commandRequested));
 
-                player.sendMessage(ChatColor.RED + AppStrings.INSUFFICIENT_PRIVELEGES_1);
-                player.sendMessage(ChatColor.RED + AppStrings.INSUFFICIENT_PRIVELEGES_2);
-                player.sendMessage(ChatColor.RED + permissonNode);
+                String msgFromBundle = getMessageBundle().getString(AppStrings.ERR_PERMISSION_FAIL_1);
+                player.sendMessage(ChatColor.RED + msgFromBundle);
+
+                msgFromBundle = getMessageBundle().getString(AppStrings.ERR_PERMISSION_FAIL_2);
+                Object[] formatValues = new Object[] { permissonNode };
+                String message = MessageFormat.format(msgFromBundle, formatValues);
+                player.sendMessage(ChatColor.RED + message);
             }
         }
 
@@ -205,7 +234,7 @@ public class NiftyWarp extends JavaPlugin
         }
         catch (PersistenceException ex)
         {
-            System.out.println(AppStrings.DB_INSTALL_PREFIX + getDescription().getName());
+            log.info(AppStrings.DB_INSTALL_PREFIX + getDescription().getName());
             installDDL();
         }
     }

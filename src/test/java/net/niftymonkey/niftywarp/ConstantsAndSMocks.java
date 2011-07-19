@@ -7,6 +7,9 @@ import org.bukkit.util.config.Configuration;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -39,6 +42,13 @@ public class ConstantsAndSMocks
 
         // also stub out permission checks to return true
         when(retVal.hasPermission(Matchers.<Player>any(), anyString(), anyBoolean(), anyBoolean())).thenReturn(true);
+
+        // get localization values from config and initialize the locale/bundle
+        String language = "en";
+        String country = "US";
+        Locale currentLocale = new Locale(language, country);
+        ResourceBundle messageBundle = ResourceBundle.getBundle("MessageBundle", currentLocale);
+        when(retVal.getMessageBundle()).thenReturn(messageBundle);
 
         return retVal;
     }

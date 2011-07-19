@@ -10,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
+
 /**
  * User: Mark
  * Date: 6/13/11
@@ -85,17 +87,23 @@ public class AddWarpCommand implements CommandExecutor
                                                                 player.getLocation());
 
 
+                    String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.WARP_ADDED);
+                    Object[] formatValues = new Object[] { warp.getWarpType().getTypeColor() + warpName };
+                    String message = MessageFormat.format(msgFromBundle, formatValues);
+
                     // let them know that we successfully created the warp
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.GREEN + AppStrings.WARP_ADDED_PREFIX +
-                                       warp.getWarpType().getTypeColor() + warpName);
+                                       ChatColor.GREEN + message);
                 }
                 else
                 {
+                    String msgFromBundle = plugin.getMessageBundle().getString(AppStrings.ERR_ALL_WARP_SLOTS_USED);
+                    Object[] formatValues = new Object[] { maxWarps };
+                    String message = MessageFormat.format(msgFromBundle, formatValues);
+
                     // let them know they aren't allowed to make any more
                     player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
-                                       ChatColor.RED + "You have used all of your warp slots [" +
-                                       maxWarps + "].  Remove warps to clear up warp slots");
+                                       ChatColor.RED + message);
                 }
 
                 retVal = true;

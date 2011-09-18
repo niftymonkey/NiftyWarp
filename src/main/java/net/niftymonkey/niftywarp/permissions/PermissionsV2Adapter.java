@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 /**
  * Permissions adapter that uses Permissions version 2 signature(s)
  */
+@Deprecated
 public class PermissionsV2Adapter implements IPermissionsAdapter
 {
     private static Logger log = Logger.getLogger("Minecraft");

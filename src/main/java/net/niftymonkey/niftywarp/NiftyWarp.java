@@ -15,6 +15,7 @@ import net.niftymonkey.niftywarp.permissions.IPermissionsAdapter;
 import net.niftymonkey.niftywarp.permissions.OpsForAdminFunctionsAdapter;
 import net.niftymonkey.niftywarp.permissions.OpsOnlyAdapter;
 import net.niftymonkey.niftywarp.permissions.PermissionNodeMapper;
+import net.niftymonkey.niftywarp.permissions.PermissionsBukkitAdapter;
 import net.niftymonkey.niftywarp.permissions.PermissionsV2Adapter;
 import net.niftymonkey.niftywarp.permissions.PermissionsV3Adapter;
 import org.bukkit.ChatColor;
@@ -141,15 +142,10 @@ public class NiftyWarp extends JavaPlugin
         // attempt to use the Permissions plugin
         if (usePermissionsPlugin)
         {
-            Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
+            Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("PermissionsBukkit");
             if (permissionsPlugin != null)
             {
-                String version = permissionsPlugin.getDescription().getVersion();
-
-                if(version.startsWith("2"))
-                    this.permissionAdapter = new PermissionsV2Adapter((Permissions) permissionsPlugin);
-                if(version.startsWith("3"))
-                    this.permissionAdapter = new PermissionsV3Adapter((Permissions) permissionsPlugin);
+                this.permissionAdapter = new PermissionsBukkitAdapter(this);
             }
         }
         else

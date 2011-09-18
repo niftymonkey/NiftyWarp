@@ -14,6 +14,7 @@ commands:
    nwdelete:
       aliases: [nwd, deletewarp, removewarp]
       description: Deletes a named warp
+      permission: niftywarp.use.delete
       usage: |
            /<command> [<owner>.]<warpname>
            Example Usages:
@@ -23,6 +24,7 @@ commands:
    nwlist:
       aliases: [nwl, listwarps]
       description: Lists all of the warps available to you
+      permission: niftywarp.use.list
       usage: |
            /<command> [world] [private|listed|unlisted]
            If no type is provided, will show all warps you own, plus any listed warps.  You can use * to get all world's warps when specifying type.
@@ -33,6 +35,7 @@ commands:
    nwrename:
       aliases: [nwr, renamewarp]
       description: Renames a named warp
+      permission: niftywarp.use.rename
       usage: |
            /<command> [<owner>.]<warpname> [<owner>.]<newwarpname>
            Example Usages:
@@ -42,11 +45,13 @@ commands:
    nwset:
       aliases: [nws, settype, setwarptype]
       description: Sets the type of an existing named warp
+      permission: niftywarp.use.set
       usage: |
            /<command> [<owner>.]<warpname> private|listed|unlisted
    nwwarp:
       aliases: [nw, nww, warp]
       description: Warps you to a named warp location
+      permission: niftywarp.use.warp
       usage: |
            /<command> [<owner>.]<warpname>
            Example Usages:
@@ -56,15 +61,18 @@ commands:
    nwhome:
       aliases: [nwh, home]
       description: Warps you to your home location
+      permission: niftywarp.use.home
       usage: |
            /<command>
    nwhomeset:
       aliases: [nwhs, homeset, sethome]
       description: Sets your home location
+      permission: niftywarp.use.homeset
       usage: |
            /<command>
    nwwarptocoord:
       aliases: [nwwtc, nww2c, warptocoord, warp2coord, wtc, w2c]
       description: Warps you to a specific location
+      permission: niftywarp.use.warptocoord
       usage: |
            /<command> <x> <y> <z> [world]

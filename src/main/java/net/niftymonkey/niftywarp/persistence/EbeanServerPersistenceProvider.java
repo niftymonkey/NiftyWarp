@@ -85,7 +85,6 @@ public class EbeanServerPersistenceProvider implements IPersistenceProvider
     @Override
     public void update(Warp warp)
     {
-        //*
         try
         {
             database.update(warp);
@@ -105,11 +104,6 @@ public class EbeanServerPersistenceProvider implements IPersistenceProvider
 
             database.endTransaction();
         }
-        /*/
-        Warp copy = Warp.copy(warp);
-        database.delete(warp);
-        database.save(copy);
-        //*/
     }
 
     /**

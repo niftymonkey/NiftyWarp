@@ -68,6 +68,11 @@ commands:
       description: Warps you to a specific location
       usage: |
            /<command> <x> <y> <z> [world]
+   nwversion:
+      aliases: [nwv]
+      description: Prints version information
+      usage: |
+           /<command>
 
 permissions:
     niftywarp.use.*:
@@ -82,6 +87,7 @@ permissions:
             niftywarp.use.set: true
             niftywarp.use.warp: true
             niftywarp.use.warptocoord: true
+            niftywarp.use.version: true
     niftywarp.admin.*:
         description: Admin niftywarp usage.
         default: op

@@ -29,6 +29,7 @@ public class AppStrings
     public static final String COMMAND_HOME         = "nwhome";
     public static final String COMMAND_HOMESET      = "nwhomeset";
     public static final String COMMAND_WARPTOCOORD  = "nwwarptocoord";
+    public static final String COMMAND_VERSION      = "nwversion";
 
     ///////////////////////////////////
     // message bundle lookup keys
@@ -106,6 +107,7 @@ public class AppStrings
     public static final String COMMAND_HOME_PERMISSION         = "niftywarp.use.home";
     public static final String COMMAND_HOMESET_PERMISSION      = "niftywarp.use.homeset";
     public static final String COMMAND_WARPTOCOORD_PERMISSION  = "niftywarp.use.warptocoord";
+    public static final String COMMAND_VERSION_PERMISSION      = "niftywarp.use.version";
 
     public static final String COMMAND_ADMIN_DELETE_PERMISSION = "niftywarp.admin.delete";
     public static final String COMMAND_ADMIN_RENAME_PERMISSION = "niftywarp.admin.rename";
@@ -169,5 +171,17 @@ public class AppStrings
             retVal = "";
 
         return retVal;
+    }
+
+    /**
+     * Gets the version string for this instance of the plugin
+     *
+     * @param plugin the java plugin instance
+     *
+     * @return a version message string
+     */
+    public static String getAddonVersion(JavaPlugin plugin)
+    {
+        return "v" + plugin.getDescription().getVersion();
     }
 }

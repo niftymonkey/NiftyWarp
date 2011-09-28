@@ -223,6 +223,18 @@ public class Warp implements Serializable, Comparable<Warp>
         return getName().compareTo(o.getName());
     }
 
+    public static Warp copy(Warp warp)
+    {
+        Warp retVal = new Warp();
+
+        retVal.setOwner(warp.getOwner());
+        retVal.setName(warp.getName());
+        retVal.setLocation(warp.getLocation());
+        retVal.setWarpType(warp.getWarpType());
+
+        return retVal;
+    }
+
     @Override
     public String toString()
     {

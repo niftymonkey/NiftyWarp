@@ -29,6 +29,7 @@ public class PermissionNodeMapper
         userCommandToPermissionNodeMap.put(AppStrings.COMMAND_SET, AppStrings.COMMAND_SET_PERMISSION);
         userCommandToPermissionNodeMap.put(AppStrings.COMMAND_WARP, AppStrings.COMMAND_WARP_PERMISSION);
         userCommandToPermissionNodeMap.put(AppStrings.COMMAND_WARPTOCOORD, AppStrings.COMMAND_WARPTOCOORD_PERMISSION);
+        userCommandToPermissionNodeMap.put(AppStrings.COMMAND_VERSION, AppStrings.COMMAND_VERSION_PERMISSION);
 
         adminCommandToPermissionNodeMap.put(AppStrings.COMMAND_DELETE, AppStrings.COMMAND_ADMIN_DELETE_PERMISSION);
         adminCommandToPermissionNodeMap.put(AppStrings.COMMAND_RENAME, AppStrings.COMMAND_ADMIN_RENAME_PERMISSION);

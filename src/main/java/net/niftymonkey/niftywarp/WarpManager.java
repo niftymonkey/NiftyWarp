@@ -29,7 +29,7 @@ public class WarpManager
         this.plugin = niftyWarp;
 
         // create the persistence provider
-        setPersistenceProvider(new EbeanServerPersistenceProvider(plugin.getDatabase()));
+        setPersistenceProvider(new EbeanServerPersistenceProvider(plugin, plugin.getDatabase()));
     }
 
     /**

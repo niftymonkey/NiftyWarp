@@ -1,10 +1,14 @@
 package net.niftymonkey.niftywarp.persistence;
 
 import com.avaje.ebean.EbeanServer;
+import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.Warp;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.persistence.OptimisticLockException;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Implementation of the persistence provider that uses EbeanServer
@@ -15,10 +19,14 @@ import java.util.List;
  */
 public class EbeanServerPersistenceProvider implements IPersistenceProvider
 {
+    private static Logger log = Logger.getLogger("Minecraft");
+
+    private JavaPlugin plugin;
     private EbeanServer database;
 
-    public EbeanServerPersistenceProvider(EbeanServer database)
+    public EbeanServerPersistenceProvider(JavaPlugin plugin, EbeanServer database)
     {
+        this.plugin = plugin;
         this.database = database;
     }
 
@@ -77,7 +85,31 @@ public class EbeanServerPersistenceProvider implements IPersistenceProvider
     @Override
     public void update(Warp warp)
     {
-        database.update(warp);
+        //*
+        try
+        {
+            database.update(warp);
+        }
+        catch (OptimisticLockException e)
+        {
+            String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);
+            log.warning(addonMsgPrefix + "Error attempting to modify warp database.  Retrying.");
+
+            // if this happens, let's requery, reapply changes, and try again
+            database.beginTransaction();
+
+            Warp tmp = database.find(Warp.class, warp.getId());
+            tmp = Warp.copy(warp);
+
+            database.update(tmp);
+
+            database.endTransaction();
+        }
+        /*/
+        Warp copy = Warp.copy(warp);
+        database.delete(warp);
+        database.save(copy);
+        //*/
     }
 
     /**

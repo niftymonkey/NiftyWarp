@@ -1,6 +1,5 @@
 package net.niftymonkey.niftywarp;
 
-import com.nijikokun.bukkit.Permissions.Permissions;
 import net.niftymonkey.niftywarp.commands.AddWarpCommand;
 import net.niftymonkey.niftywarp.commands.DeleteWarpCommand;
 import net.niftymonkey.niftywarp.commands.HomeCommand;
@@ -16,9 +15,10 @@ import net.niftymonkey.niftywarp.permissions.OpsForAdminFunctionsAdapter;
 import net.niftymonkey.niftywarp.permissions.OpsOnlyAdapter;
 import net.niftymonkey.niftywarp.permissions.PermissionNodeMapper;
 import net.niftymonkey.niftywarp.permissions.PermissionsBukkitAdapter;
-import net.niftymonkey.niftywarp.permissions.PermissionsV2Adapter;
-import net.niftymonkey.niftywarp.permissions.PermissionsV3Adapter;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * Date: 6/12/11
  * Time: 10:06 PM
  */
-public class NiftyWarp extends JavaPlugin
+public class NiftyWarp extends JavaPlugin implements CommandExecutor
 {
     private static Logger log = Logger.getLogger("Minecraft");
 
@@ -82,6 +82,7 @@ public class NiftyWarp extends JavaPlugin
         getCommand(AppStrings.COMMAND_SET).setExecutor(new SetWarpTypeCommand(this));
         getCommand(AppStrings.COMMAND_WARP).setExecutor(new WarpCommand(this));
         getCommand(AppStrings.COMMAND_WARPTOCOORD).setExecutor(new WarpToCoordCommand(this));
+        getCommand(AppStrings.COMMAND_VERSION).setExecutor(this);
 
         // log enable success to console
         log.info(AppStrings.getEnabledMessage(this));
@@ -93,6 +94,33 @@ public class NiftyWarp extends JavaPlugin
     public void onDisable()
     {
         log.info(AppStrings.getDisabledMessage(this));
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        boolean retVal = false;
+
+        // Cast to the player object
+        Player player = (Player) sender;
+
+        // Check permission
+        if(this.hasPermission(player, AppStrings.COMMAND_VERSION, false, true))
+        {
+            // get the addon message prefix
+            String addonMsgPrefix = AppStrings.getAddonMsgPrefix(this);
+
+            // grab the version
+            String version = AppStrings.getAddonVersion(this);
+
+            // let them know that we couldn't find that warp
+            player.sendMessage(ChatColor.AQUA + addonMsgPrefix +
+                               ChatColor.GREEN + version);
+
+            retVal = true;
+        }
+
+        return retVal;
     }
 
     /**

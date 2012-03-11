@@ -2,8 +2,9 @@ package net.niftymonkey.niftywarp;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.Configuration;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
@@ -31,13 +32,13 @@ public class ConstantsAndSMocks
     public static final String CONFIG_DEFAULT_WARP_TYPE = AppStrings.WARP_TYPE_UNLISTED;
     public static final int CONFIG_DEFAULT_MAXWARPS  = 5;
 
-    public static NiftyWarp getStubbedNWPluginMock(Configuration configuration)
+    public static NiftyWarp getStubbedNWPluginMock(FileConfiguration configuration)
     {
         NiftyWarp retVal = Mockito.mock(NiftyWarp.class);
         WarpManager warpManager = new WarpManager(retVal);
 
         // set the plugin to give our mock config and an instance of warp manager
-        when(retVal.getConfiguration()).thenReturn(configuration);
+        when(retVal.getConfig()).thenReturn(configuration);
         when(retVal.getWarpManager()).thenReturn(warpManager);
 
         // also stub out permission checks to return true
@@ -53,9 +54,9 @@ public class ConstantsAndSMocks
         return retVal;
     }
 
-    public static Configuration getStubbedConfigurationMock()
+    public static FileConfiguration getStubbedConfigurationMock()
     {
-        Configuration retVal = Mockito.mock(Configuration.class);
+        FileConfiguration retVal = Mockito.mock(FileConfiguration.class);
 
         // stub a default warp type config option
         when(retVal.getString(AppStrings.PROPERTY_WARP_DEFAULT_WARPTYPE, AppStrings.WARP_TYPE_UNLISTED))

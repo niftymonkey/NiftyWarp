@@ -4,8 +4,8 @@ import net.niftymonkey.niftywarp.commands.AddWarpCommand;
 import net.niftymonkey.niftywarp.commands.DeleteWarpCommand;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.config.Configuration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +54,7 @@ public class CommandsTest
         World mockWorld = ConstantsAndSMocks.getStubbedWorldMock(ConstantsAndSMocks.WORLD_NAME);
         Location mockLocation = ConstantsAndSMocks.getStubbedLocationMock(mockWorld, 0, 0, 0, 0, 0);
         Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
-        Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
+        FileConfiguration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
         NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
 
         // create a test persistence provider and set that as our warp manager's provider
@@ -103,7 +103,7 @@ public class CommandsTest
         World mockWorld = ConstantsAndSMocks.getStubbedWorldMock(ConstantsAndSMocks.WORLD_NAME);
         Location mockLocation = ConstantsAndSMocks.getStubbedLocationMock(mockWorld, 0, 0, 0, 0, 0);
         Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
-        Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
+        FileConfiguration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
         NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
 
         // create a test persistence provider and set that as our warp manager's provider
@@ -150,7 +150,7 @@ public class CommandsTest
         World mockWorld = ConstantsAndSMocks.getStubbedWorldMock(ConstantsAndSMocks.WORLD_NAME);
         Location mockLocation = ConstantsAndSMocks.getStubbedLocationMock(mockWorld, 0, 0, 0, 0, 0);
         Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
-        Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
+        FileConfiguration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
         NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
 
         List<Warp> warpList = new ArrayList<Warp>();
@@ -207,7 +207,7 @@ public class CommandsTest
         World mockWorld = ConstantsAndSMocks.getStubbedWorldMock(ConstantsAndSMocks.WORLD_NAME);
         Location mockLocation = ConstantsAndSMocks.getStubbedLocationMock(mockWorld, 0, 0, 0, 0, 0);
         Player mockPlayerOne = ConstantsAndSMocks.getStubbedPlayerMock(ConstantsAndSMocks.PLAYER_ONE_NAME, mockLocation);
-        Configuration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
+        FileConfiguration mockConfiguration = ConstantsAndSMocks.getStubbedConfigurationMock();
         NiftyWarp mockNiftyWarpPlugin = ConstantsAndSMocks.getStubbedNWPluginMock(mockConfiguration);
 
         List<Warp> warpList = new ArrayList<Warp>();

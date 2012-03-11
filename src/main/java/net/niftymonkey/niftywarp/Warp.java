@@ -26,7 +26,9 @@ import static javax.persistence.EnumType.STRING;
 @Table(name="nw_warp")
 public class Warp implements Serializable, Comparable<Warp>
 {
-    @Id
+	private static final long serialVersionUID = 1L; //added for consistency
+	
+	@Id
     private int id;
     @NotNull
     private String   fullyQualifiedName;

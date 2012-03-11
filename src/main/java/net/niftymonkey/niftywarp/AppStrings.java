@@ -3,9 +3,6 @@ package net.niftymonkey.niftywarp;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 /**
  * In lieu of implementing real i18n right now, I'm going to just centralize my strings here so that I can do that later
  *
@@ -164,7 +161,7 @@ public class AppStrings
         String retVal = ADDON_MSG_PREFIX;
 
         // try to get the value out of the config.  Default to true
-        boolean useAddonMessagePrefix = plugin.getConfiguration().getBoolean(PROPERTY_MSG_SHOWPREFIX, true);
+        boolean useAddonMessagePrefix = plugin.getConfig().getBoolean(PROPERTY_MSG_SHOWPREFIX, true);
 
         // blank out the message prefix the config was set to false
         if(!useAddonMessagePrefix)

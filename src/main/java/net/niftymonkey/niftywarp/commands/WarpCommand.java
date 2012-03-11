@@ -4,7 +4,7 @@ import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
 import net.niftymonkey.niftywarp.Warp;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
+//import org.bukkit.Chunk; // never used, remove in next cleanup
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

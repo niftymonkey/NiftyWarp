@@ -3,7 +3,7 @@ package net.niftymonkey.niftywarp.commands;
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NWUtils;
 import net.niftymonkey.niftywarp.NiftyWarp;
-import net.niftymonkey.niftywarp.Warp;
+//import net.niftymonkey.niftywarp.Warp; // never used, remove in next cleanup
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;

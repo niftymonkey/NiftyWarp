@@ -2,8 +2,8 @@ package net.niftymonkey.niftywarp.commands;
 
 import net.niftymonkey.niftywarp.AppStrings;
 import net.niftymonkey.niftywarp.NiftyWarp;
-import net.niftymonkey.niftywarp.Warp;
-import net.niftymonkey.niftywarp.WarpType;
+//import net.niftymonkey.niftywarp.Warp; // never used, remove in next cleanup
+//import net.niftymonkey.niftywarp.WarpType; // never used, remove in next cleanup
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -52,10 +52,10 @@ public class HomeSetCommand implements CommandExecutor
         if(this.plugin.hasPermission(player, AppStrings.COMMAND_HOMESET, false, true))
         {
             // add this warp to the warp map
-            Warp warp = plugin.getWarpManager().addWarp(AppStrings.HOME_WARP_NAME,
+            /*Warp warp = plugin.getWarpManager().addWarp(AppStrings.HOME_WARP_NAME,
                                                         player,
                                                         WarpType.PRIVATE,
-                                                        player.getLocation());
+                                                        player.getLocation());*/ // never used, remove in next cleanup
 
             // get the addon message prefix
             String addonMsgPrefix = AppStrings.getAddonMsgPrefix(plugin);

@@ -17,7 +17,7 @@ public class NWUtils
 
         try
         {
-            Double doubleVal = Double.valueOf(doubleValStr);
+            //Double doubleVal = Double.valueOf(doubleValStr); //was never used, will be removed in next cleanup
             retVal = true;
         }
         catch (NumberFormatException ignored)

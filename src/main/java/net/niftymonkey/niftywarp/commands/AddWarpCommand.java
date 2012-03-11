@@ -59,7 +59,8 @@ public class AddWarpCommand implements CommandExecutor
                 // get the first argument which is the warp name
                 String warpName = args[0];
                 // get a default warp type
-                WarpType warpType = WarpType.getDefaultWarpType(plugin.getConfiguration());
+                //WarpType warpType = WarpType.getDefaultWarpType(plugin.getConfiguration()); //this needs to be fixed once warp type fixed
+                WarpType warpType = WarpType.getDefaultWarpType();
 
                 // if we have two arguments, they're passing in warp type
                 if(args.length == 2)
@@ -72,7 +73,7 @@ public class AddWarpCommand implements CommandExecutor
                         warpType = warpParamType;
                 }
 
-                int maxWarps = plugin.getConfiguration().getInt(AppStrings.PROPERTY_WARP_MAXWARPS, 20);
+                int maxWarps = plugin.getConfig().getInt(AppStrings.PROPERTY_WARP_MAXWARPS, 20);
                 int warpsForPlayerCount = plugin.getWarpManager().getPersistenceProvider().getWarpsForPlayerCount(player);
 
                 // get the addon message prefix

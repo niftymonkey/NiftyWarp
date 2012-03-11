@@ -12,20 +12,20 @@ import java.util.logging.Logger;
  * Date: 9/17/11
  * Time: 8:19 PM
  */
-public class PermissionsBukkitAdapter implements IPermissionsAdapter
+public class PermissionsExAdapter implements IPermissionsAdapter
 {
     private static Logger log = Logger.getLogger("Minecraft");
 
     /**
      * The plugin
      */
-    private final NiftyWarp plugin; // never used, but kept in case of expansion and reference
+    //private final NiftyWarp plugin; // never used, but kept in case of expansion and reference
 
-    public PermissionsBukkitAdapter(NiftyWarp plugin)
+    public PermissionsExAdapter(NiftyWarp plugin)
     {
-        this.plugin = plugin; 
+        //this.plugin = plugin; 
 
-        log.info(AppStrings.ADDON_MSG_PREFIX + "Integrated with PermissionsBukkit");
+        log.info(AppStrings.ADDON_MSG_PREFIX + "Integrated with PermissionsEx");
     }
 
     /**

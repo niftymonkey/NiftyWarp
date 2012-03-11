@@ -1,7 +1,7 @@
 package net.niftymonkey.niftywarp;
 
 import org.bukkit.ChatColor;
-import org.bukkit.util.config.Configuration;
+//import org.bukkit.util.config.Configuration;
 
 /**
  * User: Mark
@@ -25,12 +25,13 @@ public enum WarpType
      * @return the default warp type
      * @param configuration the configuration object to use to get the default type
      */
-    public static WarpType getDefaultWarpType(Configuration configuration)
+    public static WarpType getDefaultWarpType() 
     {
         WarpType retVal;
 
         // grab the default type from the config, defaulting to unlisted
-        String type = configuration.getString(AppStrings.PROPERTY_WARP_DEFAULT_WARPTYPE, AppStrings.WARP_TYPE_UNLISTED);
+        //String type = getConfig().getString(AppStrings.PROPERTY_WARP_DEFAULT_WARPTYPE, AppStrings.WARP_TYPE_UNLISTED);
+        String type = "warps.default-type"; //this needs to be fixed to use config
         // get the type for the string specified
         retVal = getTypeForString(type);
 

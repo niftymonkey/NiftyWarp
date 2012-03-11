@@ -14,19 +14,24 @@ import net.niftymonkey.niftywarp.permissions.IPermissionsAdapter;
 import net.niftymonkey.niftywarp.permissions.OpsForAdminFunctionsAdapter;
 import net.niftymonkey.niftywarp.permissions.OpsOnlyAdapter;
 import net.niftymonkey.niftywarp.permissions.PermissionNodeMapper;
-import net.niftymonkey.niftywarp.permissions.PermissionsBukkitAdapter;
+import net.niftymonkey.niftywarp.permissions.PermissionsBukkitAdapter; 
+//import net.niftymonkey.niftywarp.permissions.PermissionsExAdapter; //future support for PermissionsEX
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+//import org.bukkit.configuration.file.FileConfiguration; //replaces config.Configuration for loading config
+//import org.bukkit.configuration.file.YamlConfiguration; //will clean up
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
+//import org.bukkit.util.config.Configuration;
 
 import javax.persistence.PersistenceException;
 import java.io.File;
-import java.io.IOException;
+//import java.io.IOException; //no longer needed
+//import java.io.InputStream; //will cleanup next release
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +53,9 @@ public class NiftyWarp extends JavaPlugin implements CommandExecutor
     public IPermissionsAdapter permissionAdapter;
 
     private WarpManager warpManager;
-    private Configuration configuration;
+    //private Configuration configuration;
+    //private FileConfiguration customConfig = null; 	//added as per DOC on Bukkit, didn't end up use will clean on next release
+    private File customConfigFile = null;			//added as per DOC on Bukkit
 
     private ResourceBundle messageBundle;
 
@@ -129,8 +136,8 @@ public class NiftyWarp extends JavaPlugin implements CommandExecutor
     public void setupResourceBundle()
     {
         // get localization values from config and initialize the locale/bundle
-        String language = getConfiguration().getString("i18n.language", "en");
-        String country = getConfiguration().getString("i18n.country", "US");
+        String language = getConfig().getString("i18n.language", "en");
+        String country = getConfig().getString("i18n.country", "US");
         Locale currentLocale = new Locale(language, country);
         messageBundle = ResourceBundle.getBundle("MessageBundle", currentLocale);
     }
@@ -165,12 +172,12 @@ public class NiftyWarp extends JavaPlugin implements CommandExecutor
      */
     private void setupPermissions()
     {
-        boolean usePermissionsPlugin = getConfiguration().getBoolean(AppStrings.PROPERTY_PERMISSION_USE_PLUGIN, true);
+        boolean usePermissionsPlugin = getConfig().getBoolean(AppStrings.PROPERTY_PERMISSION_USE_PLUGIN, true);
 
         // attempt to use the Permissions plugin
         if (usePermissionsPlugin)
         {
-            Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+            Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("PermissionsBukkit"); //this used to be "BukkitPermissions"
             if (permissionsPlugin != null)
             {
                 this.permissionAdapter = new PermissionsBukkitAdapter(this);
@@ -178,7 +185,7 @@ public class NiftyWarp extends JavaPlugin implements CommandExecutor
         }
         else
         {
-            String ruleset = getConfiguration().getString(AppStrings.PROPERTY_PERMISSION_RULESET);
+            String ruleset = getConfig().getString(AppStrings.PROPERTY_PERMISSION_RULESET);
             if(ruleset.equalsIgnoreCase(AppStrings.RULESET_FFA))
                 this.permissionAdapter = new FreeForAllAdapter();
             if(ruleset.equalsIgnoreCase(AppStrings.RULESET_OPS_ONLY))
@@ -223,7 +230,7 @@ public class NiftyWarp extends JavaPlugin implements CommandExecutor
         // only bother doing this if they passed in true to this method
         if(displayDenialMessage)
         {
-            boolean showFailureMessage = getConfiguration().getBoolean(AppStrings.PROPERTY_MSG_SHOWPERM_FAILURE, true);
+            boolean showFailureMessage = getConfig().getBoolean(AppStrings.PROPERTY_MSG_SHOWPERM_FAILURE, true);
 
             // Notify player if permission was denied if they failed ... but only if the config says the user of this addon
             // wants these messages displayed
@@ -280,25 +287,42 @@ public class NiftyWarp extends JavaPlugin implements CommandExecutor
     private void setupConfiguration()
     {
         try
-        {
-            File configFile = new File("./plugins/NiftyWarp/NiftyWarp.yml");
-            boolean fileExists = configFile.exists();
+        {       	
+        	if (customConfigFile == null) {
+        	    customConfigFile = new File(getDataFolder(), "NiftyWarp.yml");
+        	}
+        	
+            boolean fileExists = customConfigFile.exists();
             if(!fileExists)
-                fileExists = configFile.createNewFile();
-
-            if(fileExists)
             {
-                configuration = new Configuration(configFile);
-                configuration.load();
+                fileExists = customConfigFile.createNewFile(); //double checking config file exists
+                log.info("Creating default configuration file...");
             }
+               
+            //didn't end up needing, will clean up for next release
+            /*if(fileExists)
+            {
+            	customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
+            }*/
+            
+            //Look for defaults in the jar //will add later with time
+	        /*InputStream defConfigStream = getResource("NiftyWarp.yml");
+	        if (defConfigStream != null) {
+	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+	            customConfig.setDefaults(defConfig);
+	        }*/
+        	
+        	getConfig().options().configuration().load(customConfigFile);
+	        saveConfig();
         }
-        catch (IOException e)
+        catch (Exception e) //will catch all exceptions, not just IO, not best practice but will do 
         {
             log.warning(e.getMessage());
         }
     }
 
-    void setConfiguration(Configuration configuration)
+    //below methods were no longer needed but kept for reference
+  /*  void setConfiguration(Configuration configuration) 
     {
         this.configuration = configuration;
     }
@@ -307,5 +331,5 @@ public class NiftyWarp extends JavaPlugin implements CommandExecutor
     public Configuration getConfiguration()
     {
         return configuration;
-    }
+    }*/
 }

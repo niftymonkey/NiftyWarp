@@ -1,9 +1,9 @@
 package net.niftymonkey.niftywarp.permissions;
 
-import com.nijikokun.bukkit.Permissions.Permissions;
+//import com.nijikokun.bukkit.Permissions.Permissions;
 import net.niftymonkey.niftywarp.AppStrings;
 import org.bukkit.entity.Player;
-
+import com.nijikokun.bukkit.Permissions.Permissions;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +15,7 @@ public class PermissionsV2Adapter implements IPermissionsAdapter
 {
     private static Logger log = Logger.getLogger("Minecraft");
 
-    private Permissions permissionsPlugin = null;
+    private Permissions permissionsPlugin = null; 
 
     public PermissionsV2Adapter(Permissions permissionsPlugin)
     {
@@ -33,8 +33,8 @@ public class PermissionsV2Adapter implements IPermissionsAdapter
                                (PermissionNodeMapper.getPermissionNode(commandRequested));
 
         if (permissonNode != null)
-        {
-            if(permissionsPlugin.getHandler().has(player, permissonNode))
+        {   
+        	if(permissionsPlugin.getHandler().has(player, permissonNode))
             {
                 retVal = true;
             }

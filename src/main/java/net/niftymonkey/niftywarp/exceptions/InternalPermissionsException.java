@@ -7,7 +7,9 @@ package net.niftymonkey.niftywarp.exceptions;
  */
 public class InternalPermissionsException extends Exception
 {
-    public InternalPermissionsException()
+	private static final long serialVersionUID = 1L; //added for consistency, good practice
+
+	public InternalPermissionsException()
     {
         super();
     }

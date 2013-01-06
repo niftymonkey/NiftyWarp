@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Niftywarp by niftymonkey</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/niftymonkey/NiftyWarp">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/niftymonkey/NiftyWarp/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/niftymonkey/NiftyWarp/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Niftywarp</h1>
+          <p>Nifty Warp is a plugin (built on bukkit) that allows for private, public-listed, and public-unlisted warps.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/niftymonkey">niftymonkey</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p>Nifty Warp is a server-side plugin (built on bukkit) that allows for private, listed, unlisted warps.</p>
+
+<h2>WARP TYPES:</h2>
+
+<p>"private"</p>
+
+<ul>
+<li>This is the default type of a warp if no type parameter is used when adding a warp.  When listing warps,
+private warps will only show up in their owner's lists.  When warping, only the owner will be able to warp to
+that named warp.</li>
+</ul><p>"unlisted"</p>
+
+<ul>
+<li>When listing warps, unlisted warps will only show up the their owner's lists.  However, when using warps, anyone
+can use the warp.  If the warp has the same name as one the owner has, you can use it by typing the fully qualified 
+name of the warp.  This warp type is useful if you want create useful warps to places that you can let your friends 
+know about, but that aren't important enough to clutter up everyone's list with.</li>
+</ul><p>"listed"</p>
+
+<ul>
+<li>This type of warp is able to be seen and used by anyone.</li>
+</ul><h2>COMMANDS AND ALIASES</h2>
+
+<p>In order to be able to function alongside other warp plugins, all of the main commands are unique to NiftyWarp and prefixed
+with "nw". However, for ease of use, I've also included quite a few common and intuitive aliases. Here are the commands
+listed using the aliases people are most likely to use. Below them are the main command and other alternates if you need to
+use this in conjunction with another addon.</p>
+
+<p>/addwarp 
+Add a warp</p>
+
+<ul>
+<li>Command:    /nwadd</li>
+<li>Alternates: /nwa, /addwarp, /createwarp, /setwarp</li>
+</ul><p>/deletewarp 
+Delete a warp</p>
+
+<ul>
+<li>Command:    /nwdelete</li>
+<li>Alternates: /nwd, /deletewarp, /removewarp</li>
+</ul><p>/sethome
+Set your home warp (currently just makes a warp named "home")</p>
+
+<ul>
+<li>Command:    /nwhomeset</li>
+<li>Alternates: /nwhs, /homeset, /sethome</li>
+</ul><p>/home
+Warp to your home (currently just warps to your "home" warp)</p>
+
+<ul>
+<li>Command:    /nwhome</li>
+<li>Alternates: /nwh, /home</li>
+</ul><p>/listwarps 
+Get the list of warps</p>
+
+<ul>
+<li>Command:    /nwlist</li>
+<li>Alternates: /nwl, /listwarps</li>
+</ul><p>/renamewarp 
+Rename an existing warp</p>
+
+<ul>
+<li>Command:    /nwrename</li>
+<li>Alternates: /nwr, /renamewarp</li>
+</ul><p>/setwarptype  private | unlisted | listed
+Set the privacy/visibility of a warp after creation</p>
+
+<ul>
+<li>Command:    /nwset</li>
+<li>Alternates: /nws, /settype, /setwarptype</li>
+</ul><p>/warp 
+Use a warp</p>
+
+<ul>
+<li>Command:    /nwwarp</li>
+<li>Alternates: /nw, /nww, /warp</li>
+</ul><p>/warptocoord x y z 
+Warp to a specific coordinate</p>
+
+<ul>
+<li>Command:    /nwwarptocoord</li>
+<li>Alternates: /nwwtc, warptocoord, wtc, w2c</li>
+</ul><h2>WARPING:</h2>
+
+<p>All warps have an owner.  When attempting to use a warp that belongs to someone else, you may have to use the fully 
+qualified name which is . ... this situation only occurs when a warp that someone else owns has the 
+same name as one that you own.  For listed warps, this will be obvious due to how it is listed.  However when 
+attempting to use unlisted warps, you may have to take this into account on your own.  For instance, if I want to use 
+an unlisted warp called "foo" that is owned by niftymonkey, I would type:</p>
+
+<pre><code>/nwwarp niftymonkey.foo
+</code></pre>
+
+<h2>CONFIGURATION:</h2>
+
+<p>Currently there are only a few configuration options.  They are stored in the /NiftyWarp/NiftyWarp.yml file</p>
+
+<p>messages:</p>
+
+<pre><code># this specifies whether or not to prefix all the NiftWarp-related messages with: [NiftyWarp] -
+# values: true | false  (defaults to true)
+show-prefix: true
+
+# this specifies whether or not to show the user a message when they don't have the proper permission set
+# this message also indicates the exact permission that needs to be set in order to use that command
+# this is intended to be a helper message for determining which permission is needed to use that command
+# values: true | false  (defaults to true)
+permissions:
+    show-fail-message: true
+</code></pre>
+
+<p>warps:</p>
+
+<pre><code># this specifies the type to use when creating new warps without specifying the type
+# values: private | unlisted | listed  (defaults to unlisted)
+default-type: unlisted
+
+# this specifies the maximum number of warps to allow a user to create
+# value: a number  (defaults to 20)
+max-warps: 20
+</code></pre>
+
+<p>permissions:</p>
+
+<pre><code># this specifies whether or not to attempt to use the permissions plugin.  If set to false, the ruleset property
+# below will be used to determine permissions
+# values:  true | false  (defaults to true)
+use-plugin: true
+
+# this specifies what non-Permissions-plugin type ruleset you want to use.  This value is only used if use-plugin
+# is set to false.  ops-only means only Ops can use this plugin's commands.  ops-for-admin means only Ops can use 
+# the admin type functionality (such as renaming other people's warps).  ffa means Free For All ... meaning anyone 
+# can use any commands/functionality
+# values: ops-only | ops-for-admin | ffa (defaults to ffa)
+ruleset: ffa
+</code></pre>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
